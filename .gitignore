@@ -1,0 +1,13 @@
+# OS X
+.DS_Store
+
+# IntelliJ
+.idea/
+/out/
+*.iml
+
+# Java
+META-INF/
+
+# App
+/data/
