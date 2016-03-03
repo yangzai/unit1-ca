@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact name="jar-with-data">
+    <output-path>$PROJECT_DIR$/out/artifacts/jar_with_data</output-path>
+    <root id="root">
+      <element id="directory" name="data">
+        <element id="dir-copy" path="$PROJECT_DIR$/data" />
+      </element>
+      <element id="archive" name="unit1-ca.jar">
+        <element id="module-output" name="unit1-ca" />
+      </element>
+    </root>
+  </artifact>
+</component>
