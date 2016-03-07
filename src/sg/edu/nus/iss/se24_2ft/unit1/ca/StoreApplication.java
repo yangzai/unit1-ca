@@ -23,6 +23,11 @@ public class StoreApplication {
         Store store = new Store(mainFrame);
 
         mainFrame.setVisible(true);
+        
+        if(!initiAllData())
+        	return;
+        	
+        
 //        try {
 //            //TODO: Test resource path
 //            PrintWriter writer = new PrintWriter("level1/test.txt");
@@ -36,5 +41,16 @@ public class StoreApplication {
 //            e.printStackTrace();
 //        }
 
+    }
+    
+    public static boolean initiAllData()
+    {
+
+    	string strkeepertxtfile = "D:\test.csv";
+    	//initialize store keeper manager
+    	StoreKeeperManager.getInstance().initData(strkeepertxtfile);
+    	
+    	return false;
+    }
     }
 }
