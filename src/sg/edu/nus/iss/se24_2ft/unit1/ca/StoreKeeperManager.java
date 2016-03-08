@@ -20,7 +20,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 public class StoreKeeperManager {
 	
 	private ArrayList<StoreKeeper> storeKeeperList;
-	private static StoreKeeperManager storeKeeperManager;
+	private static StoreKeeperManager storeKeeperManager = new StoreKeeperManager();
 	
 	/**
 	 * Define singleton pattern to unify the store keeper manager instance
@@ -28,14 +28,10 @@ public class StoreKeeperManager {
 	 */
 	public static StoreKeeperManager getInstance()
 	{
-		if(null == storeKeeperManager)
-		{
-			storeKeeperManager = new StoreKeeperManager();
-		}
 		return storeKeeperManager;
 	}
 	
-	public StoreKeeperManager()
+	private StoreKeeperManager()
 	{
 		storeKeeperList = new ArrayList<>();
 	}
