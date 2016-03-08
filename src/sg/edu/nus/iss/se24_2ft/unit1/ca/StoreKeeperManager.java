@@ -24,9 +24,7 @@ public class StoreKeeperManager {
 	
 	/**
 	 * Define singleton pattern to unify the store keeper manager instance
-	 * 
-	 * @param fileName
-	 *            The path to the file to output the data.
+	 *
 	 */
 	public static StoreKeeperManager getInstance()
 	{
@@ -39,7 +37,7 @@ public class StoreKeeperManager {
 	
 	public StoreKeeperManager()
 	{
-		
+		storeKeeperList = new ArrayList<>();
 	}
 	
 	/**
@@ -56,7 +54,7 @@ public class StoreKeeperManager {
 		CSVReader reader = null;
 		//ArrayList<ArrayList<String>> csvList;
 		
-		try 
+		try
 		{
 			//csvList = new ArrayList<ArrayList<String>>();
 			
@@ -72,10 +70,10 @@ public class StoreKeeperManager {
             }
 		}
 		catch (FileNotFoundException fnfe) {
-			
-		}		
+			throw fnfe;
+		}
 		catch (IOException ioe) {
-			
+			throw ioe;
 		}
 		finally {
 			if(null != reader)
