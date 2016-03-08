@@ -34,16 +34,12 @@ public class StoreKeeperManager {
      *
      */
     private void initData() throws IOException {
-        if (filename == null) return;
-
         CSVReader reader = null;
-        try
-        {
+        try {
             reader = new CSVReader(filename);
             
-            while(reader.readRecord()){
+            while(reader.readRecord()) {
                 Object[] keepers = reader.getValues().toArray();
-
                 StoreKeeper storeKeeper = new StoreKeeper(keepers[0].toString(), keepers[1].toString());
 
                 storeKeeperList.add(storeKeeper);
@@ -53,9 +49,5 @@ public class StoreKeeperManager {
         } finally {
             if (reader != null) reader.close();
         }
-    }
-
-    public List<StoreKeeper> getStoreKeeperList() {
-        return storeKeeperList;
     }
 }
