@@ -20,29 +20,19 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 public class StoreKeeperManager {
 	
 	private ArrayList<StoreKeeper> storeKeeperList;
-	private static StoreKeeperManager storeKeeperManager = new StoreKeeperManager();
+	private String fileName;
 	
-	/**
-	 * Define singleton pattern to unify the store keeper manager instance
-	 *
-	 */
-	public static StoreKeeperManager getInstance()
-	{
-		return storeKeeperManager;
-	}
-	
-	private StoreKeeperManager()
-	{
+	public StoreKeeperManager(String fileName) throws IOException {
 		storeKeeperList = new ArrayList<>();
+		this.fileName = fileName;
+		initData();
 	}
 	
 	/**
 	 * Initialize the data from csv file for the store keepers
-	 * 
-	 * @param fileName
-	 *            The path to the file for the data loading.
+	 *
 	 */
-	public void initData(String fileName) throws IOException
+	private void initData() throws IOException
 	{
 		if (null == fileName)
 			return;
