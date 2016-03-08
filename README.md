@@ -3,6 +3,8 @@
 ## Developers
 
 ### Setting up
+[Set your IDE's indentation to use 4 spaces instead of tab.](http://eclipsesource.com/blogs/2013/07/09/invisible-chaos-mastering-white-spaces-in-eclipse/)
+
 Clone this repository.
 
 ```
