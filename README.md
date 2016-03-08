@@ -42,4 +42,7 @@ git merge dev
 ```
 
 ### Extras
-More on ```git stash```: https://youtu.be/KLEDKgMmbBI
+- [More on ```git stash```](https://youtu.be/KLEDKgMmbBI)
+
+- [You should also consider ```git rebase``` over ```git merge```]
+(https://www.atlassian.com/git/tutorials/merging-vs-rebasing)
