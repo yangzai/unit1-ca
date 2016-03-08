@@ -10,71 +10,52 @@
 
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 
 public class StoreKeeperManager {
-	
-	private ArrayList<StoreKeeper> storeKeeperList;
-	private String fileName;
-	
-	public StoreKeeperManager(String fileName) throws IOException {
-		storeKeeperList = new ArrayList<>();
-		this.fileName = fileName;
-		initData();
-	}
-	
-	/**
-	 * Initialize the data from csv file for the store keepers
-	 *
-	 */
-	private void initData() throws IOException
-	{
-		if (null == fileName)
-			return;
-		
-		CSVReader reader = null;
-		//ArrayList<ArrayList<String>> csvList;
-		
-		try
-		{
-			//csvList = new ArrayList<ArrayList<String>>();
-			
-            reader = new CSVReader(fileName,',',Charset.forName("SJIS")); 
+
+    private String filename;
+    private List<StoreKeeper> storeKeeperList;
+
+    public StoreKeeperManager(String fileName) throws IOException {
+        this.filename = fileName;
+        storeKeeperList = new ArrayList<>();
+
+        initData();
+    }
+
+    /**
+     * Initialize the data from csv file for the store keepers
+     *
+     */
+    private void initData() throws IOException {
+        if (filename == null) return;
+
+        CSVReader reader = null;
+        try
+        {
+            reader = new CSVReader(filename);
             
             while(reader.readRecord()){
-                //csvList.add(reader.getValues());  
-            	Object[] keepers = reader.getValues().toArray();
+                Object[] keepers = reader.getValues().toArray();
 
-            	StoreKeeper storeKeeper = new StoreKeeper(keepers[0].toString(), keepers[1].toString());
+                StoreKeeper storeKeeper = new StoreKeeper(keepers[0].toString(), keepers[1].toString());
 
-            	storeKeeperList.add(storeKeeper);
+                storeKeeperList.add(storeKeeper);
             }
-		}
-		catch (FileNotFoundException fnfe) {
-			throw fnfe;
-		}
-		catch (IOException ioe) {
-			throw ioe;
-		}
-		finally {
-			if(null != reader)
-			{
-				reader.close();
-			}
-		}
-		
-		
-	}
+        } catch (IOException ioe) {
+            throw ioe;
+        } finally {
+            if (reader != null) reader.close();
+        }
+    }
 
-
-	public ArrayList<StoreKeeper> getStoreKeeperList()
-	{
-		return storeKeeperList;
-	}
-
+    public List<StoreKeeper> getStoreKeeperList() {
+        return storeKeeperList;
+    }
 }
