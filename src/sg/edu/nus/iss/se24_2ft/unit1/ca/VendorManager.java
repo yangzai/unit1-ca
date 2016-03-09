@@ -32,11 +32,11 @@ public class VendorManager {
         try (Stream<Path> stream = Files.list(Paths.get(directory))) {
             stream
                     //get a list of filename in directory
-                    .map((p)->p.getFileName().toString())
+                    .map(p -> p.getFileName().toString())
                     //filter vendor files
-                    .filter((s)->s.matches("Vendors[A-Z][A-Z][A-Z].dat"))
+                    .filter(s -> s.matches("Vendors[A-Z][A-Z][A-Z].dat"))
                     //for each vendor file, read vendor list and insert to map
-                    .forEach((s)->{
+                    .forEach(s -> {
                         String categoryId = s.substring(7, 10);
                         CSVReader reader = null;
                         try {

@@ -63,7 +63,7 @@ public class StoreApplication {
 //            vm = new VendorManager("data");
 //            vm.getVendorListByCategoryId("MUG")
 //                    .stream()
-//                    .map((v)->v.getCategoryId()+','+v.getName()+','+v.getDescription())
+//                    .map(v -> v.getCategoryId()+','+v.getName()+','+v.getDescription())
 //                    .forEach(System.out::println);
 //        } catch (IOException e) {
 //            e.printStackTrace();
