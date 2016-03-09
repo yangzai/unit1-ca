@@ -6,14 +6,16 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVWriter;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
+import java.io.UncheckedIOException;
+
 
 /**
  * Created by yangzai on 26/2/16.
  */
 public class StoreApplication {
-    public static void main (String args[]) {
+    public static void main (String args[]) throws UncheckedIOException {
         MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -54,6 +56,19 @@ public class StoreApplication {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+
+
+        VendorManager vm = null;
+        try {
+            vm = new VendorManager("data");
+            vm.getVendorListByCategoryId("MUG")
+                    .stream()
+                    .map((v)->v.getCategoryId()+','+v.getName()+','+v.getDescription())
+                    .forEach(System.out::println);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }
