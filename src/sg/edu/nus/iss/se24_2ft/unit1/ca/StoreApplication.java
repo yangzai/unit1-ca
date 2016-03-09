@@ -58,16 +58,16 @@ public class StoreApplication {
 //        }
 
 
-        VendorManager vm = null;
-        try {
-            vm = new VendorManager("data");
-            vm.getVendorListByCategoryId("MUG")
-                    .stream()
-                    .map((v)->v.getCategoryId()+','+v.getName()+','+v.getDescription())
-                    .forEach(System.out::println);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        VendorManager vm = null;
+//        try {
+//            vm = new VendorManager("data");
+//            vm.getVendorListByCategoryId("MUG")
+//                    .stream()
+//                    .map((v)->v.getCategoryId()+','+v.getName()+','+v.getDescription())
+//                    .forEach(System.out::println);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 
     }
