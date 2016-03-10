@@ -1,12 +1,14 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 
 public class TransactionManager {
@@ -28,7 +30,13 @@ public class TransactionManager {
 		DateFormat df = new SimpleDateFormat("dd-MM-yy HH:mm:ss");
 		Date dateobj = new Date();
 		String date = df.format(dateobj);
-		Date currentdate = df.parse(date);
+		Date currentdate = null;
+		try {
+			currentdate = df.parse(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Iterator<Transaction> iter = transaction.iterator();
 		while(iter.hasNext())
@@ -46,17 +54,17 @@ public class TransactionManager {
 	
 	public float calculateTotalPrice(int discount)
 	{
-		String id = 0;
+		String id = null;
 		int quantityPurchased = 0;
 		float price =0;
-		List<Product> products = list.getKeySet();
+		Set<Product> products = list.keySet();
 		
 		Iterator<Product> iter = products.iterator();
 		while(iter.hasNext())
 		{
 			Product pro = iter.next(); 
 			int proprice = pro.getPrice();
-			quantityPurchased = list.getValue(pro);
+			quantityPurchased = list.get(pro);
 			price = price + proprice*quantityPurchased;		
 		}
 		
