@@ -1,23 +1,27 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.MainFrame;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVWriter;
 
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.io.IOException;
-import java.io.UncheckedIOException;
-
-import java.util.ArrayList;
 
 /**
  * Created by yangzai on 26/2/16.
  */
 public class StoreApplication {
-    public static void main (String args[]) {
-        MainFrame mainFrame = new MainFrame();
+    public static void main (String args[]) throws IOException {
+        //TODO: handle IOException within managers' constructors
+        CategoryManager categoryManager = new CategoryManager("data/Category.dat");
+
+        MainFrame mainFrame = new MainFrame() {
+            @Override
+            public TableModel getCategoryTableModel() {
+                return categoryManager.getTableModel();
+            }
+        };
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
