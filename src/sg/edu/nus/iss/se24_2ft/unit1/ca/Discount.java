@@ -1,19 +1,22 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 /**
  * Created by Nguyen Trung on 27/2/16.
  */
 public class Discount {
-    private String code, description;
-    private Date startDate; // Null for ALWAYS applicable
-    private int period; //-1 for ALWAYS applicable
-    private double percent; //or restrict to int
-    private boolean isOnlyForMember;
+	private String code, description;
+	private Date startDate; // Null for ALWAYS applicable
+	private int period; // -1 for ALWAYS applicable
+	private double percent; // or restrict to int
+	private boolean isOnlyForMember;
 
-    public Discount() {
-    }
+	public Discount() {
+	}
 
 	public String getCode() {
 		return code;
@@ -62,8 +65,35 @@ public class Discount {
 	public void setOnlyForMember(boolean isOnlyForMember) {
 		this.isOnlyForMember = isOnlyForMember;
 	}
-    
-    
-    
+
+	public String toString(){
+    	String strDate;
+    	if (this.startDate == null){
+    		strDate = "ALWAYS";
+    	} else {
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    		strDate = sdf.format(this.startDate);
+    	}
+    	String period = this.period == -1 ? "ALWAYS" : String.valueOf(this.period);
+    	String memberOnly = this.isOnlyForMember ? "M" : "A";
+    	return code + "," + description + "," + strDate + "," + period + "," + memberOnly;
+    	
+    }
+	
+	public boolean isDiscountAvailable(){
+		if (startDate != null) {			
+			Date today = new Date(System.currentTimeMillis());
+			if (startDate.after(today)) {
+				return false;
+			}
+			if (period != -1) {
+				Date endDate = Utils.addDate(startDate, period);
+				if (endDate.before(today)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 }
