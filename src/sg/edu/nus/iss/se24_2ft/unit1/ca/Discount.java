@@ -13,7 +13,7 @@ public class Discount {
     private boolean isOnlyForMember;
 
     public Discount() {
-
+    	//Tested Code first time commiting
     }
 
 }
