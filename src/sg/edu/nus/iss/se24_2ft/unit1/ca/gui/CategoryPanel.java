@@ -1,16 +1,48 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * Created by yangzai on 2/3/16.
  */
-public class CategoryPanel extends JPanel {
+public abstract class CategoryPanel extends JPanel {
+    private static final int VISIBLE_ROW = 5;
+    private JTable table;
 
     public CategoryPanel() {
         super(new GridBagLayout());
 
-        JList list = new JList();
+        table = new JTable(getTableModel());
+        Dimension d = table.getPreferredSize();
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.weightx = 1;
+        c.weighty = 1;
+        c.gridx = c.gridy = 0;
+        c.gridwidth = 2;
+        c.fill = GridBagConstraints.BOTH;
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(d.width,table.getRowHeight()*VISIBLE_ROW+1));
+        add(scrollPane, c);
+
+        c.gridx = c.gridy = 1;
+        c.gridwidth = 1;
+        c.fill = GridBagConstraints.NONE;
+        c.anchor = GridBagConstraints.EAST;
+
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+//            backButtonActionListenerList.forEach(l -> l.actionPerformed(e));
+            backActionPerformed(e);
+        });
+        add(backButton, c);
     }
+
+    public abstract TableModel getTableModel();
+
+    public abstract void backActionPerformed(ActionEvent e);
 }
