@@ -1,10 +1,12 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 public class DiscountManager {
@@ -27,7 +29,21 @@ public class DiscountManager {
 
 	public void initData() {
 		List<List<String>> _list = new ArrayList(); // This list gets from CSV
-													// File
+
+		CSVReader reader = null;
+        try {
+            reader = new CSVReader(filename);
+            
+            while(reader.readRecord()) {
+                ArrayList<String> discountStrList = reader.getValues();
+                _list.add(discountStrList);
+            }
+        } catch (IOException ioe) {
+        	System.out.println(ioe.getMessage());
+        } finally {
+            if (reader != null) reader.close();
+        }
+	
 		for (List<String> params : _list) {
 			Date startDate = null;
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
