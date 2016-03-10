@@ -13,7 +13,6 @@ public class Discount {
 	private Date startDate; // Null for ALWAYS applicable
 	private int period; // -1 for ALWAYS applicable
 	private double percent; // or restrict to int
-	private boolean isOnlyForMember;
 
 	public Discount() {
 	}
@@ -58,13 +57,6 @@ public class Discount {
 		this.percent = percent;
 	}
 
-	public boolean isOnlyForMember() {
-		return isOnlyForMember;
-	}
-
-	public void setOnlyForMember(boolean isOnlyForMember) {
-		this.isOnlyForMember = isOnlyForMember;
-	}
 
 	public String toString(){
     	String strDate;
@@ -75,9 +67,7 @@ public class Discount {
     		strDate = sdf.format(this.startDate);
     	}
     	String period = this.period == -1 ? "ALWAYS" : String.valueOf(this.period);
-    	String memberOnly = this.isOnlyForMember ? "M" : "A";
-    	return code + "," + description + "," + strDate + "," + period + "," + memberOnly;
-    	
+    	return code + "," + description + "," + strDate + "," + period;    	
     }
 	
 	public boolean isDiscountAvailable(){
