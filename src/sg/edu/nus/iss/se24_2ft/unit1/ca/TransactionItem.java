@@ -11,6 +11,10 @@ public class TransactionItem {
 	private int tranId;
 	private Date date; 
 	
+	/**
+	 * created by Srishti
+	 */
+	
 	public TransactionItem(int quantityPurchased, String productId,String memberID, float price, int discount, int tranId, Date date) {
 		super();
 		this.quantityPurchased = quantityPurchased;
