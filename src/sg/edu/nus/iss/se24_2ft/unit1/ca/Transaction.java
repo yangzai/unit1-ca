@@ -10,6 +10,10 @@ public class Transaction {
 	private int quantity;
 	private Date date;
 	
+	/**
+	 * created by Srishti
+	 */
+	
 	public Transaction(int transactionID, String productId,String memberID, int quantity,Date date)
 	{
 		this.transactionID = transactionID;
