@@ -36,7 +36,7 @@ public class DiscountManager {
 			} catch (Exception ex) {
 				System.out.println(ex.getMessage());
 			}
-			
+
 			Discount discount = new Discount();
 			discount.setCode(params.get(0));
 			discount.setDescription(params.get(1));
@@ -48,10 +48,11 @@ public class DiscountManager {
 		}
 	}
 
+	
 	public double getDiscountForNonMember() {
 		double maxDiscount = 0;
 		for (Discount discount : discountList) {
-			if (!discount.isOnlyForMember() && discount.getPercent() > maxDiscount) {
+			if (!discount.isOnlyForMember() && discount.isDiscountAvailable() && discount.getPercent() > maxDiscount) {
 				maxDiscount = discount.getPercent();
 			}
 		}
@@ -62,14 +63,14 @@ public class DiscountManager {
 		double firsttimeDiscount = 0;
 		double normalDiscount = 0;
 		for (Discount discount : discountList) {
-			if (discount.isOnlyForMember()) {
+			if (discount.isOnlyForMember() && discount.isDiscountAvailable()) {
 				if (discount.getPercent() > firsttimeDiscount) {
 					firsttimeDiscount = discount.getPercent();
 				}
 			}
 		}
 		for (Discount discount : discountList) {
-			if (discount.isOnlyForMember()) {
+			if (discount.isOnlyForMember() && discount.isDiscountAvailable()) {
 				if (discount.getPercent() < firsttimeDiscount) {
 					normalDiscount = discount.getPercent();
 				}
