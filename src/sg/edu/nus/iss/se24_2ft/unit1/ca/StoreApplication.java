@@ -10,12 +10,13 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
+import java.util.ArrayList;
 
 /**
  * Created by yangzai on 26/2/16.
  */
 public class StoreApplication {
-    public static void main (String args[]) throws UncheckedIOException {
+    public static void main (String args[]) {
         MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -30,6 +31,7 @@ public class StoreApplication {
 
         mainFrame.setVisible(true);
 
+//        ****************** yangzai-test ****************************************
 //        StoreKeeperManager storeKeeperManager = null;
 //        try {
 //            storeKeeperManager = new StoreKeeperManager("data/Storekeepers.dat");
@@ -42,8 +44,6 @@ public class StoreApplication {
 //        System.out.println(storeKeeperManager.login("Johny", "A12ysd45"));
 //        System.out.println(storeKeeperManager.login("Johny", "fail"));
 
-        	
-        
 //        try {
 //            //TODO: Test resource path
 //            PrintWriter writer = new PrintWriter("level1/test.txt");
@@ -57,7 +57,6 @@ public class StoreApplication {
 //            e.printStackTrace();
 //        }
 
-
 //        VendorManager vm = null;
 //        try {
 //            vm = new VendorManager("data");
@@ -69,6 +68,40 @@ public class StoreApplication {
 //            e.printStackTrace();
 //        }
 
-
+//        ****************** Tran-test ****************************************
+//        CustomerManager customerManager = null;
+//        try {
+//			customerManager = new CustomerManager("data-sample/Members.dat");
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
+//        customerManager.addMember("TestID", "TestName");
+//        ArrayList<Member> members = customerManager.getMembersAsList();
+//        for (Member member : members) {
+//			System.out.println(member.toString());
+//		}
+//        System.out.println("New Test");
+//        Customer member = customerManager.getCustomer("X437F356");
+//        System.out.println("MemberID " + member.getMemberIDasString());
+//        member.setAddPoint(53.6f);
+//        member.setRedeemPoint(261);
+//        System.out.println("Redeem Point: " + member.getRedeemPoint());
+//        System.out.println("Redeem Price: " + member.getRedeemPrice());
+//        System.out.println("Current Point: " + member.getLoyaltyPoint());
+//        System.out.println("Add-on Point: " + member.getAddPoint());
+//        member.updateLoyaltyPoint();
+//        System.out.println("Confirm Payment: " + member.getLoyaltyPoint());
+//        
+//        Customer pubCustomer = customerManager.getCustomer(null);
+//        System.out.println("MemberID " + pubCustomer.getMemberIDasString());
+//        pubCustomer.setAddPoint(53.6f);
+//        pubCustomer.setRedeemPoint(261);
+//        System.out.println("Redeem Point: " + pubCustomer.getRedeemPoint());
+//        System.out.println("Redeem Price: " + pubCustomer.getRedeemPrice());
+//        System.out.println("Current Point: " + pubCustomer.getLoyaltyPoint());
+//        System.out.println("Add-on Point: " + pubCustomer.getAddPoint());
+//        member.updateLoyaltyPoint();
+//        System.out.println("Confirm Payment: " + pubCustomer.getLoyaltyPoint());
     }
 }
