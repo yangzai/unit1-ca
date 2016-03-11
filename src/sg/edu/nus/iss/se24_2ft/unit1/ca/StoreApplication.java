@@ -75,7 +75,7 @@ public class StoreApplication {
 //        ****************** Tran-test ****************************************
 //        CustomerManager customerManager = null;
 //        try {
-//			customerManager = new CustomerManager("data-sample/Members.dat");
+//			customerManager = new CustomerManager("data/Members.dat");
 //		} catch (Exception e) {
 //			// TODO: handle exception
 //			e.printStackTrace();
@@ -107,5 +107,14 @@ public class StoreApplication {
 //        System.out.println("Add-on Point: " + pubCustomer.getAddPoint());
 //        member.updateLoyaltyPoint();
 //        System.out.println("Confirm Payment: " + pubCustomer.getLoyaltyPoint());
+
+//        ****************** srishti-test ****************************************
+//        TransactionManager transactionManager = null;
+//        try {
+//            transactionManager = new TransactionManager("data/Transactions.dat");
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }
