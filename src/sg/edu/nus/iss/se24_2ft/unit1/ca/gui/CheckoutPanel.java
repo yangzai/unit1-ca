@@ -1,8 +1,8 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
-public class TransactionPanel {
+public class CheckoutPanel {
 
-	public TransactionPanel() {
+	public CheckoutPanel() {
 		// TODO Auto-generated constructor stub
 	}
 
