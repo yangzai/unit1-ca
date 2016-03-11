@@ -8,19 +8,19 @@ public class Transaction {
 	private String productId;
 	private String memberID;
 	private int quantity;
-	private Date date;
+	private String date;
 	
 	/**
 	 * created by Srishti
 	 */
 	
-	public Transaction(int transactionID, String productId,String memberID, int quantity,Date date)
+	public Transaction(int transactionID, String productId,String memberID, int quantity,String date)
 	{
 		this.transactionID = transactionID;
 		this.productId = productId;
 		this.memberID = memberID;
 		this.quantity = quantity;
-		date = new Date();
+		this.date=date;
 	}
 	
 	public int getTransactionID() {
@@ -38,7 +38,7 @@ public class Transaction {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	public String getProductId() {
@@ -50,7 +50,7 @@ public class Transaction {
 	public int getQuantity() {
 		return quantity;
 	}
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 	

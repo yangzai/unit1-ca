@@ -9,13 +9,13 @@ public class TransactionItem {
 	private float price ;
 	private int discount ;
 	private int tranId;
-	private Date date; 
+	private String date; 
 	
 	/**
 	 * created by Srishti
 	 */
 	
-	public TransactionItem(int quantityPurchased, String productId,String memberID, float price, int discount, int tranId, Date date) {
+	public TransactionItem(int quantityPurchased, String productId,String memberID, float price, int discount, int tranId, String date) {
 		super();
 		this.quantityPurchased = quantityPurchased;
 		this.productId = productId;
