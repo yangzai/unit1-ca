@@ -26,7 +26,7 @@ public class StoreApplication {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosed(e);
-//                mainFrame.dispose();
+                // mainFrame.dispose();
                 System.exit(0);
             }
         });
@@ -116,5 +116,30 @@ public class StoreApplication {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+
+//        ****************** cy-test ****************************************
+//         ProductManager productManager = null;
+//         try {
+//            productManager = new ProductManager("data/Products.dat");
+//         } catch (Exception e) {
+//            e.printStackTrace();
+//         }
+//
+//         for (Product pro : productManager.getProductList()) {
+//             String string = pro.toString();
+//             System.out.println(string);
+//         }
+//
+//         productManager.getMaxProductID();
+//
+//         String str = productManager.getThreshold().toString();
+//         System.out.println(str);
+//         System.out.println(productManager.getPrice("CLO/1"));
+//
+//         productManager.getListProductThreshold();
+//         for (Product pro : productManager.getListProductThreshold()) {
+//             String string = pro.toString();
+//             System.out.println(string);
+//         }
     }
 }
