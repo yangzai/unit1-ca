@@ -40,7 +40,6 @@ public abstract class MainFrame extends JFrame {
         JPanel mainPanel = new JPanel(new GridBagLayout());
         contentPane.add(mainPanel, "Main");
 
-        //TODO: @everyone
         featurePanelMap.put(NEW_CATEGORY, new CategoryPanel() {
             @Override
             public void addActionPerformed(Category category) {
@@ -60,6 +59,12 @@ public abstract class MainFrame extends JFrame {
                 return getCategoryTableModel();
             }
         });
+        //TODO: @everyone
+        featurePanelMap.put(NEW_MEMBER, new MemberPanel());
+        featurePanelMap.put(NEW_PRODUCT, new ProductPanel());
+        featurePanelMap.put(INVENTORY, new InventoryPanel());
+        featurePanelMap.put(DISCOUNT, new DiscountPanel());
+        featurePanelMap.put(CHECK_OUT, new CheckoutPanel());
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;

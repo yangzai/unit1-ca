@@ -35,7 +35,7 @@ public class CategoryManager {
 
             @Override
             public int getColumnCount() {
-                return 2;
+                return COLUMN_NAMES.length;
             }
 
             @Override
