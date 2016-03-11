@@ -1,6 +1,8 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
-public class InventoryPanel {
+import javax.swing.*;
+
+public class InventoryPanel extends JPanel {
 
 	public InventoryPanel() {
 		// TODO Auto-generated constructor stub
