@@ -16,7 +16,7 @@ public class CategoryManager {
     private Map<String, Category> categoryMap;
     private List<Category> categoryList;
 
-    private TableModel tableModel;
+    private AbstractTableModel tableModel;
 
     public CategoryManager(String filename) throws IOException {
         this.filename = filename;
@@ -79,7 +79,7 @@ public class CategoryManager {
     }
 
     public List<Category> getCategoryList() {
-        return new ArrayList<>(categoryMap.values());
+        return categoryList;
     }
 
     public boolean addCategory(Category category) {
@@ -95,6 +95,8 @@ public class CategoryManager {
         categoryMap.put(categoryId, category);
         categoryList.add(category);
 
+        int insertedRowIndex = categoryList.size() - 1;
+        tableModel.fireTableRowsInserted(insertedRowIndex, insertedRowIndex);
         return true;
         //TODO: persist immediately?
     }
