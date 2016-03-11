@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSV;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 
 /**
@@ -13,6 +15,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 public class CustomerManager {
 	private HashMap<String, Member> membersMap = new HashMap<String, Member>();
 	private String filename;
+	private CSV csvIO;
 
 	public CustomerManager(String filename) throws IOException {
 		this.filename = filename;
@@ -23,6 +26,7 @@ public class CustomerManager {
 		CSVReader reader = null;
 		try {
 			reader = new CSVReader(filename);
+			csvIO = new CSV(filename);
 			while (reader.readRecord()) {
 				Object[] keepers = reader.getValues().toArray();
 
@@ -51,14 +55,24 @@ public class CustomerManager {
 		Member m = new Member(memberID, name);
 		if (!membersMap.containsKey(memberID)) {
 			membersMap.put(memberID, m);
-			update();
+			try {
+				update();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public Member removeMember(String memberID) {
 		Member m = membersMap.remove(memberID);
 		if (m != null) {
-			update();
+			try {
+				update();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return m;
 	}
@@ -79,8 +93,12 @@ public class CustomerManager {
 		return new ArrayList<Member>(membersMap.values());
 	}
 
-	public void update() {
-		// Reserved for updating List to data file
+	public void update() throws IOException {
+		ArrayList<String> contents = new ArrayList<String>();
+	    for (Member member : this.getMembersAsList()) {
+			contents.add(member.toString());
+		}
+	    csvIO.write(contents);
 	}
 
 }
