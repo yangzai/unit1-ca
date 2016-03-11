@@ -7,6 +7,7 @@ import javax.swing.table.TableModel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by yangzai on 26/2/16.
@@ -14,7 +15,7 @@ import java.io.IOException;
 public class StoreApplication {
     public static void main (String args[]) throws IOException {
         //TODO: handle IOException within managers' constructors
-        CategoryManager categoryManager = new CategoryManager("data/Category.dat");
+        CategoryManager categoryManager = new CategoryManager("data-sample/Category.dat");
 
         MainFrame mainFrame = new MainFrame() {
             @Override
@@ -75,18 +76,20 @@ public class StoreApplication {
 //        ****************** Tran-test ****************************************
 //        CustomerManager customerManager = null;
 //        try {
-//			customerManager = new CustomerManager("data-sample/Members.dat");
+//			customerManager = new CustomerManager("data/Members.dat");
 //		} catch (Exception e) {
 //			// TODO: handle exception
 //			e.printStackTrace();
 //		}
 //        customerManager.addMember("TestID", "TestName");
+//        customerManager.addMember("TestID2", "TestName2");
+//        customerManager.removeMember("X437F356");
 //        ArrayList<Member> members = customerManager.getMembersAsList();
 //        for (Member member : members) {
 //			System.out.println(member.toString());
 //		}
 //        System.out.println("New Test");
-//        Customer member = customerManager.getCustomer("X437F356");
+//        Customer member = customerManager.getCustomer("F42563743156");
 //        System.out.println("MemberID " + member.getMemberIDasString());
 //        member.setAddPoint(53.6f);
 //        member.setRedeemPoint(261);
@@ -107,5 +110,6 @@ public class StoreApplication {
 //        System.out.println("Add-on Point: " + pubCustomer.getAddPoint());
 //        member.updateLoyaltyPoint();
 //        System.out.println("Confirm Payment: " + pubCustomer.getLoyaltyPoint());
+        
     }
 }
