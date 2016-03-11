@@ -9,16 +9,7 @@ public class Product {
     // BigDecimal price;
     private double price;
 
-    public Product(String id, String name, String description, int quantity, int barCode, int treshold,
-            int orderQuantity, double price) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.quantity = quantity;
-        this.barCode = barCode;
-        this.treshold = treshold;
-        this.orderQuantity = orderQuantity;
-        this.price = price;
+    public Product() {
     }
 
     public String getId() {
@@ -83,6 +74,11 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String toString() {
+        return id + "," + name + "," + description + "," + quantity + "," + price + "," + barCode + "," + treshold + ","
+                + orderQuantity;
     }
 
 }
