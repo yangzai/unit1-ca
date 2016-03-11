@@ -19,6 +19,11 @@ public class StoreApplication {
 
         MainFrame mainFrame = new MainFrame() {
             @Override
+            public void addCategoryActionPerformed(Category category) {
+                categoryManager.addCategory(category);
+            }
+
+            @Override
             public TableModel getCategoryTableModel() {
                 return categoryManager.getTableModel();
             }

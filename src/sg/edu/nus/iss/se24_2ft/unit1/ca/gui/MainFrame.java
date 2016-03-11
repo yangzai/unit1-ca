@@ -1,5 +1,8 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
+import sg.edu.nus.iss.se24_2ft.unit1.ca.Category;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.CategoryManager;
+
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -40,7 +43,12 @@ public abstract class MainFrame extends JFrame {
         //TODO: @everyone
         featurePanelMap.put(NEW_CATEGORY, new CategoryPanel() {
             @Override
-            public void backActionPerformed(ActionEvent e) {
+            public void addActionPerformed(Category category) {
+                addCategoryActionPerformed(category);
+            }
+
+            @Override
+            public void backActionPerformed() {
                 //TODO: refactor
                 cardLayout.show(contentPane, "Main");
                 contentPane.setPreferredSize(mainPanel.getPreferredSize());
@@ -87,6 +95,8 @@ public abstract class MainFrame extends JFrame {
         contentPane.setPreferredSize(mainPanel.getPreferredSize());
         pack();
     }
+
+    public abstract void addCategoryActionPerformed(Category category);
 
     public abstract TableModel getCategoryTableModel();
 }
