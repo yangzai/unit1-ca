@@ -84,20 +84,20 @@ public  class InventoryPanel extends JPanel {
 
 					table.setValueAt(quantity, a, col1);
 					list.get(a).setQuantity(quantity);
-					JFrame frame = new JFrame();
-					int response = JOptionPane.showConfirmDialog(
-						    frame,
-						    "Sure to place an order for selected items?",
-						    "An Inane Question",
-						    JOptionPane.YES_NO_OPTION);
-					if (response == JOptionPane.YES_OPTION) {
-						((AbstractTableModel)table.getModel()).fireTableCellUpdated(a, col1);
-					}
-					else
-					{
-						frame.dispose();
-					}
 					
+				}
+				JFrame frame = new JFrame();
+				int response = JOptionPane.showConfirmDialog(
+					    frame,
+					    "Sure to place an order for selected items?",
+					    "An Inane Question",
+					    JOptionPane.YES_NO_OPTION);
+				if (response == JOptionPane.YES_OPTION) {
+					((AbstractTableModel)table.getModel()).fireTableRowsUpdated(0, table.getRowCount());
+				}
+				else
+				{
+					frame.dispose();
 				}
 
 			}
