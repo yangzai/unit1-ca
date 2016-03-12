@@ -8,6 +8,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yangzai on 26/2/16.
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 public class StoreApplication {
     public static void main (String args[]) throws IOException {
         //TODO: handle IOException within managers' constructors
-        CategoryManager categoryManager = new CategoryManager("data/Category.dat");
+        CategoryManager categoryManager = new CategoryManager("data-sample/Category.dat");
 
         MainFrame mainFrame = new MainFrame() {
             @Override
@@ -150,4 +151,19 @@ public class StoreApplication {
 //             System.out.println(string);
 //         }
     }
+  //******************Srishti-test inventory panel code starts ***************************************
+    
+    public List<Product> getProductList()
+    {
+    	ProductManager pm = null;
+		try {
+			pm = new ProductManager("data-sample/Products.dat");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	List<Product> list = pm.getProductList();
+    	return list;
+    }
 }
+// *********************************Srishti-test Inventory panel code ends*****************************************************************//

@@ -1,11 +1,149 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 
-public class InventoryPanel extends JPanel {
+import sg.edu.nus.iss.se24_2ft.unit1.ca.Product;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.StoreApplication;
 
-	public InventoryPanel() {
+// ** Created by Srishti ** // 
+
+public  class InventoryPanel extends JPanel {
+	
+		private List<Product> list;
+		//private StoreApplication store;
+		private String[] COLUMN_NAMES = {"ID","Name","Description","Quantity Avl.","Price",
+				"Bar Code","Reorder Quantity","Order Quantity"};
+
+	public InventoryPanel(/*StoreApplication store*/){
 		// TODO Auto-generated constructor stub
+		super(new GridBagLayout());
+	
+		//this.store= store;
+		
+		list = initData();
+		
+		
+		
+		JTable table = new JTable(getTableModel());
+		JScrollPane scroller = new JScrollPane(table);
+		JButton updateButton = new JButton("Generate Purchase Order");
+		updateButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			
+			}
+			
+		});
+		JButton back = new JButton("Back");
+		
+		GridBagConstraints gc = new GridBagConstraints();
+		JLabel label = new JLabel("Inventory Below Threshold");
+		
+		gc.gridx = 0 ; 
+		gc.gridy = 0 ;
+		add(label,gc);
+		
+		
+		gc.gridx = 0 ; 
+		gc.gridy =1 ;
+		gc.weightx =0.3;
+		gc.fill = GridBagConstraints.BOTH;
+		add(scroller,gc);
+		
+		JPanel buttonPanel = new JPanel();
+		
+		gc.gridx = 0; 
+		gc.gridy =0 ;
+		gc.weightx =0;
+		buttonPanel.add(updateButton,gc);
+		
+		gc.gridx = 0; 
+		gc.gridy =1 ;
+		gc.weightx =0;
+		buttonPanel.add(back,gc);
+		
+		
+		gc.gridx = 1; 
+		gc.gridy =1;
+		gc.weightx =0;
+		
+		add(buttonPanel,gc);
+			
+		
 	}
 
+	public AbstractTableModel getTableModel()
+	{
+		AbstractTableModel tableModel = new AbstractTableModel(){
+	        @Override
+	        public String getColumnName(int column) {
+	            return COLUMN_NAMES[column];
+	        }
+
+	        @Override
+	        public int getRowCount() {
+	            return list.size();
+	        }
+
+	        @Override
+	        public int getColumnCount() {
+	            return COLUMN_NAMES.length;
+	        }
+
+	      @Override
+	      public Object getValueAt(int rowIndex, int columnIndex) {
+	            Product product = list.get(rowIndex);
+	            switch (columnIndex) {
+	                case 0: return product.getId();
+	                case 1: return product.getName();
+	                case 2: return product.getDescription();
+	                case 3: return product.getQuantity();
+	                case 4: return product.getPrice();
+	                case 5: return product.getBarCode();
+	                case 6: return product.getTreshold();
+	                case 7: return product.getOrderQuantity();
+	                default: return null;
+	            }
+	        }
+			
+			}; 
+			
+			return tableModel;
+	}
+  //// ************************************** this method is for testing *****************************************////	
+	public List<Product> initData()
+	{
+		list = (new StoreApplication()).getProductList();
+		ArrayList<Product> product = new ArrayList<Product>();
+		
+		list.get(1).setQuantity(24);
+		list.get(2).setQuantity(49);
+		list.get(0).setQuantity(9);
+		
+		Iterator<Product> iter = list.iterator();
+		while(iter.hasNext())
+		{
+			Product p = iter.next();
+			if(p.getQuantity() < p.getTreshold())
+			{
+				product.add(p);
+			}
+		}
+		
+		
+		return product;
+	}
+	
 }
+
