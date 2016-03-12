@@ -18,6 +18,8 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.StoreApplication;
 
 public  class InventoryPanel extends JPanel {
 	
+	
+		JTable table;
 		private List<Product> list;
 		//private StoreApplication store;
 		private String[] COLUMN_NAMES = {"ID","Name","Description","Quantity Avl.","Price",
@@ -30,17 +32,42 @@ public  class InventoryPanel extends JPanel {
 		//this.store= store;
 		
 		list = initData();
-		
-		
-		
-		JTable table = new JTable(getTableModel());
+		table = new JTable(getTableModel());
 		JScrollPane scroller = new JScrollPane(table);
 		JButton updateButton = new JButton("Generate Purchase Order");
 		updateButton.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+			
+				int[] rowcount  = table.getSelectedRows();
 				
+				int col1 =0; 
+				int col2 =0;
+				
+				Integer quantity =null;
+
+				for(int a : rowcount)
+				{
+						for(int i=0; i< table.getColumnCount() ; i++)
+						{
+							if (table.getColumnName(i).equals("Quantity Avl."))
+							{
+								col1 = i;
+								quantity = (Integer)table.getValueAt(a, col1);
+							}
+							if (table.getColumnName(i).equals("Order Quantity"))
+							{
+								col2 = i;
+								quantity = quantity + (Integer)table.getValueAt(a,col2);
+							}
+									
+						}
+						
+						table.setValueAt(quantity, a, col1);
+						((AbstractTableModel)table.getModel()).fireTableCellUpdated(a, col1);
+						
+				}
 			
 			}
 			
