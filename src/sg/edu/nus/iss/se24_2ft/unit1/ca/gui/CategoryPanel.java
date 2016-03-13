@@ -5,29 +5,30 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.Category;
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by yangzai on 2/3/16.
  */
-public abstract class CategoryPanel extends JPanel {
+public class CategoryPanel extends FeaturePanel {
     private static final int VISIBLE_ROW = 5;
     private JTable table;
+    private JScrollPane scrollPane;
+    private List<CategoryPanelListener> categoryPanelListenerList;
 
     public CategoryPanel() {
         super(new GridBagLayout());
 
-        table = new JTable(getTableModel());
-        Dimension d = table.getPreferredSize();
-
+        table = new JTable();
+        scrollPane = new JScrollPane(table);
+        categoryPanelListenerList = new ArrayList<>();
         GridBagConstraints c = new GridBagConstraints();
-        c.weightx = 1;
-        c.weighty = 1;
+
+        c.weightx = c.weighty = 1;
         c.gridx = c.gridy = 0;
         c.gridwidth = 2;
         c.fill = GridBagConstraints.BOTH;
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(d.width,table.getRowHeight()*VISIBLE_ROW+1));
         add(scrollPane, c);
 
         c.gridy++;
@@ -50,37 +51,34 @@ public abstract class CategoryPanel extends JPanel {
         JTextField nameTextField = new JTextField();
         add(nameTextField, c);
 
-
-
-//        c.anchor = GridBagConstraints.EAST;
-
         c.gridx--;
         c.gridy++;
         c.gridwidth++;
         c.fill = GridBagConstraints.NONE;
         c.anchor = GridBagConstraints.EAST;
-        JButton addButton = new JButton("Add");
-        addButton.addActionListener(e -> {
+        JButton addCategoryButton = new JButton("Add");
+        addCategoryButton.addActionListener(e -> {
             Category category = new Category(idTextField.getText(), nameTextField.getText());
             //TODO: validate category
-            addActionPerformed(category);
+            categoryPanelListenerList.forEach(l -> l.addCategoryRequested(category));
             idTextField.setText(null);
             nameTextField.setText(null);
         });
-        add(addButton, c);
+        add(addCategoryButton, c);
 
         c.gridy++;
         JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> {
-//            backButtonActionListenerList.forEach(l -> l.actionPerformed(e));
-            backActionPerformed();
-        });
+        backButton.addActionListener(e -> backActionPerformed(e));
         add(backButton, c);
     }
 
-    public abstract TableModel getTableModel();
+    public void addCategoryPanelListener(CategoryPanelListener l) {
+        categoryPanelListenerList.add(l);
+    }
 
-    public abstract void addActionPerformed(Category category);
-
-    public abstract void backActionPerformed(/*ActionEvent e*/);
+    public void setTableModel(TableModel tableModel) {
+        table.setModel(tableModel);
+        Dimension d = table.getPreferredSize();
+        scrollPane.setPreferredSize(new Dimension(d.width,table.getRowHeight()*VISIBLE_ROW+1));
+    }
 }
