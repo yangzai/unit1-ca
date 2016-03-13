@@ -1,4 +1,4 @@
-package sg.edu.nus.iss.se24_2ft.unit1.ca;
+package sg.edu.nus.iss.se24_2ft.unit1.ca.product;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +10,6 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 public class ProductManager {
     private String filename;
     private List<Product> productList = null;
-    private Product productByID = new Product();
     private HashMap<String, Integer> threshold = new HashMap<String, Integer>();
 
     public List<Product> getProductList() {
@@ -51,15 +50,11 @@ public class ProductManager {
             }
 
             for (List<String> params : _list) {
-                Product product = new Product();
+                Product product = new Product(params.get(1), params.get(2), Integer.parseInt(params.get(3)),
+                        Double.parseDouble(params.get(4)), Integer.parseInt(params.get(5)),
+                        Integer.parseInt(params.get(6)), Integer.parseInt(params.get(7)));
                 product.setId(params.get(0));
-                product.setName(params.get(1));
-                product.setDescription(params.get(2));
-                product.setQuantity(Integer.parseInt(params.get(3)));
-                product.setPrice(Double.parseDouble(params.get(4)));
-                product.setBarCode(Integer.parseInt(params.get(5)));
-                product.setTreshold(Integer.parseInt(params.get(6)));
-                product.setOrderQuantity(Integer.parseInt(params.get(7)));
+
                 productList.add(product);
             }
         }
@@ -69,7 +64,7 @@ public class ProductManager {
     public List<Product> getListProductThreshold() {
         List<Product> listProductThreshold = new ArrayList<>();
         for (Product pro : productList) {
-            if (pro.getQuantity() < pro.getTreshold()) {
+            if (pro.getQuantity() < pro.getThreshold()) {
                 listProductThreshold.add(pro);
             }
         }
@@ -92,26 +87,17 @@ public class ProductManager {
     }
 
     public double getPrice(String id) {
-        productByID = this.getProductByID(id);
-        return productByID.getPrice();
+        return getProductByID(id).getPrice();
     }
 
     public Product getProductByID(String id) {
-        for (Product pro : productList) {
-            if (pro.getId().equals(id)) {
-                productByID = pro;
-            }
-        }
-        return productByID;
+        for (Product pro : productList)
+            if (pro.getId().equals(id)) return pro;
+        return null;
     }
 
     public boolean isBelowThreshold(String id) {
-        productByID = this.getProductByID(id);
-        if (productByID.getQuantity() < productByID.getTreshold()) {
-            return true;
-        } else {
-            return false;
-        }
+        Product product = getProductByID(id);
+        return product.getQuantity() < product.getThreshold();
     }
-
 }

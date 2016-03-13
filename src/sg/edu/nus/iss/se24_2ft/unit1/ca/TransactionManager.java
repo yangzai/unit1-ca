@@ -2,7 +2,6 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 
 /*
@@ -56,7 +56,7 @@ public class TransactionManager {
 		transaction.add(tran);
 	}
 	
-	public double calculateTotalPrice(HashMap<Product, Integer> list,int discount)
+	public double calculateTotalPrice(HashMap<Product, Integer> list, int discount)
 	{
 		String id = null;
 		int quantityPurchased = 0;
