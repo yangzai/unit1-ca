@@ -1,33 +1,35 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.MainFrame;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.*;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Created by yangzai on 26/2/16.
  */
 public class StoreApplication {
+    private static final String
+            CHECK_OUT = "Check Out", DISCOUNT = "Discount",
+            INVENTORY = "Inventory", NEW_MEMBER = "New Member",
+            NEW_PRODUCT = "New Product", NEW_CATEGORY = "New Category",
+            REPORTS = "Reports", NULL = "NULL";
+
     public static void main (String args[]) throws IOException {
         //TODO: handle IOException within managers' constructors
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
 
-        MainFrame mainFrame = new MainFrame() {
-            @Override
-            public void addCategoryActionPerformed(Category category) {
-                categoryManager.addCategory(category);
-            }
-
-            @Override
-            public TableModel getCategoryTableModel() {
-                return categoryManager.getTableModel();
-            }
-        };
+        MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -36,6 +38,32 @@ public class StoreApplication {
                 System.exit(0);
             }
         });
+
+        CategoryPanel categoryPanel = new CategoryPanel();
+        categoryPanel.setTableModel(categoryManager.getTableModel());
+        categoryPanel.addCategoryPanelListener(c -> categoryManager.addCategory(c));
+
+        mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
+        mainFrame.addFeaturePanel(NEW_MEMBER, new MemberPanel());
+        mainFrame.addFeaturePanel(NEW_PRODUCT, new ProductPanel());
+        mainFrame.addFeaturePanel(INVENTORY, new InventoryPanel());
+        mainFrame.addFeaturePanel(DISCOUNT, new DiscountPanel());
+        mainFrame.addFeaturePanel(CHECK_OUT, new CheckoutPanel());
+        //TODO: Temp panel
+        Function<String, FeaturePanel> getTempPanel = s -> new FeaturePanel() {
+            {
+                add(new JLabel(s));
+                add(new JButton("Back") {
+                    {
+                        addActionListener(e -> backActionPerformed(e));
+                    }
+                });
+            }
+        };
+        mainFrame.addFeaturePanel(REPORTS, getTempPanel.apply(REPORTS));
+        mainFrame.addFeaturePanel(NULL, getTempPanel.apply(NULL));
+
+        mainFrame.resizeAndPack();
 
         Store store = new Store(mainFrame);
 

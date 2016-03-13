@@ -6,12 +6,10 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -20,7 +18,7 @@ import javax.swing.table.TableModel;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.Member;
 
-public class MemberPanel extends JPanel {
+public class MemberPanel extends FeaturePanel {
     private static final int VISIBLE_ROW = 5;
     private JTable table;
     private ArrayList<Member> memberList = new ArrayList<Member>();
