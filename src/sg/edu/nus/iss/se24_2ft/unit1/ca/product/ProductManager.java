@@ -13,7 +13,7 @@ public class ProductManager {
     private List<Product> productList;
     private Map<String, Product> productMap;
     private List<Product> understockProductList;
-    private Map<String, Integer> maxPidPerCidMap;
+    private Map<String, Integer> maxSubIdMap;
 
     public ProductManager(String filename) throws IOException {
         this.filename = filename;
@@ -21,7 +21,7 @@ public class ProductManager {
         productMap = new HashMap<>();
         understockProductList = new ArrayList<>();
 
-        maxPidPerCidMap = new HashMap<>();
+        maxSubIdMap = new HashMap<>();
         initData();
     }
 
@@ -49,8 +49,8 @@ public class ProductManager {
                 String[] idArray = id.split("/");
                 String categoryId = idArray[0];
                 int current = Integer.parseInt(idArray[1]);
-                int max = maxPidPerCidMap.getOrDefault(idArray[0], 0);
-                if (max < current) maxPidPerCidMap.put(categoryId, current);
+                int max = maxSubIdMap.getOrDefault(idArray[0], 0);
+                if (max < current) maxSubIdMap.put(categoryId, current);
 
                 productMap.put(id, product);
                 productList.add(product);
@@ -69,8 +69,8 @@ public class ProductManager {
 
     public void addProduct(String categoryId, Product product) {
         //TODO: verify category exist
-        int subId = maxPidPerCidMap.getOrDefault(categoryId, 0) + 1;
-        maxPidPerCidMap.put(categoryId, subId);
+        int subId = maxSubIdMap.getOrDefault(categoryId, 0) + 1;
+        maxSubIdMap.put(categoryId, subId);
         String id = categoryId + '/' + subId;
         product.setId(id);
 
