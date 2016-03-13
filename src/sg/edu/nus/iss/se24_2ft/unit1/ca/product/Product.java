@@ -46,7 +46,7 @@ public class Product {
     //protected setters
     protected void setId(String id) { this.id = id; }
 
-    protected boolean reStock() {
+    protected boolean restock() {
         if (quantity > threshold) return false;
         quantity += orderQuantity;
         return true;

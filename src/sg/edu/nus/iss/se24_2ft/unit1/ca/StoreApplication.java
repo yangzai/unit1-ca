@@ -167,17 +167,5 @@ public class StoreApplication {
 //             String string = pro.toString();
 //             System.out.println(string);
 //         }
-//
-//         productManager.getMaxProductID();
-//
-//         String str = productManager.getThreshold().toString();
-//         System.out.println(str);
-//         System.out.println(productManager.getPrice("CLO/1"));
-//
-//         productManager.getListProductThreshold();
-//         for (Product pro : productManager.getListProductThreshold()) {
-//             String string = pro.toString();
-//             System.out.println(string);
-//         }
     }
 }

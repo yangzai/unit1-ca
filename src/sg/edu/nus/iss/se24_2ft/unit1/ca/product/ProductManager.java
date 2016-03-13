@@ -4,100 +4,79 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 
 public class ProductManager {
     private String filename;
-    private List<Product> productList = null;
-    private HashMap<String, Integer> threshold = new HashMap<String, Integer>();
+    private List<Product> productList;
+    private Map<String, Product> productMap;
+    private List<Product> understockProductList;
+    private Map<String, Integer> maxPidPerCidMap;
 
-    public List<Product> getProductList() {
-        return productList;
-    }
-
-    public HashMap<String, Integer> getThreshold() {
-        return threshold;
-    }
-
-    public void setThreshold(HashMap<String, Integer> threshold) {
-        this.threshold = threshold;
-    }
-
-    public ProductManager(String filename) throws Exception {
+    public ProductManager(String filename) throws IOException {
         this.filename = filename;
-        productList = new ArrayList<Product>();
+        productList = new ArrayList<>();
+        productMap = new HashMap<>();
+        understockProductList = new ArrayList<>();
 
+        maxPidPerCidMap = new HashMap<>();
         initData();
     }
 
-    public void initData() {
-        List<List<String>> _list = new ArrayList();
+    public void initData() throws IOException {
         CSVReader reader = null;
-
         try {
             reader = new CSVReader(filename);
 
             while (reader.readRecord()) {
-                ArrayList<String> productStrList = reader.getValues();
-                _list.add(productStrList);
+                ArrayList<String> record = reader.getValues();
+
+                String id = record.get(0), name = record.get(1),
+                        description = record.get(2);
+                int quantity = Integer.parseInt(record.get(3)),
+                        barCode = Integer.parseInt(record.get(5)),
+                        threshold = Integer.parseInt(record.get(6)),
+                        orderQuantity = Integer.parseInt(record.get(7));
+                double price = Double.parseDouble(record.get(4));
+
+                Product product = new Product(name, description,
+                        quantity, price, barCode, threshold, orderQuantity);
+                product.setId(id);
+
+                //TODO: case where category doesn't exist
+                String[] idArray = id.split("/");
+                String categoryId = idArray[0];
+                int current = Integer.parseInt(idArray[1]);
+                int max = maxPidPerCidMap.getOrDefault(idArray[0], 0);
+                if (max < current) maxPidPerCidMap.put(categoryId, current);
+
+                productMap.put(id, product);
+                productList.add(product);
+                if (quantity <= threshold) understockProductList.add(product);
             }
         } catch (IOException ioe) {
-            System.out.println(ioe.getMessage());
+            throw ioe;
         } finally {
-            if (reader != null) {
-                reader.close();
-            }
-
-            for (List<String> params : _list) {
-                Product product = new Product(params.get(1), params.get(2), Integer.parseInt(params.get(3)),
-                        Double.parseDouble(params.get(4)), Integer.parseInt(params.get(5)),
-                        Integer.parseInt(params.get(6)), Integer.parseInt(params.get(7)));
-                product.setId(params.get(0));
-
-                productList.add(product);
-            }
+            if (reader != null) reader.close();
         }
     }
 
-    @SuppressWarnings("null")
-    public List<Product> getListProductThreshold() {
-        List<Product> listProductThreshold = new ArrayList<>();
-        for (Product pro : productList) {
-            if (pro.getQuantity() < pro.getThreshold()) {
-                listProductThreshold.add(pro);
-            }
-        }
-        return listProductThreshold;
-    }
+    public Product getProduct(String id) { return productMap.get(id); }
 
-    public void getMaxProductID() {
-        for (Product pro : productList) {
-            String record = pro.toString();
-            String category = record.substring(0, record.indexOf("/"));
-            int number = Integer.parseInt(record.substring(record.indexOf("/") + 1, record.indexOf(",")));
-            if (threshold.get(category) != null) {
-                if (threshold.get(category) < number) {
-                    threshold.put(category, number);
-                }
-            } else {
-                threshold.put(category, number);
-            }
-        }
-    }
+    public List<Product> getProductList() { return productList; }
 
-    public double getPrice(String id) {
-        return getProductByID(id).getPrice();
-    }
+    public void addProduct(String categoryId, Product product) {
+        //TODO: verify category exist
+        int subId = maxPidPerCidMap.getOrDefault(categoryId, 0) + 1;
+        maxPidPerCidMap.put(categoryId, subId);
+        String id = categoryId + '/' + subId;
+        product.setId(id);
 
-    public Product getProductByID(String id) {
-        for (Product pro : productList)
-            if (pro.getId().equals(id)) return pro;
-        return null;
-    }
-
-    public boolean isBelowThreshold(String id) {
-        Product product = getProductByID(id);
-        return product.getQuantity() < product.getThreshold();
+        productMap.put(id, product);
+        productList.add(product);
+        if (product.getQuantity() <= product.getThreshold())
+            understockProductList.add(product);
     }
 }
