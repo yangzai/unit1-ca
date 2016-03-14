@@ -41,6 +41,7 @@ public class InventoryPanel extends FeaturePanel {
         gc.anchor = GridBagConstraints.NORTH;
         JButton purchaseOrderButton = new JButton("Generate Purchase Order");
         purchaseOrderButton.addActionListener(e -> {
+            //TODO: vendor selection?
             List<Integer> selectedRowList = Arrays.stream(table.getSelectedRows())
                     .boxed().collect(Collectors.toList());
 
