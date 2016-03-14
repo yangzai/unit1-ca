@@ -38,6 +38,8 @@ public class Product {
 
     public double getPrice() { return price; }
 
+    public boolean isUnderstock() { return quantity <= threshold; }
+
     public String toString() {
         return id + "," + name + "," + description + "," + quantity + ","
                 + price + "," + barCode + "," + threshold + "," + orderQuantity;
