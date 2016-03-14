@@ -49,7 +49,7 @@ public class Product {
     protected void setId(String id) { this.id = id; }
 
     protected boolean restock() {
-        if (quantity > threshold) return false;
+        if (!isUnderstock()) return false;
         quantity += orderQuantity;
         return true;
     }
