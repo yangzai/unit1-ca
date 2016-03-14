@@ -73,4 +73,3 @@ public class InventoryPanel extends FeaturePanel {
         scrollPane.setPreferredSize(new Dimension(d.width,table.getRowHeight()*VISIBLE_ROW+1));
     }
 }
-

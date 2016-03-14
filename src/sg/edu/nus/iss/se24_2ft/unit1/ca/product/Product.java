@@ -1,5 +1,8 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.product;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * Created by yangzai on 26/2/16.
  */
@@ -41,8 +44,10 @@ public class Product {
     public boolean isUnderstock() { return quantity <= threshold; }
 
     public String toString() {
-        return id + "," + name + "," + description + "," + quantity + ","
-                + price + "," + barCode + "," + threshold + "," + orderQuantity;
+        return Arrays.asList(id, name, description, quantity, price,
+                barCode, threshold, orderQuantity).stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(","));
     }
 
     //protected setters
