@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.List;
 
 /**
  * Created by yangzai on 26/2/16.
@@ -29,7 +30,7 @@ public class StoreApplication {
 
     public static void main (String args[]) throws IOException {
         //TODO: handle IOException within managers' constructors
-        CategoryManager categoryManager = new CategoryManager("data/Category.dat");
+        CategoryManager categoryManager = new CategoryManager("data-sample/Category.dat");
 
         MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
