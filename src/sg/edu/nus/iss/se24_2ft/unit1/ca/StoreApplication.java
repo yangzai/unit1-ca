@@ -1,18 +1,15 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
+import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.*;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -28,6 +25,7 @@ public class StoreApplication {
     public static void main (String args[]) throws IOException {
         //TODO: handle IOException within managers' constructors
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
+        ProductManager productManager = new ProductManager("data/Products.dat");
 
         MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -43,10 +41,14 @@ public class StoreApplication {
         categoryPanel.setTableModel(categoryManager.getTableModel());
         categoryPanel.addCategoryPanelListener(c -> categoryManager.addCategory(c));
 
+        InventoryPanel inventoryPanel = new InventoryPanel();
+        inventoryPanel.setTableModel(productManager.getUnderstockTableModel());
+        inventoryPanel.addInventoryPanelListener(l -> productManager.generatePurchaseOrder(l));
+
         mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
         mainFrame.addFeaturePanel(NEW_MEMBER, new MemberPanel());
         mainFrame.addFeaturePanel(NEW_PRODUCT, new ProductPanel());
-        mainFrame.addFeaturePanel(INVENTORY, new InventoryPanel());
+        mainFrame.addFeaturePanel(INVENTORY, inventoryPanel);
         mainFrame.addFeaturePanel(DISCOUNT, new DiscountPanel());
         mainFrame.addFeaturePanel(CHECK_OUT, new CheckoutPanel());
         //TODO: Temp panel
@@ -154,28 +156,13 @@ public class StoreApplication {
 //        }
 
 //        ****************** cy-test ****************************************
-//         ProductManager productManager = null;
-//         try {
-//            productManager = new ProductManager("data/Products.dat");
-//         } catch (Exception e) {
-//            e.printStackTrace();
-//         }
-//
 //         for (Product pro : productManager.getProductList()) {
 //             String string = pro.toString();
 //             System.out.println(string);
 //         }
-//
-//         productManager.getMaxProductID();
-//
-//         String str = productManager.getThreshold().toString();
-//         System.out.println(str);
-//         System.out.println(productManager.getPrice("CLO/1"));
-//
-//         productManager.getListProductThreshold();
-//         for (Product pro : productManager.getListProductThreshold()) {
-//             String string = pro.toString();
-//             System.out.println(string);
-//         }
+
+//        ****************** understock test ****************************************
+//        productManager.addProduct(categoryManager.getCategory("CLO"), new Product("t", "t", 1, 10.5, 101, 5, 5));
+//        productManager.addProduct(categoryManager.getCategory("CLO"), new Product("z", "z", 1, 10.5, 102, 10, 5));
     }
 }

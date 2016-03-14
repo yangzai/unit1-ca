@@ -11,21 +11,18 @@ import java.util.Map;
 public class MainFrame extends JFrame {
 
     private static final int ROW_BUTTON_COUNT = 2;
-    private Map<String, FeaturePanel> featurePanelMap;
-
     private JPanel mainPanel;
+    private JPanel currentPanel;
     GridBagConstraints c;
 
     public MainFrame() {
         super("University Souvenir Store");
 
-        featurePanelMap = new HashMap<>();
-
         CardLayout cardLayout = new CardLayout();
         JPanel contentPane = new JPanel(cardLayout);
         setContentPane(contentPane);
 
-        mainPanel = new JPanel(new GridBagLayout());
+        currentPanel = mainPanel = new JPanel(new GridBagLayout());
         contentPane.add(mainPanel, "Main");
 
         c = new GridBagConstraints();
@@ -39,15 +36,16 @@ public class MainFrame extends JFrame {
 
         featurePanel.addBackActionListener(e -> {
             cardLayout.show(contentPane, "Main");
+            currentPanel = mainPanel;
             resizeAndPack();
         });
-        featurePanelMap.put(name, featurePanel);
         contentPane.add(featurePanel, name);
 
         JButton button = new JButton(name);
         button.addActionListener(e -> {
             cardLayout.show(contentPane, name);
-            resizeAndPack(name);
+            currentPanel = featurePanel;
+            resizeAndPack();
         });
         mainPanel.add(button, c);
 
@@ -57,15 +55,9 @@ public class MainFrame extends JFrame {
         }
     }
 
-    //resize to feature panel
-    private void resizeAndPack(String featurePanelName) {
-        JPanel panel = featurePanelMap.get(featurePanelName);
-        if (panel == null) panel = mainPanel;
-
-        getContentPane().setPreferredSize(panel.getPreferredSize());
+    //resize to currentPanel
+    public void resizeAndPack() {
+        getContentPane().setPreferredSize(currentPanel.getPreferredSize());
         pack();
     }
-
-    //resize to main panel
-    public void resizeAndPack() { resizeAndPack(null); }
 }
