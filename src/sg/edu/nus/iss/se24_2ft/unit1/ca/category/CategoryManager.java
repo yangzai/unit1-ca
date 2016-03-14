@@ -1,4 +1,4 @@
-package sg.edu.nus.iss.se24_2ft.unit1.ca;
+package sg.edu.nus.iss.se24_2ft.unit1.ca.category;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 
@@ -58,11 +58,12 @@ public class CategoryManager {
             reader = new CSVReader(filename);
 
             while(reader.readRecord()) {
-                Object[] keepers = reader.getValues().toArray();
+                List<String> record = reader.getValues();
 
-                String id = keepers[0].toString();
-                String name = keepers[1].toString();
+                String id = record.get(0);
+                String name = record.get(1);
                 Category category = new Category(id, name);
+                category.setId();
 
                 categoryMap.put(id, category);
                 categoryList.add(category);
@@ -89,9 +90,10 @@ public class CategoryManager {
 //        //null implies success, not null implies collision
 //        return categoryMap.putIfAbsent(category.getId(), category) == null;
 
-        String categoryId = category.getId();
+        String categoryId = category.getRequestedId();
         if (categoryMap.get(categoryId) != null) return false;
 
+        category.setId();
         categoryMap.put(categoryId, category);
         categoryList.add(category);
 

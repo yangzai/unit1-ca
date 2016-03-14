@@ -1,163 +1,75 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-
-import sg.edu.nus.iss.se24_2ft.unit1.ca.StoreApplication;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
+import javax.swing.table.TableModel;
 
 // ** Created by Srishti ** // 
 
 public class InventoryPanel extends FeaturePanel {
+    private static final int VISIBLE_ROW = 20;
     JTable table;
-    private List<Product> list;
-    //private StoreApplication store;
-    private String[] COLUMN_NAMES = {"ID","Name","Description","Quantity Avl.","Price",
-            "Bar Code","Reorder Quantity","Order Quantity"};
+    JScrollPane scrollPane;
+    private List<InventoryPanelListener> inventoryPanelListenerList;
 
-    public InventoryPanel(/*StoreApplication store*/){
-        // TODO Auto-generated constructor stub
+    public InventoryPanel() {
         super(new GridBagLayout());
 
-        //this.store= store;
-        list = new ArrayList<>();
-        table = new JTable(getTableModel());
-        JScrollPane scroller = new JScrollPane(table);
-
-        JButton back = new JButton("Back");
-
+        table = new JTable();
+        inventoryPanelListenerList = new ArrayList<>();
         GridBagConstraints gc = new GridBagConstraints();
-        JLabel label = new JLabel("Inventory Below Threshold");
 
-        gc.gridx = 0 ;
-        gc.gridy = 0 ;
-        add(label,gc);
+        gc.gridx = gc.gridy = 0;
+        add(new JLabel("Inventory Below Threshold"), gc);
 
-
-        gc.gridx = 0 ;
-        gc.gridy =1 ;
-        gc.weightx =0.3;
+        gc.gridy++;
+        gc.gridheight++;
+        gc.weightx = gc.weighty = 1;
         gc.fill = GridBagConstraints.BOTH;
-        add(scroller,gc);
+        scrollPane = new JScrollPane(table);
+        add(scrollPane, gc);
 
+        gc.gridx++;
+        gc.gridheight--;
+        gc.weightx = gc.weighty = 0;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.anchor = GridBagConstraints.NORTH;
+        JButton purchaseOrderButton = new JButton("Generate Purchase Order");
+        purchaseOrderButton.addActionListener(e -> {
+            List<Integer> selectedRowList = Arrays.stream(table.getSelectedRows())
+                    .boxed().collect(Collectors.toList());
 
-        JButton updateButton = new JButton("Generate Purchase Order");
-        updateButton.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                int[] rowcount  = table.getSelectedRows();
-
-                int col1 =0;
-                int col2 =0;
-
-                Integer quantity =null;
-
-                for(int a : rowcount)
-                {
-                    for(int i=0; i< table.getColumnCount() ; i++)
-                    {
-                        if (table.getColumnName(i).equals("Quantity Avl."))
-                        {
-                            col1 = i;
-                            quantity = (Integer)table.getValueAt(a, col1);
-                        }
-                        if (table.getColumnName(i).equals("Order Quantity"))
-                        {
-                            col2 = i;
-                            quantity = quantity + (Integer)table.getValueAt(a,col2);
-                        }
-
-                    }
-
-                    table.setValueAt(quantity, a, col1);
-                    //TODO: bad restock impl
-//					list.get(a).setQuantity(quantity);
-
-                }
-                JFrame frame = new JFrame();
-                int response = JOptionPane.showConfirmDialog(
-                        frame,
-                        "Sure to place an order for selected items?",
-                        "An Inane Question",
-                        JOptionPane.YES_NO_OPTION);
-                if (response == JOptionPane.YES_OPTION) {
-                    ((AbstractTableModel)table.getModel()).fireTableRowsUpdated(0, table.getRowCount());
-                }
-                else
-                {
-                    frame.dispose();
-                }
-
-            }
-
+            JFrame frame = new JFrame();
+            int response = JOptionPane.showConfirmDialog(
+                    frame,
+                    "Sure to place an order for selected items?",
+                    "An Inane Question",
+                    JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION)
+                inventoryPanelListenerList.forEach(l -> l.purchaseOrderRequested(selectedRowList));
+            else frame.dispose();
         });
+        add(purchaseOrderButton,gc);
 
-        JPanel buttonPanel = new JPanel();
-
-        gc.gridx = 0;
-        gc.gridy =0 ;
-        gc.weightx =0;
-        buttonPanel.add(updateButton,gc);
-
-        gc.gridx = 0;
-        gc.gridy =1 ;
-        gc.weightx =0;
-        buttonPanel.add(back,gc);
-
-        gc.gridx = 1;
-        gc.gridy =1;
-        gc.weightx =0;
-        add(buttonPanel,gc);
-
+        gc.gridy++;
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(l -> backActionPerformed(l));
+        add(backButton,gc);
     }
 
-    public AbstractTableModel getTableModel()
-    {
-        AbstractTableModel tableModel = new AbstractTableModel(){
-            @Override
-            public String getColumnName(int column) {
-                return COLUMN_NAMES[column];
-            }
+    public void addInventoryPanelListener(InventoryPanelListener l ) {
+        inventoryPanelListenerList.add(l);
+    }
 
-            @Override
-            public int getRowCount() {
-                return list.size();
-            }
-
-            @Override
-            public int getColumnCount() {
-                return COLUMN_NAMES.length;
-            }
-
-            @Override
-            public Object getValueAt(int rowIndex, int columnIndex) {
-                Product product = list.get(rowIndex);
-                switch (columnIndex) {
-                case 0: return product.getId();
-                case 1: return product.getName();
-                case 2: return product.getDescription();
-                case 3: return product.getQuantity();
-                case 4: return product.getPrice();
-                case 5: return product.getBarCode();
-                case 6: return product.getThreshold();
-                case 7: return product.getOrderQuantity();
-                default: return null;
-                }
-            }
-
-        };
-
-        return tableModel;
+    public void setTableModel(TableModel tableModel) {
+        table.setModel(tableModel);
+        Dimension d = table.getPreferredSize();
+        scrollPane.setPreferredSize(new Dimension(d.width,table.getRowHeight()*VISIBLE_ROW+1));
     }
 }
 

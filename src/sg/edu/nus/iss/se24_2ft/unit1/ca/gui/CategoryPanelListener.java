@@ -1,6 +1,6 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.Category;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
 
 /**
  * Created by yangzai on 13/3/16.
