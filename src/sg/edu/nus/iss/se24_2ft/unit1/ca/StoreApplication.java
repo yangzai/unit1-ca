@@ -1,15 +1,14 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.MemberManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.*;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.function.Function;
 
 /**
@@ -26,6 +25,7 @@ public class StoreApplication {
         //TODO: handle IOException within managers' constructors
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
         ProductManager productManager = new ProductManager("data/Products.dat");
+        MemberManager memberManager = new MemberManager("data/Members.dat");
 
         MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -43,10 +43,14 @@ public class StoreApplication {
 
         InventoryPanel inventoryPanel = new InventoryPanel();
         inventoryPanel.setTableModel(productManager.getUnderstockTableModel());
-        inventoryPanel.addInventoryPanelListener(l -> productManager.generatePurchaseOrder(l));
+        inventoryPanel.addInventoryPanelListener(uil -> productManager.generatePurchaseOrder(uil));
+
+        MemberPanel memberPanel = new MemberPanel();
+        memberPanel.setTableModel(memberManager.getTableModel());
+        memberPanel.addMemberPanelistener(m -> memberManager.addMember(m));
 
         mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
-        mainFrame.addFeaturePanel(NEW_MEMBER, new MemberPanel());
+        mainFrame.addFeaturePanel(NEW_MEMBER, memberPanel);
         mainFrame.addFeaturePanel(NEW_PRODUCT, new ProductPanel());
         mainFrame.addFeaturePanel(INVENTORY, inventoryPanel);
         mainFrame.addFeaturePanel(DISCOUNT, new DiscountPanel());

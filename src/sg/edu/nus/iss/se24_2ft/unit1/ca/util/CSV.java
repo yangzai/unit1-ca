@@ -1,10 +1,8 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.util;
 
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class CSV {
 
@@ -16,7 +14,7 @@ public class CSV {
 		this.fileName = fileName;
 	}
 
-	public void write(ArrayList<String> contents) throws IOException {
+	public void write(List<String> contents) throws IOException {
 		FileWriter writer = new FileWriter(fileName);
 		for (String record : contents) {
 			writer.write(record);
@@ -27,5 +25,4 @@ public class CSV {
 		writer.flush();
 		writer.close();
 	}
-
 }
