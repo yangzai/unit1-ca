@@ -25,14 +25,15 @@ public class CategoryPanel extends FeaturePanel {
         categoryPanelListenerList = new ArrayList<>();
         GridBagConstraints c = new GridBagConstraints();
 
-        c.weightx = c.weighty = 1;
         c.gridx = c.gridy = 0;
+        c.weightx = c.weighty = 1;
         c.gridwidth = 2;
         c.fill = GridBagConstraints.BOTH;
         add(scrollPane, c);
 
         c.gridy++;
         c.gridwidth--;
+        c.weighty = 0;
         c.fill = GridBagConstraints.NONE;
         add(new JLabel("ID"), c);
 
