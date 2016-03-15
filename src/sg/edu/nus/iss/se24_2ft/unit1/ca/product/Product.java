@@ -43,6 +43,7 @@ public class Product {
 
     public boolean isUnderstock() { return quantity <= threshold; }
 
+    @Override
     public String toString() {
         return Arrays.asList(id, name, description, quantity, price,
                 barCode, threshold, orderQuantity).stream()
