@@ -67,7 +67,7 @@ public class Discount {
     		strDate = sdf.format(this.startDate);
     	}
     	String period = this.period == -1 ? "ALWAYS" : String.valueOf(this.period);
-    	return code + "," + description + "," + strDate + "," + period;    	
+    	return code + "," + description + "," + strDate + "," + period + "," + percent;    	
     }
 	
 	public boolean isDiscountAvailable(){
