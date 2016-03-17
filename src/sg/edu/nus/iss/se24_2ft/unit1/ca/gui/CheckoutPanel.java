@@ -150,9 +150,9 @@ public class CheckoutPanel extends FeaturePanel {
 		gbc.gridx++;
 		gbc.weightx = 0.5;
 		proceedPaymentButton = new JButton("Proceed to Payment");
-//		proceedPaymentButton.addActionListener(e -> {
-//        	
-//        });
+		proceedPaymentButton.addActionListener(e -> {
+        	(new ConfirmPaymentDialog()).show();;
+        });
 		buttonPanel.add(proceedPaymentButton, gbc);
 		
 		//Back button
@@ -265,5 +265,12 @@ public class CheckoutPanel extends FeaturePanel {
 		public int getQuantity() {
 			return quantity;
 		}
+    }
+    
+    class ConfirmPaymentDialog extends JDialog {  	 
+    	ConfirmPaymentDialog(){
+    		setTitle("Payment Details");
+    		setSize(WIDTH, HEIGHT);
+    	}
     }
 }
