@@ -20,7 +20,7 @@ public class Member implements Customer {
         this.name = name;
         loyaltyPoint = -1;
     }
-    
+
     public String getId() {
         return id;
     }

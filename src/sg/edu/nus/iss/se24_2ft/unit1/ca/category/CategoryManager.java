@@ -1,11 +1,14 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.category;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Created by yangzai on 28/2/16.
@@ -29,25 +32,15 @@ public class CategoryManager {
     }
 
     private void initData() throws IOException {
-        CSVReader reader = null;
-        try {
-            reader = new CSVReader(filename);
-
-            while(reader.readRecord()) {
-                List<String> record = reader.getValues();
-
-                String id = record.get(0);
-                String name = record.get(1);
+        try (Stream<String> stream = Files.lines(Paths.get(filename))) {
+            stream.map(Utils::splitCsv).forEach(a -> {
+                String id = a[0], name = a[1];
                 Category category = new Category(id, name);
                 category.setId();
 
                 categoryMap.put(id, category);
                 categoryList.add(category);
-            }
-        } catch (IOException ioe) {
-            throw ioe;
-        } finally {
-            if (reader != null) reader.close();
+            });
         }
     }
 

@@ -1,11 +1,13 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSV;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.*;
+import java.util.stream.Stream;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -17,7 +19,6 @@ public class MemberManager {
     private List<Member> memberList;
     private Map<String, Member> memberMap;
     private String filename;
-    private CSV csvIO;
     private AbstractTableModel tableModel;
 
     public MemberManager(String filename) throws IOException {
@@ -31,36 +32,21 @@ public class MemberManager {
     }
 
     private void initData() throws IOException {
-        CSVReader reader = null;
-        try {
-            //TODO: refactor IO
-            reader = new CSVReader(filename);
-            csvIO = new CSV(filename);
-            while (reader.readRecord()) {
-                List<String> record = reader.getValues();
-
-                String name = record.get(0);
-                String id = record.get(1);
+        try (Stream<String> stream = Files.lines(Paths.get(filename))) {
+            stream.map(Utils::splitCsv).forEach(a -> {
+                String name = a[0], id = a[1];
                 int loyaltyPoint = -1;
-                try {
-                    // Convert the loyaltyPoint from String to int
-                    loyaltyPoint = Integer.parseInt(record.get(2));
-                } catch (NumberFormatException nfe) {
-                    System.out.println("Member " + id + " NumberFormatException: " + nfe.getMessage());
-                }
+                try { loyaltyPoint = Integer.parseInt(a[2]); }
+                catch (NumberFormatException e) { e.printStackTrace(); }
+
                 Member member = new Member(id, name);
                 member.setId();
                 member.setLoyaltyPoint(loyaltyPoint);
 
                 memberList.add(member);
                 memberMap.put(id, member);
-            }
-        } catch (IOException e) {
-            throw e;
-        } finally {
-            if (reader != null) reader.close();
+            });
         }
-
     }
 
     public boolean addMember(Member member) {
@@ -74,7 +60,7 @@ public class MemberManager {
         int rowIndex = memberList.size() - 1;
         tableModel.fireTableRowsInserted(rowIndex, rowIndex);
 
-        //TODO: refactor IO
+        //TODO: KIV try/catch for IO
         try {
             store();
         } catch (IOException e) {
@@ -137,11 +123,11 @@ public class MemberManager {
     }
 
     public void store() throws IOException {
-        List<String> contents = memberList.stream()
+        Stream<String> stream = memberList.stream()
                 .sorted(Comparator.comparing(Member::getId))
-                .map(Member::toString)
-                .collect(Collectors.toList());
+                .map(Member::toString);
 
-        csvIO.write(contents);
+        Files.write(Paths.get(filename), (Iterable<String>) stream::iterator,
+                StandardOpenOption.CREATE);
     }
 }
