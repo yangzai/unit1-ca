@@ -37,6 +37,9 @@ public class StoreApplication {
             }
         });
 
+        DiscountPanel discountPanel = new DiscountPanel();
+        discountPanel.addDiscountPanelListener(d -> DiscountManager.getInstance().addDiscount(d));
+        
         CategoryPanel categoryPanel = new CategoryPanel();
         categoryPanel.setTableModel(categoryManager.getTableModel());
         categoryPanel.addCategoryPanelListener(c -> categoryManager.addCategory(c));
@@ -49,7 +52,7 @@ public class StoreApplication {
         mainFrame.addFeaturePanel(NEW_MEMBER, new MemberPanel());
         mainFrame.addFeaturePanel(NEW_PRODUCT, new ProductPanel());
         mainFrame.addFeaturePanel(INVENTORY, inventoryPanel);
-        mainFrame.addFeaturePanel(DISCOUNT, new DiscountPanel());
+        mainFrame.addFeaturePanel(DISCOUNT, discountPanel);
         mainFrame.addFeaturePanel(CHECK_OUT, new CheckoutPanel());
         //TODO: Temp panel
         Function<String, FeaturePanel> getTempPanel = s -> new FeaturePanel() {

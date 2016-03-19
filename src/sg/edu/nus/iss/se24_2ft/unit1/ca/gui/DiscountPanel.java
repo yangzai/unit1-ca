@@ -141,14 +141,9 @@ public class DiscountPanel extends FeaturePanel {
 			discount.setPeriod(
 					periodTextFiled.getText().equals("ALWAYS") ? -1 : Integer.parseInt(periodTextFiled.getText()));
 			discount.setStartDate(new Date());
-			Discount d1 = new CustomerDiscount();
-			d1.setCode("CNY2017");
-			d1.setDescription("Chinese New Year 2017");
-			d1.setStartDate(new Date(2017, 2, 7));
-			d1.setPeriod(10);
-			d1.setPercent(20);
+
 			// TODO: validate category
-			discountPanelListenerList.forEach(l -> l.addDiscountRequested(d1));
+			discountPanelListenerList.forEach(l -> l.addDiscountRequested(discount));
 		});
 		c.gridy++;
 		c.fill = GridBagConstraints.HORIZONTAL;
