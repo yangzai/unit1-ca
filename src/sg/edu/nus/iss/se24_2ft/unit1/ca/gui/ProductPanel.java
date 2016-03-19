@@ -231,8 +231,9 @@ public class ProductPanel extends FeaturePanel {
         ((AbstractTableModel) table.getModel()).fireTableRowsInserted(insertedRowIndex, insertedRowIndex);
     }
 
-    private void initdata() {
-        productList.add(new Product("NUS Pen", "A really cute blue pen", 768, 5.75, 123, 50, 250));
-    }
+    // private void initdata() {
+    // productList.add(new Product("NUS Pen", "A really cute blue pen", 768,
+    // 5.75, 123, 50, 250));
+    // }
 
 }
