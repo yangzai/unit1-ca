@@ -24,9 +24,12 @@ public class StoreApplication {
 
     public static void main (String args[]) throws IOException {
         //TODO: handle IOException within managers' constructors
-        CategoryManager categoryManager = new CategoryManager("data/Category.dat");
-        ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
-        MemberManager memberManager = new MemberManager("data/Members.dat");
+        CategoryManager categoryManager = new CategoryManager("data-sample/Category.dat");
+        ProductManager productManager = new ProductManager("data-sample/Products.dat", categoryManager);
+        MemberManager memberManager = new MemberManager("data-sample/Members.dat");
+        TransactionItemManager transactionItemManager = new TransactionItemManager();
+        TransactionManager transctionManager = new TransactionManager("data-sample/Transactions.dat",transactionItemManager.getTransactionItems());
+        
 
         MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -49,13 +52,27 @@ public class StoreApplication {
         MemberPanel memberPanel = new MemberPanel();
         memberPanel.setTableModel(memberManager.getTableModel());
         memberPanel.addMemberPanelistener(m -> memberManager.addMember(m));
-
+        
+        // Added by Srishti
+        CheckoutPanel checkoutPanel = new CheckoutPanel();
+        checkoutPanel.setTableModel(transactionItemManager.getTableModel());
+        checkoutPanel.addCheckOutListener(new CheckOutPanelListener() {
+			
+			@Override
+				public void getTransactionItemDetails(String id) {
+				Product p = productManager.getProduct(id);
+				 transactionItemManager.storeTransactionItem(p);
+			}
+			
+		});
+        
+ 
         mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
         mainFrame.addFeaturePanel(NEW_MEMBER, memberPanel);
         mainFrame.addFeaturePanel(NEW_PRODUCT, new ProductPanel());
         mainFrame.addFeaturePanel(INVENTORY, inventoryPanel);
         mainFrame.addFeaturePanel(DISCOUNT, new DiscountPanel());
-        mainFrame.addFeaturePanel(CHECK_OUT, new CheckoutPanel());
+        mainFrame.addFeaturePanel(CHECK_OUT, checkoutPanel);
         //TODO: Temp panel
         Function<String, FeaturePanel> getTempPanel = s -> new FeaturePanel() {
             {
