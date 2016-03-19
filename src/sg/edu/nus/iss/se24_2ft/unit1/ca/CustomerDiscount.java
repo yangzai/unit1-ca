@@ -6,4 +6,6 @@ public class CustomerDiscount extends Discount {
 	public String toString(){
 		return super.toString() + ",A";
 	}
+	
+	
 }
