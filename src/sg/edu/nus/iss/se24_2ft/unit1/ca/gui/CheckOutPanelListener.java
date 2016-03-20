@@ -5,6 +5,10 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.TransactionItem;
 //Created by Srishti 
 public interface CheckOutPanelListener {
 	
-	public  void getTransactionItemDetails(String id);
+	public void getTransactionDetails(String id);
+	
+	public void refreshTable(); 
+	
+	public double calculateSubtotal();
 
 }

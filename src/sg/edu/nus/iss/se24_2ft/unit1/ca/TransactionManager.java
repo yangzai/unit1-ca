@@ -60,20 +60,12 @@ public class TransactionManager {
 		}
 	}
 	
-	public double calculateTotalPrice(int discount)
+	public double calculateDiscountedPrice(double totalPrice,int discount)
 	{
-		double price =0;
-		
-		Iterator<TransactionItem> iter = item.iterator();
-		while(iter.hasNext())
-		{
-			price += (iter.next()).getTotalPrice();
-			System.out.println(price +"Priceeeeeeee");
-		}
-		
-		price = price - (discount/100)*price; 
+		double price = totalPrice - (discount/100)*totalPrice; 
 		return price;
 	}
+	
 	
 	private void initData() throws IOException {
         CSVReader reader = null;

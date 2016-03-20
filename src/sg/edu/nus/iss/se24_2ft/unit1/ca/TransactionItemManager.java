@@ -16,12 +16,13 @@ public class TransactionItemManager {
 	private TransactionItem transactionItems;	
 	private List<TransactionItem> transactionlist ;
 	private AbstractTableModel tableModel; 
+//	/private double subTotal;
 	private static final String COLUMN_NAMES [] = {"Qty.", "Item", "Description" , "Unit Price", "Discount", "Total"};
 
 	public TransactionItemManager(/*TransactionItem transactionItems*/)
 	{
-		this.transactionItems = transactionItems;
 		transactionlist = new ArrayList<>();
+		//subTotal = 0;
 	}
 
 	public TableModel getTableModel() {
@@ -63,7 +64,8 @@ public class TransactionItemManager {
 	}
 	
 	public void storeTransactionItem(Product p)
-	{	Iterator<TransactionItem> iter = transactionlist.iterator();
+	{	
+		Iterator<TransactionItem> iter = transactionlist.iterator();
 		while(iter.hasNext())
 		{
 			TransactionItem tran = iter.next();
@@ -75,15 +77,14 @@ public class TransactionItemManager {
 				price = price*quantity;
 				tran.setQuantityPurchased(quantity);
 				tran.setTotalPrice(price);
-				tableModel.fireTableRowsUpdated(transactionlist.size()-1, transactionlist.size()-1);
-				return ;		
+				tableModel.fireTableRowsUpdated(transactionlist.size()-1, transactionlist.size()-1);	
+				return;
 			}
-
+			
 		}
 		transactionItems = new TransactionItem(p.getId(),p.getDescription(),p.getPrice());
 		transactionlist.add(transactionItems);
 		tableModel.fireTableRowsInserted(transactionlist.size()-1, transactionlist.size()-1);
-		//return transactionItems;
 		}
 	
 	public List<TransactionItem> getTransactionItems()
@@ -91,6 +92,23 @@ public class TransactionItemManager {
 		return transactionlist;
 	}
 	
+	public void refreshTable()
+	{	
+		transactionlist.clear();
+		tableModel.fireTableDataChanged();
+	}
+	
+	public double calculateTotalPrice()
+	{
+		double subTotal = 0;
+		Iterator<TransactionItem> iter = transactionlist.iterator();
+		while(iter.hasNext())
+		{
+			TransactionItem transactionITem = iter.next();
+			subTotal += transactionITem.getTotalPrice();	
+		}
+		return subTotal;
+	}
 	
 	} 
 

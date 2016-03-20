@@ -9,35 +9,42 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-
+/// created by Srishti//
 public class CheckoutPanel extends FeaturePanel {
 	
-	private static final String COLUMN_NAMES [] = {"Qty.", "Item", "Description" , "Unit Price", "Discount", "tax", "Total"};
 	private JPanel top,top1_right_panel,top1_left,top1,bottom;
 	private GridBagConstraints gc;
 
 	//private Container c;
 	private JScrollPane scroller,scroll;
 	private JTextPane area;
+	private JTextArea text;
 	private JLabel label,itemlabel;
 	private JButton select,entry,addItem,logOff,btn_qty,view_receipt, pay, new_tran;
 	private JTable table;
 	private  Border loweredetched,
 	raisedetched;
 	private CheckOutPanelListener l;
+	private double subTotal;
 
 	public CheckoutPanel() {
 		// TODO Auto-generated constructor stub
 		super(new GridBagLayout());
+		area = new JTextPane();
+		area.setBackground(Color.pink);
+		area.setText("Total:    $" +subTotal + "      ");
+		
 		
 		raisedetched = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
 		loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
@@ -53,8 +60,12 @@ public class CheckoutPanel extends FeaturePanel {
 		top.add(label,BorderLayout.WEST);
 
 		logOff = new JButton("Back");
+		logOff.addActionListener(e -> {
+			refreshFields(e);
+			l.refreshTable();
+			backActionPerformed(e);		
+		});
 		logOff.setFont(new Font("Tahoma", Font.BOLD, 10));
-		System.out.println(logOff.getSize());
 		top.add(logOff,BorderLayout.EAST);
 
 		gc.gridx=0;
@@ -82,7 +93,7 @@ public class CheckoutPanel extends FeaturePanel {
 		top1_left.add(itemlabel,gc);
 		
 		/// *********Adding text area***////
-		JTextArea text = new JTextArea(0,0);
+		text = new JTextArea(0,0);
 		text.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		gc.gridx=0;
 		gc.gridy =1;
@@ -94,7 +105,8 @@ public class CheckoutPanel extends FeaturePanel {
 		//*** Adding Add item button*********////
 		addItem = new JButton("Add Item");
 		addItem.addActionListener(e -> {
-		 l.getTransactionItemDetails(text.getText());
+			l.getTransactionDetails(text.getText());
+			
 		});
 		
 		addItem.setFont(new Font("Tahoma", Font.BOLD, 10));
@@ -153,12 +165,6 @@ public class CheckoutPanel extends FeaturePanel {
 		add(scroller,gc);
 
 	/// *************Adding TextPane *************************/////	
-		
-		area = new JTextPane();
-		int total = 0;
-		area.setBackground(Color.pink);
-		area.setText("Total:    $" +total + "      ");
-		
 	////// *****************Styling text *************************/////
 		StyledDocument doc = area.getStyledDocument();
 		SimpleAttributeSet right = new SimpleAttributeSet();
@@ -166,6 +172,7 @@ public class CheckoutPanel extends FeaturePanel {
 		doc.setParagraphAttributes(0, doc.getLength(), right, false);
 		
 		area.setFont(new Font("Tahoma", Font.BOLD, 13));
+		area.setEditable(false);
 		area.setBorder(BorderFactory.createCompoundBorder(
 				raisedetched, loweredetched));
 		scroll = new JScrollPane(area);
@@ -183,11 +190,20 @@ public class CheckoutPanel extends FeaturePanel {
 		Component rigidArea = Box.createRigidArea(new Dimension(30,30));
 		bottom.add(rigidArea);
 
-		view_receipt = new JButton("View Reciept");
+		view_receipt = new JButton("Confirm Selection");
+		view_receipt.addActionListener(e -> {
+			subTotal = l.calculateSubtotal();
+			refreshFields(e);
+			view_receipt.setEnabled(false);
+		});
 		bottom.add(view_receipt);
 		pay = new JButton("Pay");
 		bottom.add(pay);
 		new_tran = new JButton("New Transaction");
+		new_tran.addActionListener(e -> {
+			refreshFields(e);
+			l.refreshTable();
+		});
 		bottom.add(new_tran);
 		
 		gc.gridx=0;
@@ -208,5 +224,15 @@ public class CheckoutPanel extends FeaturePanel {
 	public void setTableModel(TableModel model)
 	{
 		table.setModel(model);
+	}
+	
+	public void refreshFields(ActionEvent ae)
+	{
+		if(ae.getSource() != view_receipt){
+		subTotal =0;
+		}
+		area.setText("Total:    $" +subTotal + "      ");	
+		text.setText("");
+		view_receipt.setEnabled(true);
 	}
 }

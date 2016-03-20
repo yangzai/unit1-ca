@@ -56,15 +56,29 @@ public class StoreApplication {
         // Added by Srishti
         CheckoutPanel checkoutPanel = new CheckoutPanel();
         checkoutPanel.setTableModel(transactionItemManager.getTableModel());
-        checkoutPanel.addCheckOutListener(new CheckOutPanelListener() {
+        checkoutPanel.addCheckOutListener( new CheckOutPanelListener() {
 			
 			@Override
-				public void getTransactionItemDetails(String id) {
-				Product p = productManager.getProduct(id);
-				 transactionItemManager.storeTransactionItem(p);
+			public void refreshTable() {
+				// TODO Auto-generated method stub
+				transactionItemManager.refreshTable();				
 			}
 			
+			@Override
+			public void getTransactionDetails(String id) {
+				// TODO Auto-generated method stub
+				Product p = productManager.getProduct(id);
+				System.out.println("product" +p);
+			    transactionItemManager.storeTransactionItem(p);
+				
+			}
+			
+			public double calculateSubtotal()
+			{
+				return transactionItemManager.calculateTotalPrice();
+			}
 		});
+				
         
  
         mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
