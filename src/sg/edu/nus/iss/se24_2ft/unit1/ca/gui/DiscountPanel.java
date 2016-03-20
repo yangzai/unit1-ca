@@ -3,6 +3,7 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -140,7 +141,13 @@ public class DiscountPanel extends FeaturePanel {
 			discount.setPercent(Double.parseDouble(percentTextFiled.getText()));
 			discount.setPeriod(
 					periodTextFiled.getText().equals("ALWAYS") ? -1 : Integer.parseInt(periodTextFiled.getText()));
-			discount.setStartDate(new Date());
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			try {
+				discount.setStartDate(sdf.parse(dateTextField.getText()));
+			} catch (Exception ex) {
+				// TODO Auto-generated catch block
+				System.out.println(ex.toString());
+			}
 
 			// TODO: validate category
 			discountPanelListenerList.forEach(l -> l.addDiscountRequested(discount));
