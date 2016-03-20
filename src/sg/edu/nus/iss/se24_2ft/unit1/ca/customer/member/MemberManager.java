@@ -35,9 +35,8 @@ public class MemberManager {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Utils::splitCsv).forEach(a -> {
                 String name = a[0], id = a[1];
-                int loyaltyPoint = -1;
-                try { loyaltyPoint = Integer.parseInt(a[2]); }
-                catch (NumberFormatException e) { e.printStackTrace(); }
+
+                int loyaltyPoint = Utils.parseIntOrDefault(a[2], -1);
 
                 Member member = new Member(id, name);
                 member.setId();
