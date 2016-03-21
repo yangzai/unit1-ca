@@ -43,10 +43,10 @@ public class Member implements Customer {
                 .collect(Collectors.joining(","));
     }
 
-    //protected setters
-    protected void setId () { id = requestedId; }
+    //setters
+    /*package*/ void setId () { id = requestedId; }
 
-    protected void setLoyaltyPoint(int loyaltyPoint) {
+    /*package*/ void setLoyaltyPoint(int loyaltyPoint) {
         this.loyaltyPoint = loyaltyPoint;
     }
 

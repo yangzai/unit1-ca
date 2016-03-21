@@ -57,12 +57,12 @@ public class Product {
                 .collect(Collectors.joining(","));
     }
 
-    //protected setters
-    protected void setId(String id) { this.id = id; }
+    //setters
+    /*package*/ void setId(String id) { this.id = id; }
 
-    protected void setCategory(Category category) { this.category = category; }
+    /*package*/ void setCategory(Category category) { this.category = category; }
 
-    protected boolean restock() {
+    /*package*/ boolean restock() {
         if (!isUnderstock()) return false;
         quantity += orderQuantity;
         return true;
