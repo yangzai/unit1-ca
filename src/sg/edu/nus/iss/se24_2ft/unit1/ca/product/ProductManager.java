@@ -1,15 +1,15 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.product;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -41,44 +41,35 @@ public class ProductManager {
     }
 
     public void initData() throws IOException {
-        CSVReader reader = null;
-        try {
-            reader = new CSVReader(filename);
+        try (Stream<String> stream = Files.lines(Paths.get(filename))) {
+            stream.map(Utils::splitCsv).forEach(a -> {
+                String id = a[0], name = a[1], description = a[2];
+                double price = Utils.parseDoubleOrDefault(a[4], 0);
+                int quantity = Utils.parseIntOrDefault(a[3], 0),
+                        barCode = Utils.parseIntOrDefault(a[5], 0),
+                        threshold = Utils.parseIntOrDefault(a[6], 0),
+                        orderQuantity = Utils.parseIntOrDefault(a[7], 0);
 
-            while (reader.readRecord()) {
-                ArrayList<String> record = reader.getValues();
+                Product product = new Product(name, description, quantity,
+                        price, barCode, threshold, orderQuantity);
 
-                String id = record.get(0), name = record.get(1),
-                        description = record.get(2);
-                int quantity = Integer.parseInt(record.get(3)),
-                        barCode = Integer.parseInt(record.get(5)),
-                        threshold = Integer.parseInt(record.get(6)),
-                        orderQuantity = Integer.parseInt(record.get(7));
-                double price = Double.parseDouble(record.get(4));
-
-                Product product = new Product(name, description,
-                        quantity, price, barCode, threshold, orderQuantity);
-
+                //TODO: try filter
                 //if id already exist, skip
-                if (productMap.containsKey(id)) continue;
+                if (productMap.containsKey(id)) return;
 
                 String[] idArray = id.split("/");
                 String categoryId = idArray[0];
                 Category category = categoryManager.getCategory(categoryId);
 
                 //if category does not exist, skip
-                if (category == null) continue;
+                if (category == null) return;
 
                 int current = Integer.parseInt(idArray[1]);
                 int max = maxSubIdMap.getOrDefault(idArray[0], 0);
                 if (max < current) maxSubIdMap.put(categoryId, current);
 
-                addProductWithId(category, product, id);
-            }
-        } catch (IOException ioe) {
-            throw ioe;
-        } finally {
-            if (reader != null) reader.close();
+                addProduct(category, product, id);
+            });
         }
     }
 
@@ -96,12 +87,12 @@ public class ProductManager {
         maxSubIdMap.put(categoryId, subId);
         String id = categoryId + '/' + subId;
 
-        addProductWithId(category, product, id);
+        addProduct(category, product, id);
 
         return true;
     }
 
-    private void addProductWithId(Category category, Product product, String id) {
+    private void addProduct(Category category, Product product, String id) {
         product.setId(id);
         product.setCategory(category);
         productMap.put(id, product);
@@ -123,7 +114,7 @@ public class ProductManager {
         //Assume immediate stock arrival
         understockIndexList.forEach(i -> understockProductList.get(i).restock());
         understockProductList = productList.stream()
-                .filter(p -> p.isUnderstock())
+                .filter(Product::isUnderstock)
                 .collect(Collectors.toList());
 
         if (understockTableModel != null)
