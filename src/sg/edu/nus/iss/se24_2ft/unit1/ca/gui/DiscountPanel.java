@@ -3,6 +3,7 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +32,7 @@ public class DiscountPanel extends FeaturePanel {
 		discountPanelListenerList = new ArrayList<>();
 		discountList = DiscountManager.getInstance().getDiscountList();
 		table = new JTable(getDiscountTableModel());
+
 		scrollPane = new JScrollPane(table);
 		Dimension d = table.getPreferredSize();
 		scrollPane.setPreferredSize(new Dimension(d.width, table.getRowHeight() * VISIBLE_ROW + 1));
@@ -124,7 +126,6 @@ public class DiscountPanel extends FeaturePanel {
 		c.gridx++;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(appliedComboBox, c);
-
 		// add percent
 		JButton addBtn = new JButton("Add Discount");
 		addBtn.addActionListener(e -> {
@@ -136,21 +137,41 @@ public class DiscountPanel extends FeaturePanel {
 			} else {
 				discount = new CustomerDiscount();
 			}
-			discount.setCode(codeTextField.getText());
-			discount.setDescription(descTextArea.getText());
-			discount.setPercent(Double.parseDouble(percentTextFiled.getText()));
-			discount.setPeriod(
-					periodTextFiled.getText().equals("ALWAYS") ? -1 : Integer.parseInt(periodTextFiled.getText()));
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			try {
-				discount.setStartDate(sdf.parse(dateTextField.getText()));
-			} catch (Exception ex) {
-				// TODO Auto-generated catch block
-				System.out.println(ex.toString());
-			}
+				discount.setCode(codeTextField.getText());
+				discount.setDescription(descTextArea.getText());
+				discount.setPercent(Double.parseDouble(percentTextFiled.getText()));
+				discount.setPeriod(
+						periodTextFiled.getText().equals("ALWAYS") ? -1 : Integer.parseInt(periodTextFiled.getText()));
 
+				if (!dateTextField.getText().toUpperCase().equals("ALWAYS")) {
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+					try {
+						discount.setStartDate(sdf.parse(dateTextField.getText()));
+					} catch (ParseException ex) {
+						// TODO Auto-generated catch block
+						System.out.println(ex.toString());
+						JOptionPane.showMessageDialog(null, "Date format incorrect, dd/MM/yyyy or ALWAYS");
+					}
+				}
+			} catch (Exception ex) {
+				System.out.println(ex.toString());
+				JOptionPane.showMessageDialog(null, "data input incorrect");
+
+			}
 			// TODO: validate category
-			discountPanelListenerList.forEach(l -> l.addDiscountRequested(discount));
+			if (dateTextField.getText().toUpperCase().equals("ALWAYS") || discount.getStartDate() != null) {
+				discountPanelListenerList.forEach(l -> l.addDiscountRequested(discount));
+				int firstRow = table.getRowHeight() - 1;
+				System.out.println(firstRow);
+				((AbstractTableModel) table.getModel()).fireTableRowsInserted(firstRow, firstRow);
+				codeTextField.setText("");
+				descTextArea.setText("");
+				percentTextFiled.setText("");
+				periodTextFiled.setText("");
+				dateTextField.setText("");
+
+			}
 		});
 		c.gridy++;
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -211,6 +232,7 @@ public class DiscountPanel extends FeaturePanel {
 					return null;
 				}
 			}
+
 		};
 	};
 
