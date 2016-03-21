@@ -140,9 +140,6 @@ public class DiscountPanel extends FeaturePanel {
 			try {
 				discount.setCode(codeTextField.getText());
 				discount.setDescription(descTextArea.getText());
-				discount.setPercent(Double.parseDouble(percentTextFiled.getText()));
-				discount.setPeriod(
-						periodTextFiled.getText().equals("ALWAYS") ? -1 : Integer.parseInt(periodTextFiled.getText()));
 
 				if (!dateTextField.getText().toUpperCase().equals("ALWAYS")) {
 					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -153,6 +150,11 @@ public class DiscountPanel extends FeaturePanel {
 						System.out.println(ex.toString());
 						JOptionPane.showMessageDialog(null, "Date format incorrect, dd/MM/yyyy or ALWAYS");
 					}
+				}
+				if (discount.getStartDate() != null) {
+					discount.setPercent(Double.parseDouble(percentTextFiled.getText()));
+					discount.setPeriod(periodTextFiled.getText().equals("ALWAYS") ? -1
+							: Integer.parseInt(periodTextFiled.getText()));
 				}
 			} catch (Exception ex) {
 				System.out.println(ex.toString());
