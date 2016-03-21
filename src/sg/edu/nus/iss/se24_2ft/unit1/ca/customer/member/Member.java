@@ -20,7 +20,7 @@ public class Member implements Customer {
         this.name = name;
         loyaltyPoint = -1;
     }
-    
+
     public String getId() {
         return id;
     }
@@ -43,10 +43,10 @@ public class Member implements Customer {
                 .collect(Collectors.joining(","));
     }
 
-    //protected setters
-    protected void setId () { id = requestedId; }
+    //setters
+    /*package*/ void setId () { id = requestedId; }
 
-    protected void setLoyaltyPoint(int loyaltyPoint) {
+    /*package*/ void setLoyaltyPoint(int loyaltyPoint) {
         this.loyaltyPoint = loyaltyPoint;
     }
 

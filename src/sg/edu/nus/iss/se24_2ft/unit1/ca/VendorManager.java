@@ -1,17 +1,14 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -29,39 +26,24 @@ public class VendorManager {
     }
 
     private void initData() throws IOException {
-        try (Stream<Path> stream = Files.list(Paths.get(directory))) {
-            stream
-                    //get a list of filename in directory
-                    .map(p -> p.getFileName().toString())
-                    //filter vendor files
-                    .filter(s -> s.matches("Vendors[A-Z][A-Z][A-Z].dat"))
-                    //for each vendor file, read vendor list and insert to map
-                    .forEach(s -> {
-                        String categoryId = s.substring(7, 10);
-                        CSVReader reader = null;
-                        try {
-                            reader = new CSVReader(
-                                    Paths.get(directory, s).toString(), ',', Charset.forName("UTF-8")
-                            );
-                            List<Vendor> vendorList = new ArrayList<>();
-                            while (reader.readRecord()) {
-                                Object[] keepers = reader.getValues().toArray();
+        try (Stream<Path> pathStream = Files.list(Paths.get(directory))) {
+            pathStream.filter(p -> p.getFileName() //filter vendor files
+                    .toString()
+                    .matches("Vendors[A-Z]{3}.dat")
+            ).forEach(p -> { //for each vendor file, read vendor list and insert to map
+                String categoryId = p.getFileName().toString().substring(7, 10);
 
-                                String name = keepers[0].toString();
-                                String description = keepers[1].toString();
-                                Vendor vendor = new Vendor(categoryId, name, description);
+                try (Stream<String> lineStream = Files.lines(p)) {
 
-                                vendorList.add(vendor);
-                            }
-                            vendorMap.put(categoryId, vendorList);
-                        } catch (IOException e) {
-                            throw new UncheckedIOException(e);
-                        } finally {
-                            if (reader != null) reader.close();
-                        }
-                    });
-        } catch (IOException e) {
-            throw e;
+                    List<Vendor> vendorList = lineStream.map(Utils::splitCsv)
+                            .map(a -> new Vendor(categoryId, a[0], a[1]))
+                            .collect(Collectors.toList());
+
+                    vendorMap.put(categoryId, vendorList);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            });
         } catch (UncheckedIOException e) {
             throw e.getCause();
         }

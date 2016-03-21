@@ -16,6 +16,6 @@ public class Category {
     public String getRequestedId() { return requestedId; }
     public String getName() { return name; }
 
-    //protected setters
-    protected void setId() { id = requestedId; }
+    //setters
+    /*package*/ void setId() { id = requestedId; }
 }
