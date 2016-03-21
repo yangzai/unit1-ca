@@ -3,6 +3,7 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.MemberManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.*;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
 
 import javax.swing.*;
@@ -24,7 +25,7 @@ public class StoreApplication {
     public static void main (String args[]) throws IOException {
         //TODO: handle IOException within managers' constructors
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
-        ProductManager productManager = new ProductManager("data/Products.dat");
+        ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
         MemberManager memberManager = new MemberManager("data/Members.dat");
 
         MainFrame mainFrame = new MainFrame();

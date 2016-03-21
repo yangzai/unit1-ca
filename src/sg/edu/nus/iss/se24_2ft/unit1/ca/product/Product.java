@@ -1,5 +1,7 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.product;
 
+import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
+
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -11,10 +13,12 @@ public class Product {
     private int quantity, barCode, threshold, orderQuantity;
     // BigDecimal price;
     private double price;
+    private Category category;
 
     public Product(String name, String description, int quantity,
                    double price, int barCode, int threshold, int orderQuantity) {
         id = null;
+        category = null;
 
         this.name = name;
         this.description = description;
@@ -41,6 +45,8 @@ public class Product {
 
     public double getPrice() { return price; }
 
+    public Category getCategory() { return category; }
+
     public boolean isUnderstock() { return quantity <= threshold; }
 
     @Override
@@ -53,6 +59,8 @@ public class Product {
 
     //protected setters
     protected void setId(String id) { this.id = id; }
+
+    protected void setCategory(Category category) { this.category = category; }
 
     protected boolean restock() {
         if (!isUnderstock()) return false;

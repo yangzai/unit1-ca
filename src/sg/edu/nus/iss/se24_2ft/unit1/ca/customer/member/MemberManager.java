@@ -21,41 +21,11 @@ public class MemberManager {
     private AbstractTableModel tableModel;
 
     public MemberManager(String filename) throws IOException {
+        tableModel = null;
         this.filename = filename;
 
         memberList = new ArrayList<>();
         memberMap = new HashMap<>();
-
-        tableModel = new AbstractTableModel() {
-            //TODO: move others here
-            private final String[] COLUMN_NAMES = { "Name", "Member ID", "Loyalty Point" };
-
-            @Override
-            public String getColumnName(int column) {
-                return COLUMN_NAMES[column];
-            }
-
-            @Override
-            public int getRowCount() {
-                return memberList.size();
-            }
-
-            @Override
-            public int getColumnCount() {
-                return COLUMN_NAMES.length;
-            }
-
-            @Override
-            public Object getValueAt(int rowIndex, int columnIndex) {
-                Member member = memberList.get(rowIndex);
-                switch (columnIndex) {
-                    case 0: return member.getName();
-                    case 1: return member.getId();
-                    case 2: return member.getLoyaltyPoint();
-                    default: return null;
-                }
-            }
-        };
 
         initData();
     }
@@ -132,7 +102,38 @@ public class MemberManager {
     }
 
     public TableModel getTableModel() {
-        return tableModel;
+        if (tableModel != null) return tableModel;
+
+        return tableModel = new AbstractTableModel() {
+            //TODO: move others here
+            private final String[] COLUMN_NAMES = { "Name", "Member ID", "Loyalty Point" };
+
+            @Override
+            public String getColumnName(int column) {
+                return COLUMN_NAMES[column];
+            }
+
+            @Override
+            public int getRowCount() {
+                return memberList.size();
+            }
+
+            @Override
+            public int getColumnCount() {
+                return COLUMN_NAMES.length;
+            }
+
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                Member member = memberList.get(rowIndex);
+                switch (columnIndex) {
+                    case 0: return member.getName();
+                    case 1: return member.getId();
+                    case 2: return member.getLoyaltyPoint();
+                    default: return null;
+                }
+            }
+        };
     }
 
     public void store() throws IOException {
