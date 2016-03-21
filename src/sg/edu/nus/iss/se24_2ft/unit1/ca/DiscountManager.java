@@ -1,24 +1,29 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
+//@author: Nguyen Trung
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVWriter;
 
 public class DiscountManager {
 	private static DiscountManager _instance = null;
 	private String filename;
 	private List<Discount> discountList = null;
+	private List<String> storingList = null;
 	private double FIRST_TIME_MEMBER_DISCOUNT;
 
 	private DiscountManager() {
 		// TODO Auto-generated constructor stub
 		discountList = new ArrayList<Discount>();
+		storingList = new ArrayList<String>();
 		discountList.size();
-		filename = "data/data-sample/Discounts.dat";
+		filename = "data/Discounts.dat";
 		this.initData();
 	}
 
@@ -30,7 +35,11 @@ public class DiscountManager {
 	}
 
 	private void initData() {
-		List<ArrayList<String>> _list = new ArrayList(); // This list gets from CSV
+		List<ArrayList<String>> _list = new ArrayList<ArrayList<String>>(); // This
+																			// list
+																			// gets
+																			// from
+																			// CSV
 		CSVReader reader = null;
 		try {
 			reader = new CSVReader(filename);
@@ -58,7 +67,6 @@ public class DiscountManager {
 			}
 			if (params.get(0).equals("MEMBER_FIRST")) {
 				this.FIRST_TIME_MEMBER_DISCOUNT = Double.parseDouble(params.get(4));
-				continue;
 			}
 			Discount discount = null;
 			if (params.get(5).equals("M")) {
@@ -100,6 +108,33 @@ public class DiscountManager {
 			}
 		}
 		return normalDiscount;
+	}
+
+	public List<Discount> getDiscountList() {
+		return this.discountList;
+	}
+
+	public void addDiscount(Discount discount) {
+		this.discountList.add(discount);
+		writeToFile();
+	}
+
+	private void writeToFile() {
+		CSVWriter writer = null;
+		try {
+			writer = new CSVWriter(this.filename);
+			Iterator<Discount> i = this.discountList.iterator();
+			while (i.hasNext()) {
+				Discount discount = i.next();
+				writer.writeRecord(discount.toString().split(","));
+			}
+		} catch (IOException ioe) {
+			System.out.println(ioe.getMessage());
+		} finally {
+			if (writer != null)
+				writer.close();
+		}
+
 	}
 
 }

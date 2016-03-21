@@ -9,10 +9,10 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
  * Created by Nguyen Trung on 27/2/16.
  */
 public class Discount {
-	private String code, description;
-	private Date startDate; // Null for ALWAYS applicable
-	private int period; // -1 for ALWAYS applicable
-	private double percent; // or restrict to int
+	protected String code, description;
+	protected Date startDate; // Null for ALWAYS applicable
+	protected int period; // -1 for ALWAYS applicable
+	protected double percent; // or restrict to int
 
 	public Discount() {
 	}
@@ -57,21 +57,20 @@ public class Discount {
 		this.percent = percent;
 	}
 
+	public String toString() {
+		String strDate;
+		if (this.startDate == null) {
+			strDate = "ALWAYS";
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			strDate = sdf.format(this.startDate);
+		}
+		String period = this.period == -1 ? "ALWAYS" : String.valueOf(this.period);
+		return code + "," + description + "," + strDate + "," + period + "," + percent;
+	}
 
-	public String toString(){
-    	String strDate;
-    	if (this.startDate == null){
-    		strDate = "ALWAYS";
-    	} else {
-    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    		strDate = sdf.format(this.startDate);
-    	}
-    	String period = this.period == -1 ? "ALWAYS" : String.valueOf(this.period);
-    	return code + "," + description + "," + strDate + "," + period;    	
-    }
-	
-	public boolean isDiscountAvailable(){
-		if (startDate != null) {			
+	public boolean isDiscountAvailable() {
+		if (startDate != null) {
 			Date today = new Date(System.currentTimeMillis());
 			if (startDate.after(today)) {
 				return false;
