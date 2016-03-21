@@ -57,7 +57,8 @@ public class MemberManager {
         memberMap.put(id, member);
 
         int rowIndex = memberList.size() - 1;
-        tableModel.fireTableRowsInserted(rowIndex, rowIndex);
+        if (tableModel != null)
+            tableModel.fireTableRowsInserted(rowIndex, rowIndex);
 
         //TODO: KIV try/catch for IO
         try {

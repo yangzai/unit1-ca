@@ -67,7 +67,8 @@ public class CategoryManager {
         categoryList.add(category);
 
         int insertedRowIndex = categoryList.size() - 1;
-        tableModel.fireTableRowsInserted(insertedRowIndex, insertedRowIndex);
+        if (tableModel != null)
+            tableModel.fireTableRowsInserted(insertedRowIndex, insertedRowIndex);
         return true;
         //TODO: persist immediately?
     }
