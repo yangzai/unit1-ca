@@ -43,17 +43,24 @@ public class StoreApplication {
         categoryPanel.setTableModel(categoryManager.getTableModel());
         categoryPanel.addCategoryPanelListener(c -> categoryManager.addCategory(c));
 
-        InventoryPanel inventoryPanel = new InventoryPanel();
-        inventoryPanel.setTableModel(productManager.getUnderstockTableModel());
-        inventoryPanel.addInventoryPanelListener(uil -> productManager.generatePurchaseOrder(uil));
-
         MemberPanel memberPanel = new MemberPanel();
         memberPanel.setTableModel(memberManager.getTableModel());
         memberPanel.addMemberPanelistener(m -> memberManager.addMember(m));
 
+        ProductPanel productPanel = new ProductPanel();
+        productPanel.setTableModel(productManager.getTableModel());
+        productPanel.addProductPanelListener(
+                (cid, p) -> productManager.addProduct(categoryManager.getCategory(cid), p)
+        );
+
+        InventoryPanel inventoryPanel = new InventoryPanel();
+        inventoryPanel.setTableModel(productManager.getUnderstockTableModel());
+        inventoryPanel.addInventoryPanelListener(uil -> productManager.generatePurchaseOrder(uil));
+
+
         mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
         mainFrame.addFeaturePanel(NEW_MEMBER, memberPanel);
-        mainFrame.addFeaturePanel(NEW_PRODUCT, new ProductPanel());
+        mainFrame.addFeaturePanel(NEW_PRODUCT, productPanel);
         mainFrame.addFeaturePanel(INVENTORY, inventoryPanel);
         mainFrame.addFeaturePanel(DISCOUNT, new DiscountPanel());
         mainFrame.addFeaturePanel(CHECK_OUT, new CheckoutPanel());

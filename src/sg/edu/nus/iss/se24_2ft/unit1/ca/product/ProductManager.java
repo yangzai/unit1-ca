@@ -15,8 +15,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 public class ProductManager {
-    private static final String[] COLUMN_NAMES = {"ID","Name","Description","Quantity Avl.","Price",
-            "Bar Code","Reorder Quantity","Order Quantity"};
+    private final String[] COLUMN_NAMES = {"ID", "Name", "Description", "Quantity Avl.", "Price",
+            "Bar Code", "Reorder Quantity", "Order Quantity"};
     private String filename;
     private CategoryManager categoryManager;
     private List<Product> productList;
@@ -24,9 +24,11 @@ public class ProductManager {
     private List<Product> understockProductList;
     private Map<String, Integer> maxSubIdMap;
 
+    private AbstractTableModel tableModel;
     private AbstractTableModel understockTableModel;
 
     public ProductManager(String filename, CategoryManager categoryManager) throws IOException {
+        tableModel = null;
         understockTableModel = null;
 
         this.filename = filename;
@@ -98,10 +100,15 @@ public class ProductManager {
         productMap.put(id, product);
         productList.add(product);
 
+        int rowIndex = productList.size() - 1;
+
+        if (tableModel != null)
+            tableModel.fireTableRowsInserted(rowIndex, rowIndex);
+
         if (!product.isUnderstock()) return;
 
         understockProductList.add(product);
-        int rowIndex = understockProductList.size() - 1;
+        rowIndex = understockProductList.size() - 1;
 
         if (understockTableModel != null)
             understockTableModel.fireTableRowsInserted(rowIndex, rowIndex);
@@ -119,6 +126,40 @@ public class ProductManager {
 
         if (understockTableModel != null)
             understockTableModel.fireTableDataChanged();
+
+        if (tableModel != null)
+            tableModel.fireTableDataChanged();
+    }
+
+    public TableModel getTableModel() {
+        if (tableModel != null) return tableModel;
+
+        return tableModel = new AbstractTableModel() {
+            @Override
+            public String getColumnName(int column) { return COLUMN_NAMES[column]; }
+
+            @Override
+            public int getRowCount() { return productList.size(); }
+
+            @Override
+            public int getColumnCount() { return COLUMN_NAMES.length; }
+
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                Product product = productList.get(rowIndex);
+                switch (columnIndex) {
+                    case 0: return product.getId();
+                    case 1: return product.getName();
+                    case 2: return product.getDescription();
+                    case 3: return product.getQuantity();
+                    case 4: return product.getPrice();
+                    case 5: return product.getBarCode();
+                    case 6: return product.getThreshold();
+                    case 7: return product.getOrderQuantity();
+                    default: return null;
+                }
+            }
+        };
     }
 
     public TableModel getUnderstockTableModel() {
@@ -126,19 +167,13 @@ public class ProductManager {
 
         return understockTableModel = new AbstractTableModel() {
             @Override
-            public String getColumnName(int column) {
-                return COLUMN_NAMES[column];
-            }
+            public String getColumnName(int column) { return COLUMN_NAMES[column]; }
 
             @Override
-            public int getRowCount() {
-                return understockProductList.size();
-            }
+            public int getRowCount() { return understockProductList.size(); }
 
             @Override
-            public int getColumnCount() {
-                return COLUMN_NAMES.length;
-            }
+            public int getColumnCount() { return COLUMN_NAMES.length; }
 
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {

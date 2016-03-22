@@ -45,7 +45,7 @@ public class CategoryManager {
     }
 
     public Category getCategory(String id) {
-        return categoryMap.get(id);
+        return categoryMap.get(id.toUpperCase());
     }
 
     public List<Category> getCategoryList() {
