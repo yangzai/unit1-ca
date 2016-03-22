@@ -2,21 +2,16 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
-import javax.swing.table.AbstractTableModel;
-
-import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 
-/*
- * created by Srishti
+/**
+ * Created by Srishti
  */
 
 public class TransactionManager {
@@ -25,6 +20,7 @@ public class TransactionManager {
 	private List<TransactionItem> item ;
 	private List<Transaction> transaction;
 	private String fileName;
+	private final DecimalFormat df = new DecimalFormat("#.##");
 	//private TransactionItemManager transactionItems;	
 	
 	
@@ -39,7 +35,7 @@ public class TransactionManager {
 	public void addTransaction(String memberID)
 	{
 		
-		Date dateobj = new Date();
+		Date dateobj = new Date(System.currentTimeMillis());
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		String date = df.format(dateobj);
 			
@@ -60,9 +56,10 @@ public class TransactionManager {
 		}
 	}
 	
-	public double calculateDiscountedPrice(double totalPrice,int discount)
+	public double calculateDiscountedPrice(double totalPrice,double discount)
 	{
 		double price = totalPrice - (discount/100)*totalPrice; 
+		price =Math.round(price * 100.0) / 100.0;
 		return price;
 	}
 	

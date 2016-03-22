@@ -1,9 +1,5 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import java.util.Date;
-
-import javax.swing.table.AbstractTableModel;
-
 public class TransactionItem {
 	private int quantityPurchased;
 	private String productId;

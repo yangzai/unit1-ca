@@ -18,7 +18,7 @@ public class DiscountManager {
 		// TODO Auto-generated constructor stub
 		discountList = new ArrayList<Discount>();
 		discountList.size();
-		filename = "data/data-sample/Discounts.dat";
+		filename = "data-sample/Discounts.dat";
 		this.initData();
 	}
 
@@ -88,6 +88,7 @@ public class DiscountManager {
 	}
 
 	public double getDiscountForMember(boolean firstTimePurchase) {
+		
 		double normalDiscount = 0;
 		if (firstTimePurchase) {
 			normalDiscount = this.FIRST_TIME_MEMBER_DISCOUNT;

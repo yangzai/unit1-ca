@@ -1,6 +1,9 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-// Created by Srishti 
+/**
+ * Created by Srishti
+ */
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,19 +19,22 @@ public class TransactionItemManager {
 	private TransactionItem transactionItems;	
 	private List<TransactionItem> transactionlist ;
 	private AbstractTableModel tableModel; 
-//	/private double subTotal;
 	private static final String COLUMN_NAMES [] = {"Qty.", "Item", "Description" , "Unit Price", "Discount", "Total"};
 
-	public TransactionItemManager(/*TransactionItem transactionItems*/)
+	public TransactionItemManager()
 	{
 		transactionlist = new ArrayList<>();
-		//subTotal = 0;
 	}
 
 	public TableModel getTableModel() {
 		if (tableModel != null) return tableModel;
 
 		tableModel  = new AbstractTableModel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public String getColumnName(int column) {
 				return COLUMN_NAMES[column];
@@ -66,25 +72,35 @@ public class TransactionItemManager {
 	public void storeTransactionItem(Product p)
 	{	
 		Iterator<TransactionItem> iter = transactionlist.iterator();
+		int rowIndex = transactionlist.size()-1;
 		while(iter.hasNext())
 		{
 			TransactionItem tran = iter.next();
 			if(tran.getProductId() == p.getId())
 			{
+				// ** Increasing quantity if product ID is same as added before **//
 				int quantity = tran.getQuantityPurchased(); 
 				quantity = quantity+1; 
+				
+				// **calculating total price for each product id **//
 				double price = tran.getUnitPrice();
 				price = price*quantity;
+				
+				// ** updating the quantity purchased and total price for each product in TransactionItem class ** //
 				tran.setQuantityPurchased(quantity);
 				tran.setTotalPrice(price);
-				tableModel.fireTableRowsUpdated(transactionlist.size()-1, transactionlist.size()-1);	
+				
+				// ** updating the table to show the changed values **// 
+				tableModel.fireTableRowsUpdated(rowIndex, rowIndex);
+				
 				return;
 			}
 			
 		}
+		// *** creating and adding new transaction item object for the newly added products in the cart ** //
 		transactionItems = new TransactionItem(p.getId(),p.getDescription(),p.getPrice());
 		transactionlist.add(transactionItems);
-		tableModel.fireTableRowsInserted(transactionlist.size()-1, transactionlist.size()-1);
+		tableModel.fireTableRowsInserted(rowIndex, rowIndex);
 		}
 	
 	public List<TransactionItem> getTransactionItems()

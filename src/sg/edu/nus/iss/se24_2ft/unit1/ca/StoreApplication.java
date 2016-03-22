@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.MemberManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.*;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
@@ -29,6 +30,7 @@ public class StoreApplication {
         MemberManager memberManager = new MemberManager("data-sample/Members.dat");
         TransactionItemManager transactionItemManager = new TransactionItemManager();
         TransactionManager transctionManager = new TransactionManager("data-sample/Transactions.dat",transactionItemManager.getTransactionItems());
+        DiscountManager discountManager = DiscountManager.getInstance();
         
 
         MainFrame mainFrame = new MainFrame();
@@ -68,7 +70,6 @@ public class StoreApplication {
 			public void getTransactionDetails(String id) {
 				// TODO Auto-generated method stub
 				Product p = productManager.getProduct(id);
-				System.out.println("product" +p);
 			    transactionItemManager.storeTransactionItem(p);
 				
 			}
@@ -77,6 +78,30 @@ public class StoreApplication {
 			{
 				return transactionItemManager.calculateTotalPrice();
 			}
+			
+			public double getDiscount(String id)
+			{
+				if(id.equals("PUBLIC"))
+				{
+					return discountManager.getDiscountForCustomer();
+				}else
+				{
+					return discountManager.getDiscountForMember(true);
+				}
+				
+			}
+			
+			public double getDiscountedAmount(double subtotal,double discount_amount)
+			{
+				return transctionManager.calculateDiscountedPrice(subtotal,discount_amount);
+			}
+			
+			public JFrame getMainFrame()
+			{
+				return mainFrame; 
+			}
+			
+			
 		});
 				
         
@@ -157,7 +182,7 @@ public class StoreApplication {
 //        customerManager.removeMember("X437F356");
 //        ArrayList<Member> members = customerManager.getMembersAsList();
 //        for (Member member : members) {
-//			System.out.println(member.toString());
+//		System.out.println(member.toString());
 //		}
 //        System.out.println("New Test");
 //        Customer member = customerManager.getCustomer("F42563743156");
@@ -201,4 +226,5 @@ public class StoreApplication {
 //        productManager.addProduct(categoryManager.getCategory("CLO"), new Product("t", "t", 1, 10.5, 101, 5, 5));
 //        productManager.addProduct(categoryManager.getCategory("CLO"), new Product("z", "z", 1, 10.5, 102, 10, 5));
     }
+    
 }

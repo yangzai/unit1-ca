@@ -54,7 +54,6 @@ public class MainFrame extends JFrame {
             c.gridy++;
         }
     }
-
     //resize to currentPanel
     public void resizeAndPack() {
         getContentPane().setPreferredSize(currentPanel.getPreferredSize());
