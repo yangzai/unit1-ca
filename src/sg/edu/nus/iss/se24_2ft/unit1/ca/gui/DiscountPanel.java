@@ -3,7 +3,6 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,12 +11,9 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.CustomerDiscount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.Discount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.DiscountManager;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.Member;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.MemberDiscount;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 public class DiscountPanel extends FeaturePanel {
 	private static final int VISIBLE_ROW = 5;
@@ -130,26 +126,14 @@ public class DiscountPanel extends FeaturePanel {
 		addBtn.addActionListener(e -> {
 			System.out.println("Add button clicked");
 			boolean memberDiscount = appliedComboBox.getSelectedItem().toString().equals("Member") ? true : false;
-			Discount discount;
-			if (memberDiscount) {
-				discount = new MemberDiscount();
-			} else {
-				discount = new CustomerDiscount();
-			}
-			discount.setCode(codeTextField.getText());
-			discount.setDescription(descTextArea.getText());
-			discount.setPercent(Double.parseDouble(percentTextFiled.getText()));
-			discount.setPeriod(
-					periodTextFiled.getText().equals("ALWAYS") ? -1 : Integer.parseInt(periodTextFiled.getText()));
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			try {
-				discount.setStartDate(sdf.parse(dateTextField.getText()));
-			} catch (Exception ex) {
-				// TODO Auto-generated catch block
-				System.out.println(ex.toString());
-			}
 
-			// TODO: validate category
+			String code = codeTextField.getText(), description = descTextArea.getText();
+			Date start = Utils.parseDateOrDefault(dateTextField.getText(), null); //TODO: date ui
+			int period = Utils.parseIntOrDefault(percentTextFiled.getText(), -1);
+			double percent = Utils.parseDoubleOrDefault(percentTextFiled.getText(), 0);
+
+			Discount discount = new Discount(code, description, start, period, percent, memberDiscount);
+
 			discountPanelListenerList.forEach(l -> l.addDiscountRequested(discount));
 		});
 		c.gridy++;
@@ -161,10 +145,6 @@ public class DiscountPanel extends FeaturePanel {
 		c.gridy++;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(backBtn, c);
-
-	}
-
-	private void initData() {
 
 	}
 
@@ -206,12 +186,12 @@ public class DiscountPanel extends FeaturePanel {
 				case 4:
 					return discount.getPercent();
 				case 5:
-					return discount instanceof MemberDiscount ? "M" : "A";
+					return discount.isMemeberOnly() ? "M" : "A";
 				default:
 					return null;
 				}
 			}
 		};
-	};
+	}
 
 }

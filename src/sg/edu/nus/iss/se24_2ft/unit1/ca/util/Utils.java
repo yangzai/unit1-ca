@@ -1,9 +1,13 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class Utils {
+    public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+
     public static Date addDate(Date date, int period) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -24,6 +28,10 @@ public class Utils {
         catch (NumberFormatException e) { return defaultValue; }
     }
 
+    public static Date parseDateOrDefault(String string, Date date) {
+        try { return SDF.parse(string); }
+        catch (ParseException e) { return date; }
+    }
     public static String[] splitCsv(String string) {
         if (string == null) return new String[0];
         return string.split(",");

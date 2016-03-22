@@ -9,74 +9,68 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
  * Created by Nguyen Trung on 27/2/16.
  */
 public class Discount {
-	protected String code, description;
-	protected Date startDate; // Null for ALWAYS applicable
-	protected int period; // -1 for ALWAYS applicable
-	protected double percent; // or restrict to int
+	private String code, requestedCode, description;
+	private Date start; // Null for ALWAYS applicable
+	private int period; // -1 for ALWAYS applicable
+	private double percent; // or restrict to int
+	private boolean memberOnly;
 
-	public Discount() {
+	public Discount(String requestedCode, String description, Date start, int period, double percent, boolean memberOnly) {
+		code = null;
+		this.requestedCode = requestedCode;
+		this.description = description;
+		this.start = start;
+		this.period = period;
+		this.percent = percent;
+		this.memberOnly = memberOnly;
 	}
 
 	public String getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public String getRequestedCode() {
+		return requestedCode;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+		return start;
 	}
 
 	public int getPeriod() {
 		return period;
 	}
 
-	public void setPeriod(int period) {
-		this.period = period;
-	}
-
 	public double getPercent() {
 		return percent;
 	}
 
-	public void setPercent(double percent) {
-		this.percent = percent;
-	}
+	public boolean isMemeberOnly() { return memberOnly; }
 
-	public String toString() {
+	public String toString() { //TODO: refactor
 		String strDate;
-		if (this.startDate == null) {
+		if (this.start == null) {
 			strDate = "ALWAYS";
 		} else {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			strDate = sdf.format(this.startDate);
+			strDate = sdf.format(this.start);
 		}
 		String period = this.period == -1 ? "ALWAYS" : String.valueOf(this.period);
 		return code + "," + description + "," + strDate + "," + period + "," + percent;
 	}
 
-	public boolean isDiscountAvailable() {
-		if (startDate != null) {
+	public boolean isDiscountAvailable() { //TODO: move to manager
+		if (start != null) {
 			Date today = new Date(System.currentTimeMillis());
-			if (startDate.after(today)) {
+			if (start.after(today)) {
 				return false;
 			}
 			if (period != -1) {
-				Date endDate = Utils.addDate(startDate, period);
+				Date endDate = Utils.addDate(start, period);
 				if (endDate.before(today)) {
 					return false;
 				}
@@ -85,4 +79,5 @@ public class Discount {
 		return true;
 	}
 
+	protected void setCode() { code = requestedCode; }
 }
