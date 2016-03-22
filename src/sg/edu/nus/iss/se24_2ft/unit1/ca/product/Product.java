@@ -1,5 +1,7 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.product;
 
+import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
+
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -11,10 +13,12 @@ public class Product {
     private int quantity, barCode, threshold, orderQuantity;
     // BigDecimal price;
     private double price;
+    private Category category;
 
     public Product(String name, String description, int quantity,
                    double price, int barCode, int threshold, int orderQuantity) {
         id = null;
+        category = null;
 
         this.name = name;
         this.description = description;
@@ -41,8 +45,11 @@ public class Product {
 
     public double getPrice() { return price; }
 
+    public Category getCategory() { return category; }
+
     public boolean isUnderstock() { return quantity <= threshold; }
 
+    @Override
     public String toString() {
         return Arrays.asList(id, name, description, quantity, price,
                 barCode, threshold, orderQuantity).stream()
@@ -50,10 +57,12 @@ public class Product {
                 .collect(Collectors.joining(","));
     }
 
-    //protected setters
-    protected void setId(String id) { this.id = id; }
+    //setters
+    /*package*/ void setId(String id) { this.id = id; }
 
-    protected boolean restock() {
+    /*package*/ void setCategory(Category category) { this.category = category; }
+
+    /*package*/ boolean restock() {
         if (!isUnderstock()) return false;
         quantity += orderQuantity;
         return true;

@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.MemberManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.*;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
@@ -9,7 +10,7 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Function;
 
 /**
@@ -25,7 +26,8 @@ public class StoreApplication {
     public static void main (String args[]) throws IOException {
         //TODO: handle IOException within managers' constructors
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
-        ProductManager productManager = new ProductManager("data/Products.dat");
+        ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
+        MemberManager memberManager = new MemberManager("data/Members.dat");
 
         MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -44,13 +46,24 @@ public class StoreApplication {
         categoryPanel.setTableModel(categoryManager.getTableModel());
         categoryPanel.addCategoryPanelListener(c -> categoryManager.addCategory(c));
 
+        MemberPanel memberPanel = new MemberPanel();
+        memberPanel.setTableModel(memberManager.getTableModel());
+        memberPanel.addMemberPanelistener(m -> memberManager.addMember(m));
+
+        ProductPanel productPanel = new ProductPanel();
+        productPanel.setTableModel(productManager.getTableModel());
+        productPanel.addProductPanelListener(
+                (cid, p) -> productManager.addProduct(categoryManager.getCategory(cid), p)
+        );
+
         InventoryPanel inventoryPanel = new InventoryPanel();
         inventoryPanel.setTableModel(productManager.getUnderstockTableModel());
-        inventoryPanel.addInventoryPanelListener(l -> productManager.generatePurchaseOrder(l));
+        inventoryPanel.addInventoryPanelListener(uil -> productManager.generatePurchaseOrder(uil));
+
 
         mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
-        mainFrame.addFeaturePanel(NEW_MEMBER, new MemberPanel());
-        mainFrame.addFeaturePanel(NEW_PRODUCT, new ProductPanel());
+        mainFrame.addFeaturePanel(NEW_MEMBER, memberPanel);
+        mainFrame.addFeaturePanel(NEW_PRODUCT, productPanel);
         mainFrame.addFeaturePanel(INVENTORY, inventoryPanel);
         mainFrame.addFeaturePanel(DISCOUNT, discountPanel);
         mainFrame.addFeaturePanel(CHECK_OUT, new CheckoutPanel());

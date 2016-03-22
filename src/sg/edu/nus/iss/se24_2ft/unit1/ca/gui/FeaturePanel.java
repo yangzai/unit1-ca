@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by yangzai on 12/3/16.
  */
-public class FeaturePanel extends JPanel {
+public abstract class FeaturePanel extends JPanel {
     private List<ActionListener> backActionListenerList;
 
     public FeaturePanel(LayoutManager layout, boolean isDoubleBuffered) {
