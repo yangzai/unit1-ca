@@ -14,23 +14,13 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVWriter;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 public class DiscountManager {
-	private static DiscountManager _instance = null;
 	private String filename;
 	private List<Discount> discountList = null;
 
-	private DiscountManager() {
-		// TODO Auto-generated constructor stub
+	public DiscountManager(String fileaname) {
+		this.filename = fileaname;
 		discountList = new ArrayList<>();
-		discountList.size();
-		filename = "data/Discounts.dat";
-		this.initData();
-	}
-
-	public static DiscountManager getInstance() {
-		if (_instance == null) {
-			_instance = new DiscountManager();
-		}
-		return _instance;
+		initData();
 	}
 
 	private void initData() {
@@ -85,19 +75,19 @@ public class DiscountManager {
 	}
 
 	public List<Discount> getDiscountList() {
-		return this.discountList;
+		return discountList;
 	}
 
 	public void addDiscount(Discount discount) {
-		this.discountList.add(discount);
+		discountList.add(discount);
 		writeToFile();
 	}
 
 	private void writeToFile() {
 		CSVWriter writer = null;
 		try {
-			writer = new CSVWriter(this.filename);
-			Iterator<Discount> i = this.discountList.iterator();
+			writer = new CSVWriter(filename);
+			Iterator<Discount> i = discountList.iterator();
 			while (i.hasNext()) {
 				Discount discount = i.next();
 				writer.writeRecord(discount.toString().split(","));

@@ -12,7 +12,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.Discount;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.DiscountManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 public class DiscountPanel extends FeaturePanel {
@@ -25,7 +24,7 @@ public class DiscountPanel extends FeaturePanel {
 	public DiscountPanel() {
 		super(new GridBagLayout());
 		discountPanelListenerList = new ArrayList<>();
-		discountList = DiscountManager.getInstance().getDiscountList();
+		discountList = new ArrayList<>();
 		table = new JTable(getDiscountTableModel());
 		scrollPane = new JScrollPane(table);
 		Dimension d = table.getPreferredSize();

@@ -32,6 +32,7 @@ public class StoreApplication {
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
         ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
         MemberManager memberManager = new MemberManager("data/Members.dat");
+        DiscountManager discountManager = new DiscountManager("data/Discounts.dat");
 
         MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -44,7 +45,7 @@ public class StoreApplication {
         });
 
         DiscountPanel discountPanel = new DiscountPanel();
-        discountPanel.addDiscountPanelListener(d -> DiscountManager.getInstance().addDiscount(d));
+        discountPanel.addDiscountPanelListener(d -> discountManager.addDiscount(d));
         
         CategoryPanel categoryPanel = new CategoryPanel();
         categoryPanel.setTableModel(categoryManager.getTableModel());
