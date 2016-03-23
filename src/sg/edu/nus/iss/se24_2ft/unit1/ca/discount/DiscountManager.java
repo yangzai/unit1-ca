@@ -12,12 +12,17 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+
 public class DiscountManager {
 	private String filename;
 	private List<Discount> discountList;
 	private Map<String, Discount> discountMap;
+	private AbstractTableModel tableModel;
 
 	public DiscountManager(String fileaname) throws IOException {
+		tableModel = null;
 		this.filename = fileaname;
 		discountList = new ArrayList<>();
 		discountMap = new HashMap<>();
@@ -82,6 +87,11 @@ public class DiscountManager {
 		discountList.add(discount);
 		discountMap.put(code, discount);
 
+		//TODO: move rowIndex for all add
+		int rowIndex = discountList.size() - 1;
+		if (tableModel != null)
+			tableModel.fireTableRowsInserted(rowIndex, rowIndex);
+
 		//TODO: KIV try/catch for IO
 		try {
 			store();
@@ -90,6 +100,50 @@ public class DiscountManager {
 		}
 
 		return true;
+	}
+
+	public TableModel getTableModel() {
+		if (tableModel != null) return tableModel;
+
+		return tableModel = new AbstractTableModel() {
+			private final String[] COLUMN_NAMES = {"Code", "Description", "Start Date", "Period", "Percent", "M/A"};
+
+			@Override
+			public String getColumnName(int column) {
+				return COLUMN_NAMES[column];
+			}
+
+			@Override
+			public int getRowCount() {
+				return discountList.size();
+			}
+
+			@Override
+			public int getColumnCount() {
+				return COLUMN_NAMES.length;
+			}
+
+			@Override
+			public Object getValueAt(int rowIndex, int columnIndex) {
+				Discount d = discountList.get(rowIndex);
+				switch (columnIndex) {
+					case 0:
+						return d.getCode();
+					case 1:
+						return d.getDescription();
+					case 2:
+						return d.getStart() != null ? d.getStart() : "ALWAYS";
+					case 3:
+						return d.getPeriod() > -1 ? d.getPeriod() : "ALWAYS";
+					case 4:
+						return d.getPercent();
+					case 5:
+						return d.isMemberOnly() ? "M" : "A";
+					default:
+						return null;
+				}
+			}
+		};
 	}
 
 	private void store() throws IOException {

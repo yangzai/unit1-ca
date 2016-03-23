@@ -17,7 +17,7 @@ public class Discount {
 
 	public Discount(String requestedCode, String description, Date start, int period, double percent, boolean memberOnly) {
 		code = null;
-		this.requestedCode = requestedCode;
+		this.requestedCode = requestedCode.toUpperCase();
 		this.description = description;
 		this.start = start;
 		this.period = period;

@@ -30,13 +30,13 @@ public final class Utils {
         catch (NumberFormatException e) { return defaultValue; }
     }
 
-    public static Date parseDateOrDefault(String string, Date date) {
+    public static Date parseDateOrDefault(String string, Date defaultDate) {
         try { return SDF.parse(string); }
-        catch (ParseException e) { return date; }
+        catch (ParseException e) { return defaultDate; }
     }
 
-    public static String formatDateOrDefault(Date date, String string) {
-        if (date == null) return string;
+    public static String formatDateOrDefault(Date date, String defaultString) {
+        if (date == null) return defaultString;
         return SDF.format(date);
     }
 

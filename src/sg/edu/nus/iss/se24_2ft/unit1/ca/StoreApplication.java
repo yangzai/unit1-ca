@@ -46,6 +46,7 @@ public class StoreApplication {
         });
 
         DiscountPanel discountPanel = new DiscountPanel();
+        discountPanel.setTableModel(discountManager.getTableModel());
         discountPanel.addDiscountPanelListener(d -> discountManager.addDiscount(d));
         
         CategoryPanel categoryPanel = new CategoryPanel();
