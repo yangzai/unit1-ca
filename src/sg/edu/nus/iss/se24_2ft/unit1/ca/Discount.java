@@ -31,7 +31,7 @@ public class Discount {
 
 	public String getDescription() { return description; }
 
-	public Date getStartDate() { return start; }
+	public Date getStart() { return start; }
 
 	public int getPeriod() { return period; }
 

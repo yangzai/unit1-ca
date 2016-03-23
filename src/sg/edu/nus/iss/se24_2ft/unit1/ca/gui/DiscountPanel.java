@@ -179,7 +179,7 @@ public class DiscountPanel extends FeaturePanel {
 				case 1:
 					return discount.getDescription();
 				case 2:
-					return discount.getStartDate() != null ? discount.getStartDate().toString() : "ALWAYS";
+					return discount.getStart() != null ? discount.getStart().toString() : "ALWAYS";
 				case 3:
 					return discount.getPeriod() != -1 ? discount.getPeriod() : "ALWAYS";
 				case 4:
