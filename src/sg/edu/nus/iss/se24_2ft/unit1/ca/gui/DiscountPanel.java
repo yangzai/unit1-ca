@@ -11,7 +11,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.Discount;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 public class DiscountPanel extends FeaturePanel {

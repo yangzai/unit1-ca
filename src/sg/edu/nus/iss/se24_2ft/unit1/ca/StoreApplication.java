@@ -2,6 +2,7 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.MemberManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.DiscountManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.*;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
