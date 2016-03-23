@@ -2,55 +2,51 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 //@author: Nguyen Trung
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Stream;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVWriter;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 public class DiscountManager {
 	private String filename;
-	private List<Discount> discountList = null;
+	private List<Discount> discountList;
+	private Map<String, Discount> discountMap;
 
-	public DiscountManager(String fileaname) {
+	public DiscountManager(String fileaname) throws IOException {
 		this.filename = fileaname;
 		discountList = new ArrayList<>();
+		discountMap = new HashMap<>();
+
 		initData();
 	}
 
-	private void initData() {
-		List<ArrayList<String>> _list = new ArrayList<>();
+	private void initData() throws IOException {
+		try (Stream<String> stream = Files.lines(Paths.get(filename))) {
+			stream.map(Utils::splitCsv).forEach(a -> {
+				String code = a[0], description = a[1];
+				Date start = Utils.parseDateOrDefault(a[2], null);
+				int period = Utils.parseIntOrDefault(a[3], -1);
+				double percent = Utils.parseDoubleOrDefault(a[4], 0);
+				boolean memberOnly = a[5].toUpperCase().equals("M");
 
-		CSVReader reader = null;
-		try {
-			reader = new CSVReader(filename);
-			while (reader.readRecord()) {
-				ArrayList<String> discountStrList = reader.getValues();
-				_list.add(discountStrList);
-			}
-		} catch (IOException ioe) {
-			System.out.println(ioe.getMessage());
-		} finally {
-			if (reader != null)
-				reader.close();
-		}
+				//TODO: refactor order of domain object instantiation for all iniitData
+				Discount discount = new Discount(code, description, start, period, percent, memberOnly);
 
-		for (int i = 0; i < _list.size(); i++) {
-			ArrayList<String> params = _list.get(i);
+				//TODO: try filter
+				//if id already exist, skip
+				//TODO: conditions for other initData
+				if (discountMap.containsKey(code)) return;
 
-			boolean memberOnly = params.get(5).toUpperCase().equals("M");
-			String code = params.get(0), description = params.get(1);
-			Date start = Utils.parseDateOrDefault(params.get(2), null);
-			int period = Utils.parseIntOrDefault(params.get(3), -1);
-			double percent = Utils.parseDoubleOrDefault(params.get(4), 0);
+				discount.setCode();
 
-			Discount discount = new Discount(code, description, start, period, percent, memberOnly);
-			discount.setCode();
-
-			discountList.add(discount);
+				discountList.add(discount);
+				discountMap.put(code, discount);
+			});
 		}
 	}
 
@@ -58,7 +54,7 @@ public class DiscountManager {
 		Optional<Discount> discountOptional = discountList.stream()
 				.filter(d -> {
 					if (!d.isDiscountAvailable()) return false;
-					if (!d.isMemeberOnly()) return true;
+					if (!d.isMemberOnly()) return true;
 					if (customer instanceof Member) {
 						int loyaltyPoint = ((Member) customer).getLoyaltyPoint();
 						String code = d.getCode().toUpperCase();
@@ -68,7 +64,7 @@ public class DiscountManager {
 							return true;
 					}
 					return false;
-				}).max((d1, d2) -> Double.compare(d1.getPercent(), d2.getPercent()));
+				}).max(Comparator.comparing(Discount::getPercent));
 
 		return discountOptional.isPresent() ? discountOptional.get() : null;
 	}
@@ -77,25 +73,31 @@ public class DiscountManager {
 		return discountList;
 	}
 
-	public void addDiscount(Discount discount) {
+	public boolean addDiscount(Discount discount) {
+		String code = discount.getRequestedCode();
+		//TODO: check constraint for all add
+		if (discountMap.containsKey(code)) return false;
+
+		discount.setCode();
 		discountList.add(discount);
-		writeToFile();
+		discountMap.put(code, discount);
+
+		//TODO: KIV try/catch for IO
+		try {
+			store();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return true;
 	}
 
-	private void writeToFile() {
-		CSVWriter writer = null;
-		try {
-			writer = new CSVWriter(filename);
-			Iterator<Discount> i = discountList.iterator();
-			while (i.hasNext()) {
-				Discount discount = i.next();
-				writer.writeRecord(discount.toString().split(","));
-			}
-		} catch (IOException ioe) {
-			System.out.println(ioe.getMessage());
-		} finally {
-			if (writer != null)
-				writer.close();
-		}
+	private void store() throws IOException {
+		Stream<String> stream = discountList.stream()
+				.sorted(Comparator.comparing(Discount::getCode))
+				.map(Discount::toString);
+
+		Files.write(Paths.get(filename), (Iterable<String>) stream::iterator,
+				StandardOpenOption.CREATE);
 	}
 }

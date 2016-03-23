@@ -185,7 +185,7 @@ public class DiscountPanel extends FeaturePanel {
 				case 4:
 					return discount.getPercent();
 				case 5:
-					return discount.isMemeberOnly() ? "M" : "A";
+					return discount.isMemberOnly() ? "M" : "A";
 				default:
 					return null;
 				}

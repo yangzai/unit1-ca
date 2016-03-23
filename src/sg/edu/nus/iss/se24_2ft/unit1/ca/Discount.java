@@ -1,6 +1,5 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringJoiner;
 
@@ -26,31 +25,19 @@ public class Discount {
 		this.memberOnly = memberOnly;
 	}
 
-	public String getCode() {
-		return code;
-	}
+	public String getCode() { return code; }
 
-	public String getRequestedCode() {
-		return requestedCode;
-	}
+	public String getRequestedCode() { return requestedCode; }
 
-	public String getDescription() {
-		return description;
-	}
+	public String getDescription() { return description; }
 
-	public Date getStartDate() {
-		return start;
-	}
+	public Date getStartDate() { return start; }
 
-	public int getPeriod() {
-		return period;
-	}
+	public int getPeriod() { return period; }
 
-	public double getPercent() {
-		return percent;
-	}
+	public double getPercent() { return percent; }
 
-	public boolean isMemeberOnly() { return memberOnly; }
+	public boolean isMemberOnly() { return memberOnly; }
 
 	@Override
 	public String toString() {
@@ -64,21 +51,18 @@ public class Discount {
 				.toString();
 	}
 
-	public boolean isDiscountAvailable() { //TODO: move to manager
-		if (start != null) {
-			Date today = new Date(System.currentTimeMillis());
-			if (start.after(today)) {
-				return false;
-			}
-			if (period != -1) {
-				Date endDate = Utils.addDate(start, period);
-				if (endDate.before(today)) {
-					return false;
-				}
-			}
-		}
-		return true;
+	public boolean isDiscountAvailable() {
+		if (start == null) return true;
+
+		Date today = new Date();
+		if (start.after(today)) return false;
+
+		if (period < 0) return true;
+
+		Date end = Utils.addDate(start, period);
+		return !end.before(today);
 	}
 
-	protected void setCode() { code = requestedCode; }
+	//setters
+	/*package*/ void setCode() { code = requestedCode; }
 }
