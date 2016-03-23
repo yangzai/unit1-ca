@@ -2,6 +2,7 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.StringJoiner;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
@@ -51,16 +52,16 @@ public class Discount {
 
 	public boolean isMemeberOnly() { return memberOnly; }
 
-	public String toString() { //TODO: refactor
-		String strDate;
-		if (this.start == null) {
-			strDate = "ALWAYS";
-		} else {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			strDate = sdf.format(this.start);
-		}
-		String period = this.period == -1 ? "ALWAYS" : String.valueOf(this.period);
-		return code + "," + description + "," + strDate + "," + period + "," + percent;
+	@Override
+	public String toString() {
+		StringJoiner stringJoiner = new StringJoiner(",");
+		return stringJoiner.add(code)
+				.add(description)
+				.add(Utils.formatDateOrDefault(start, "ALWAYS"))
+				.add(period > -1 ? Integer.toString(period) : "ALWAYS")
+				.add(Double.toString(percent))
+				.add(memberOnly ? "M" : "A")
+				.toString();
 	}
 
 	public boolean isDiscountAvailable() { //TODO: move to manager

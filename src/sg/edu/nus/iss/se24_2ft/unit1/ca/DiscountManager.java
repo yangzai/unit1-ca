@@ -2,10 +2,8 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 //@author: Nguyen Trung
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
@@ -57,7 +55,7 @@ public class DiscountManager {
 	}
 
 	public Discount getMaxDiscount(Customer customer) {
-		return discountList.stream()
+		Optional<Discount> discountOptional = discountList.stream()
 				.filter(d -> {
 					if (!d.isDiscountAvailable()) return false;
 					if (!d.isMemeberOnly()) return true;
@@ -70,8 +68,9 @@ public class DiscountManager {
 							return true;
 					}
 					return false;
-				}).max((d1, d2) -> Double.compare(d1.getPercent(), d2.getPercent()))
-				.get();
+				}).max((d1, d2) -> Double.compare(d1.getPercent(), d2.getPercent()));
+
+		return discountOptional.isPresent() ? discountOptional.get() : null;
 	}
 
 	public List<Discount> getDiscountList() {

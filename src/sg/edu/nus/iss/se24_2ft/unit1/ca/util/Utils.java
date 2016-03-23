@@ -5,8 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Utils {
+public final class Utils {
     public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+
+    private Utils() {}
 
     public static Date addDate(Date date, int period) {
         Calendar calendar = Calendar.getInstance();
@@ -32,6 +34,12 @@ public class Utils {
         try { return SDF.parse(string); }
         catch (ParseException e) { return date; }
     }
+
+    public static String formatDateOrDefault(Date date, String string) {
+        if (date == null) return string;
+        return SDF.format(date);
+    }
+
     public static String[] splitCsv(String string) {
         if (string == null) return new String[0];
         return string.split(",");
