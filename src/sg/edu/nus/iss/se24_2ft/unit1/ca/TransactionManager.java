@@ -2,19 +2,16 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
-import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.CSVReader;
 
-/*
- * created by Srishti
+/**
+ * Created by Srishti
  */
 
 public class TransactionManager {
@@ -23,22 +20,22 @@ public class TransactionManager {
 	private List<TransactionItem> item ;
 	private List<Transaction> transaction;
 	private String fileName;
+	private final DecimalFormat df = new DecimalFormat("#.##");
+	//private TransactionItemManager transactionItems;	
 	
 	
-	
-	public TransactionManager(String fileName)  throws IOException
+	public TransactionManager(String fileName, List<TransactionItem> item)  throws IOException
 	{
 		transaction = new ArrayList<Transaction>();
-		item = new ArrayList<TransactionItem>();
-		
+		this.item = item;
 		this.fileName = fileName;
 		initData();
 	}
 	
-	public void addTransaction(String productId,String memberID, int quantity)
+	public void addTransaction(String memberID)
 	{
 		
-		Date dateobj = new Date();
+		Date dateobj = new Date(System.currentTimeMillis());
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		String date = df.format(dateobj);
 			
@@ -52,29 +49,20 @@ public class TransactionManager {
 					}
 		}	
 		transactionID++;
-		Transaction tran = new Transaction(transactionID, productId, memberID, quantity ,date);
+		for(TransactionItem transactionItem : item)
+		{
+		Transaction tran = new Transaction(transactionID, transactionItem.getProductId(), memberID, transactionItem.getQuantityPurchased() ,date);
 		transaction.add(tran);
+		}
 	}
 	
-	public double calculateTotalPrice(HashMap<Product, Integer> list, int discount)
+	public double calculateDiscountedPrice(double totalPrice,double discount)
 	{
-		String id = null;
-		int quantityPurchased = 0;
-		double price =0;
-		Set<Product> products = list.keySet();
-		
-		Iterator<Product> iter = products.iterator();
-		while(iter.hasNext())
-		{
-			Product pro = iter.next(); 
-			double proprice = pro.getPrice();
-			quantityPurchased = list.get(pro);
-			price = price + proprice*quantityPurchased;		
-		}
-		
-		price = price - (discount/100)*price; 
+		double price = totalPrice - (discount/100)*totalPrice; 
+		price =Math.round(price * 100.0) / 100.0;
 		return price;
 	}
+	
 	
 	private void initData() throws IOException {
         CSVReader reader = null;
@@ -99,17 +87,7 @@ public class TransactionManager {
         } finally {
             if (reader != null) reader.close();
         }
-    }
-	
-	public void storeItems(double price , int discount)
-	{
-		Iterator<Transaction> iter = transaction.iterator();
-		while(iter.hasNext())
-		{
-			Transaction tran = iter.next(); 
 
-			item.add(new TransactionItem(tran.getQuantity(),tran.getProductId(),tran.getMemberID(),price,discount,tran.getTransactionID(),tran.getDate()));
-		}
 	}
-
-} 
+}
+	
