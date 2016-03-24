@@ -49,6 +49,7 @@ public class CheckoutPanel extends FeaturePanel {
 	public CheckoutPanel() {
 		// TODO Auto-generated constructor stub
 		super(new GridBagLayout());
+		
 		area = new JTextPane();
 		area.setBackground(Color.pink);
 		area.setText("Total: $         " + " \n" +"Discount:       " +"\n\n" + "Subtotal: $       ");

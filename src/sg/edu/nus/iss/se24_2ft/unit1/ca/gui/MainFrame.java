@@ -13,6 +13,7 @@ public class MainFrame extends JFrame {
     private static final int ROW_BUTTON_COUNT = 2;
     private JPanel mainPanel;
     private JPanel currentPanel;
+    private JPanel loginPanel;
     GridBagConstraints c;
 
     public MainFrame() {
@@ -23,6 +24,8 @@ public class MainFrame extends JFrame {
         setContentPane(contentPane);
 
         currentPanel = mainPanel = new JPanel(new GridBagLayout());
+      //  currentPanel = loginPanel = new LoginPanel();
+      // contentPane.add(loginPanel, "login");
         contentPane.add(mainPanel, "Main");
 
         c = new GridBagConstraints();
@@ -59,4 +62,5 @@ public class MainFrame extends JFrame {
         getContentPane().setPreferredSize(currentPanel.getPreferredSize());
         pack();
     }
+    
 }

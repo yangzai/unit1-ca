@@ -53,7 +53,7 @@ public class StoreKeeperManager {
         }
     }
 
-    //returns true if login is successful
+    //returns true if login is successful 
     public boolean login(String name, String password) {
         StoreKeeper storeKeeper = storeKeeperMap.get(name);
 

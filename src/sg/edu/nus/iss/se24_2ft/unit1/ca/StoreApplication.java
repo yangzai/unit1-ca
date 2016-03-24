@@ -22,209 +22,239 @@ public class StoreApplication {
             INVENTORY = "Inventory", NEW_MEMBER = "New Member",
             NEW_PRODUCT = "New Product", NEW_CATEGORY = "New Category",
             REPORTS = "Reports", NULL = "NULL";
+	private static boolean success;
+ 
 
     public static void main (String args[]) throws IOException {
-        //TODO: handle IOException within managers' constructors
-        CategoryManager categoryManager = new CategoryManager("data-sample/Category.dat");
-        ProductManager productManager = new ProductManager("data-sample/Products.dat", categoryManager);
-        MemberManager memberManager = new MemberManager("data-sample/Members.dat");
-        TransactionItemManager transactionItemManager = new TransactionItemManager();
-        TransactionManager transctionManager = new TransactionManager("data-sample/Transactions.dat",transactionItemManager.getTransactionItems());
-        DiscountManager discountManager = DiscountManager.getInstance();
-        
-
-        MainFrame mainFrame = new MainFrame();
-        mainFrame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosed(e);
-                // mainFrame.dispose();
-                System.exit(0);
-            }
-        });
-
-        CategoryPanel categoryPanel = new CategoryPanel();
-        categoryPanel.setTableModel(categoryManager.getTableModel());
-        categoryPanel.addCategoryPanelListener(c -> categoryManager.addCategory(c));
-
-        InventoryPanel inventoryPanel = new InventoryPanel();
-        inventoryPanel.setTableModel(productManager.getUnderstockTableModel());
-        inventoryPanel.addInventoryPanelListener(uil -> productManager.generatePurchaseOrder(uil));
-
-        MemberPanel memberPanel = new MemberPanel();
-        memberPanel.setTableModel(memberManager.getTableModel());
-        memberPanel.addMemberPanelistener(m -> memberManager.addMember(m));
-        
-        // Added by Srishti
-        CheckoutPanel checkoutPanel = new CheckoutPanel();
-        checkoutPanel.setTableModel(transactionItemManager.getTableModel());
-        checkoutPanel.addCheckOutListener( new CheckOutPanelListener() {
+    	
+    	LoginPanel loginPanel = new LoginPanel();
+    	StoreKeeperManager storeKeeper = new StoreKeeperManager("data/Storekeepers.dat");
+    	loginPanel.addLoginListener(new LoginPanelListener() {
 			
 			@Override
-			public void refreshTable() {
+			public void setSuccess(boolean value) {
 				// TODO Auto-generated method stub
-				transactionItemManager.refreshTable();				
+				if(value == true){
+					new StoreApplication().startApplication();
+					}
 			}
 			
 			@Override
-			public void getTransactionDetails(String id) {
+			public boolean login(String username, String password) {
 				// TODO Auto-generated method stub
-				Product p = productManager.getProduct(id);
-			    transactionItemManager.storeTransactionItem(p);
-				
+				 return storeKeeper.login(username,password);
 			}
-			
-			public double calculateSubtotal()
-			{
-				return transactionItemManager.calculateTotalPrice();
-			}
-			
-			public double getDiscount(String id)
-			{
-				if(id.equals("PUBLIC"))
-				{
-					return discountManager.getDiscountForCustomer();
-				}else
-				{
-					return discountManager.getDiscountForMember(true);
-				}
-				
-			}
-			
-			public double getDiscountedAmount(double subtotal,double discount_amount)
-			{
-				return transctionManager.calculateDiscountedPrice(subtotal,discount_amount);
-			}
-			
-			public JFrame getMainFrame()
-			{
-				return mainFrame; 
-			}
-			
-			
 		});
-				
-        
- 
-        mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
-        mainFrame.addFeaturePanel(NEW_MEMBER, memberPanel);
-        mainFrame.addFeaturePanel(NEW_PRODUCT, new ProductPanel());
-        mainFrame.addFeaturePanel(INVENTORY, inventoryPanel);
-        mainFrame.addFeaturePanel(DISCOUNT, new DiscountPanel());
-        mainFrame.addFeaturePanel(CHECK_OUT, checkoutPanel);
-        //TODO: Temp panel
-        Function<String, FeaturePanel> getTempPanel = s -> new FeaturePanel() {
-            {
-                add(new JLabel(s));
-                add(new JButton("Back") {
-                    {
-                        addActionListener(e -> backActionPerformed(e));
-                    }
-                });
-            }
-        };
-        mainFrame.addFeaturePanel(REPORTS, getTempPanel.apply(REPORTS));
-        mainFrame.addFeaturePanel(NULL, getTempPanel.apply(NULL));
-
-        mainFrame.resizeAndPack();
-
-        Store store = new Store(mainFrame);
-
-        mainFrame.setVisible(true);
-
-//        ****************** yangzai-test ****************************************
-//        StoreKeeperManager storeKeeperManager = null;
-//        try {
-//            storeKeeperManager = new StoreKeeperManager("data/Storekeepers.dat");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        System.out.println(storeKeeperManager.login("xxx", "fail"));
-//        System.out.println(storeKeeperManager.login("Stacy", "Dean56s"));
-//        System.out.println(storeKeeperManager.login("Johny", "A12ysd45"));
-//        System.out.println(storeKeeperManager.login("Johny", "fail"));
-
-//        try {
-//            //TODO: Test resource path
-//            PrintWriter writer = new PrintWriter("level1/test.txt");
-//            writer.println("test");
-//            writer.close();
-//
-//            BufferedReader reader = new BufferedReader(new FileReader("test.txt"));
-//
-//            System.out.println(reader.readLine());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-//        VendorManager vm = null;
-//        try {
-//            vm = new VendorManager("data");
-//            vm.getVendorListByCategoryId("MUG")
-//                    .stream()
-//                    .map(v -> v.getCategoryId()+','+v.getName()+','+v.getDescription())
-//                    .forEach(System.out::println);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-//        ****************** Tran-test ****************************************
-//        CustomerManager customerManager = null;
-//        try {
-//			customerManager = new CustomerManager("data/Members.dat");
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//		}
-//        customerManager.addMember("TestID", "TestName");
-//        customerManager.addMember("TestID2", "TestName2");
-//        customerManager.removeMember("X437F356");
-//        ArrayList<Member> members = customerManager.getMembersAsList();
-//        for (Member member : members) {
-//		System.out.println(member.toString());
-//		}
-//        System.out.println("New Test");
-//        Customer member = customerManager.getCustomer("F42563743156");
-//        System.out.println("MemberID " + member.getMemberIDasString());
-//        member.setAddPoint(53.6f);
-//        member.setRedeemPoint(261);
-//        System.out.println("Redeem Point: " + member.getRedeemPoint());
-//        System.out.println("Redeem Price: " + member.getRedeemPrice());
-//        System.out.println("Current Point: " + member.getLoyaltyPoint());
-//        System.out.println("Add-on Point: " + member.getAddPoint());
-//        member.updateLoyaltyPoint();
-//        System.out.println("Confirm Payment: " + member.getLoyaltyPoint());
-//
-//        Customer pubCustomer = customerManager.getCustomer(null);
-//        System.out.println("MemberID " + pubCustomer.getMemberIDasString());
-//        pubCustomer.setAddPoint(53.6f);
-//        pubCustomer.setRedeemPoint(261);
-//        System.out.println("Redeem Point: " + pubCustomer.getRedeemPoint());
-//        System.out.println("Redeem Price: " + pubCustomer.getRedeemPrice());
-//        System.out.println("Current Point: " + pubCustomer.getLoyaltyPoint());
-//        System.out.println("Add-on Point: " + pubCustomer.getAddPoint());
-//        member.updateLoyaltyPoint();
-//        System.out.println("Confirm Payment: " + pubCustomer.getLoyaltyPoint());
-
-//        ****************** srishti-test ****************************************
-//        TransactionManager transactionManager = null;
-//        try {
-//            transactionManager = new TransactionManager("data/Transactions.dat");
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-//        ****************** cy-test ****************************************
-//         for (Product pro : productManager.getProductList()) {
-//             String string = pro.toString();
-//             System.out.println(string);
-//         }
-
-//        ****************** understock test ****************************************
-//        productManager.addProduct(categoryManager.getCategory("CLO"), new Product("t", "t", 1, 10.5, 101, 5, 5));
-//        productManager.addProduct(categoryManager.getCategory("CLO"), new Product("z", "z", 1, 10.5, 102, 10, 5));
+    	
+        //TODO: handle IOException within managers' constructors
+       
     }
     
-}
+    public void startApplication(){
+    		try{
+    	 CategoryManager categoryManager = new CategoryManager("data/Category.dat");
+         ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
+         MemberManager memberManager = new MemberManager("data/Members.dat");
+         TransactionItemManager transactionItemManager = new TransactionItemManager();
+         TransactionManager transctionManager = new TransactionManager("data/Transactions.dat",transactionItemManager.getTransactionItems());
+         DiscountManager discountManager = DiscountManager.getInstance();
+ 
+
+         MainFrame mainFrame = new MainFrame();
+         mainFrame.addWindowListener(new WindowAdapter() {
+             @Override
+             public void windowClosing(WindowEvent e) {
+                 super.windowClosed(e);
+                 // mainFrame.dispose();
+                 System.exit(0);
+             }
+         });
+
+         CategoryPanel categoryPanel = new CategoryPanel();
+         categoryPanel.setTableModel(categoryManager.getTableModel());
+         categoryPanel.addCategoryPanelListener(c -> categoryManager.addCategory(c));
+
+         InventoryPanel inventoryPanel = new InventoryPanel();
+         inventoryPanel.setTableModel(productManager.getUnderstockTableModel());
+         inventoryPanel.addInventoryPanelListener(uil -> productManager.generatePurchaseOrder(uil));
+
+         MemberPanel memberPanel = new MemberPanel();
+         memberPanel.setTableModel(memberManager.getTableModel());
+         memberPanel.addMemberPanelistener(m -> memberManager.addMember(m));
+         
+         // Added by Srishti
+         CheckoutPanel checkoutPanel = new CheckoutPanel();
+         checkoutPanel.setTableModel(transactionItemManager.getTableModel());
+         checkoutPanel.addCheckOutListener( new CheckOutPanelListener() {
+ 			
+ 			@Override
+ 			public void refreshTable() {
+ 				// TODO Auto-generated method stub
+ 				transactionItemManager.refreshTable();				
+ 			}
+ 			
+ 			@Override
+ 			public void getTransactionDetails(String id) {
+ 				// TODO Auto-generated method stub
+ 				Product p = productManager.getProduct(id);
+ 			    transactionItemManager.storeTransactionItem(p);
+ 				
+ 			}
+ 			
+ 			public double calculateSubtotal()
+ 			{
+ 				return transactionItemManager.calculateTotalPrice();
+ 			}
+ 			
+ 			public double getDiscount(String id)
+ 			{
+ 				if(id.equals("PUBLIC"))
+ 				{
+ 					return discountManager.getDiscountForCustomer();
+ 				}else
+ 				{
+ 					return discountManager.getDiscountForMember(true);
+ 				}
+ 				
+ 			}
+ 			
+ 			public double getDiscountedAmount(double subtotal,double discount_amount)
+ 			{
+ 				return transctionManager.calculateDiscountedPrice(subtotal,discount_amount);
+ 			}
+ 	//// ***  Can add this method as "Static" in Main Frame class to get main frame window from anywhere. *** ///		
+ 			public JFrame getMainFrame()
+ 			{
+ 				return mainFrame; 
+ 			}			
+ 			
+ 		});
+ 				
+         
+  
+         mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
+         mainFrame.addFeaturePanel(NEW_MEMBER, memberPanel);
+         mainFrame.addFeaturePanel(NEW_PRODUCT, new ProductPanel());
+         mainFrame.addFeaturePanel(INVENTORY, inventoryPanel);
+         mainFrame.addFeaturePanel(DISCOUNT, new DiscountPanel());
+         mainFrame.addFeaturePanel(CHECK_OUT, checkoutPanel);
+         //TODO: Temp panel
+         Function<String, FeaturePanel> getTempPanel = s -> new FeaturePanel() {
+             {
+                 add(new JLabel(s));
+                 add(new JButton("Back") {
+                     {
+                         addActionListener(e -> backActionPerformed(e));
+                     }
+                 });
+             }
+         };
+         mainFrame.addFeaturePanel(REPORTS, getTempPanel.apply(REPORTS));
+         mainFrame.addFeaturePanel(NULL, getTempPanel.apply(NULL));
+
+         mainFrame.resizeAndPack();
+
+         Store store = new Store(mainFrame);
+
+         mainFrame.setVisible(true);
+     	} catch(IOException exception)
+    	{
+    		exception.getMessage();
+    	}
+
+//         ****************** yangzai-test ****************************************
+//         StoreKeeperManager storeKeeperManager = null;
+//         try {
+//             storeKeeperManager = new StoreKeeperManager("data/Storekeepers.dat");
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         }
+ //
+//         System.out.println(storeKeeperManager.login("xxx", "fail"));
+//         System.out.println(storeKeeperManager.login("Stacy", "Dean56s"));
+//         System.out.println(storeKeeperManager.login("Johny", "A12ysd45"));
+//         System.out.println(storeKeeperManager.login("Johny", "fail"));
+
+//         try {
+//             //TODO: Test resource path
+//             PrintWriter writer = new PrintWriter("level1/test.txt");
+//             writer.println("test");
+//             writer.close();
+ //
+//             BufferedReader reader = new BufferedReader(new FileReader("test.txt"));
+ //
+//             System.out.println(reader.readLine());
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         }
+
+//         VendorManager vm = null;
+//         try {
+//             vm = new VendorManager("data");
+//             vm.getVendorListByCategoryId("MUG")
+//                     .stream()
+//                     .map(v -> v.getCategoryId()+','+v.getName()+','+v.getDescription())
+//                     .forEach(System.out::println);
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         }
+
+//         ****************** Tran-test ****************************************
+//         CustomerManager customerManager = null;
+//         try {
+// 			customerManager = new CustomerManager("data/Members.dat");
+// 		} catch (Exception e) {
+// 			// TODO: handle exception
+// 			e.printStackTrace();
+// 		}
+//         customerManager.addMember("TestID", "TestName");
+//         customerManager.addMember("TestID2", "TestName2");
+//         customerManager.removeMember("X437F356");
+//         ArrayList<Member> members = customerManager.getMembersAsList();
+//         for (Member member : members) {
+// 		System.out.println(member.toString());
+// 		}
+//         System.out.println("New Test");
+//         Customer member = customerManager.getCustomer("F42563743156");
+//         System.out.println("MemberID " + member.getMemberIDasString());
+//         member.setAddPoint(53.6f);
+//         member.setRedeemPoint(261);
+//         System.out.println("Redeem Point: " + member.getRedeemPoint());
+//         System.out.println("Redeem Price: " + member.getRedeemPrice());
+//         System.out.println("Current Point: " + member.getLoyaltyPoint());
+//         System.out.println("Add-on Point: " + member.getAddPoint());
+//         member.updateLoyaltyPoint();
+//         System.out.println("Confirm Payment: " + member.getLoyaltyPoint());
+ //
+//         Customer pubCustomer = customerManager.getCustomer(null);
+//         System.out.println("MemberID " + pubCustomer.getMemberIDasString());
+//         pubCustomer.setAddPoint(53.6f);
+//         pubCustomer.setRedeemPoint(261);
+//         System.out.println("Redeem Point: " + pubCustomer.getRedeemPoint());
+//         System.out.println("Redeem Price: " + pubCustomer.getRedeemPrice());
+//         System.out.println("Current Point: " + pubCustomer.getLoyaltyPoint());
+//         System.out.println("Add-on Point: " + pubCustomer.getAddPoint());
+//         member.updateLoyaltyPoint();
+//         System.out.println("Confirm Payment: " + pubCustomer.getLoyaltyPoint());
+
+//         ****************** srishti-test ****************************************
+//         TransactionManager transactionManager = null;
+//         try {
+//             transactionManager = new TransactionManager("data/Transactions.dat");
+ //
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         }
+
+//         ****************** cy-test ****************************************
+//          for (Product pro : productManager.getProductList()) {
+//              String string = pro.toString();
+//              System.out.println(string);
+//          }
+
+//         ****************** understock test ****************************************
+//         productManager.addProduct(categoryManager.getCategory("CLO"), new Product("t", "t", 1, 10.5, 101, 5, 5));
+//         productManager.addProduct(categoryManager.getCategory("CLO"), new Product("z", "z", 1, 10.5, 102, 10, 5));
+    }
+    }
+
