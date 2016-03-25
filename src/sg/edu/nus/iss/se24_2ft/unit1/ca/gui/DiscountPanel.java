@@ -16,7 +16,6 @@ import javax.swing.table.TableModel;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.CustomerDiscount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.Discount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.DiscountManager;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.MemberDiscount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
 
