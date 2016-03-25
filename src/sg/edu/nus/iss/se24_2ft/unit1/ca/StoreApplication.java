@@ -2,15 +2,20 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.MemberManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.DiscountManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.*;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.function.Function;
 
 /**
@@ -28,6 +33,7 @@ public class StoreApplication {
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
         ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
         MemberManager memberManager = new MemberManager("data/Members.dat");
+        DiscountManager discountManager = new DiscountManager("data/Discounts.dat");
 
         MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -40,7 +46,8 @@ public class StoreApplication {
         });
 
         DiscountPanel discountPanel = new DiscountPanel();
-        discountPanel.addDiscountPanelListener(d -> DiscountManager.getInstance().addDiscount(d));
+        discountPanel.setTableModel(discountManager.getTableModel());
+        discountPanel.addDiscountPanelListener(d -> discountManager.addDiscount(d));
         
         CategoryPanel categoryPanel = new CategoryPanel();
         categoryPanel.setTableModel(categoryManager.getTableModel());

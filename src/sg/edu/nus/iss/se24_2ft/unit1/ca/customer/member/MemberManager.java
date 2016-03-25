@@ -122,7 +122,7 @@ public class MemberManager {
         };
     }
 
-    public void store() throws IOException {
+    private void store() throws IOException {
         Stream<String> stream = memberList.stream()
                 .sorted(Comparator.comparing(Member::getId))
                 .map(Member::toString);
