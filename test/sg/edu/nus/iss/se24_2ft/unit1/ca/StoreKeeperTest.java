@@ -1,7 +1,8 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import static org.junit.Assert.*;
-
+import java.lang.reflect.*;
+import java.util.Map;
 import java.io.IOException;
 
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class StoreKeeperTest extends TestCase {
 	@Before
 	public void setUp() throws Exception {
 		sk1 = new StoreKeeper("Gao Haijun", "123456");
-		sk2 = new StoreKeeper("Chen Yao", null); //permit no password for input by default
+		sk2 = new StoreKeeper("Navy", null); //permit no password for input by default
 		//storeKeeperManager = new StoreKeeperManager("data/Storekeepers.dat");
 	}
 	
@@ -66,6 +67,7 @@ public class StoreKeeperTest extends TestCase {
 	
 	@Test
 	public void testLogin() {
+		
 		assertNull(storeKeeperManager);
 		try {
 			storeKeeperManager = new StoreKeeperManager("data/Storekeepers.dat");
@@ -73,6 +75,41 @@ public class StoreKeeperTest extends TestCase {
 			e.printStackTrace();
 			fail("Exception thrown!");
 		}
+		
+		//reflect the member storeKeeperMap
+		Field field;
+        try {
+        	field = storeKeeperManager.getClass().getDeclaredField("storeKeeperMap");
+        	field.setAccessible(true);
+            Object value = (Object)field.get(storeKeeperManager);
+            
+            assertTrue(value instanceof Map<?,?>);
+            
+            StoreKeeper storeKeeper = new StoreKeeper("Gao Haijun", "123456");
+            ((Map<String, StoreKeeper>)value).put("Gao Haijun", storeKeeper);
+            field.setAccessible(false);
+
+ 
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+			fail("Exception thrown!");
+
+        } catch (NoSuchFieldException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+			fail("Exception thrown!");
+
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+			fail("Exception thrown!");
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+			fail("Exception thrown!");
+        }
+        
 		assertTrue(storeKeeperManager != null);
 		assertTrue(storeKeeperManager.login("Gao Haijun", "123456"));
 		assertFalse(storeKeeperManager.login("none", null));
@@ -84,14 +121,14 @@ public class StoreKeeperTest extends TestCase {
 		assertEquals("Gao Haijun", sk1.getName());
 		assertEquals("123456", sk1.getPassword());
 		
-		assertEquals("Chen Yao", sk2.getName());
+		assertEquals("Navy", sk2.getName());
 		assertNull(sk2.getPassword());
 	}
 	
 	@Test
 	public void testGetName() {
 		assertEquals("Gao Haijun", sk1.getName());
-		assertEquals("Chen Yao", sk2.getName());
+		assertEquals("Navy", sk2.getName());
 	}
 	
 	@Test
