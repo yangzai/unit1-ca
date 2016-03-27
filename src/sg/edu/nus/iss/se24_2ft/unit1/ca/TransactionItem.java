@@ -1,54 +1,27 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
+import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
+
 public class TransactionItem {
-	private int quantityPurchased;
-	private String productId;
-	private double price, totalPrice;
-	private String Description;
-	
+	//TODO: this might be a package/inner class
+	private Product product;
+	private int quantity;
+
 	/**
 	 * created by Srishti
 	 */
-	
-	public TransactionItem(String productId,String Description, double price) {
-		super();
-		this.quantityPurchased = 1;
-		this.productId = productId;
-		this.price = price;
-		this.totalPrice = getUnitPrice();
-		this.Description = Description;
-	}
-	
 
-	public int getQuantityPurchased() {
-		return quantityPurchased;
+	public TransactionItem(Product product, int quantity) {
+		this.product = product;
+		this.quantity = quantity;
 	}
 
-	public String getProductId() {
-		return productId;
-	}
+	public Product getProduct() { return product; }
 
-	public double getUnitPrice() {
-		return price;
-	}
-	
-	public double getTotalPrice()
-	{
-		return totalPrice;
-	}
-	 
-	public String getDescription()
-	{
-		return Description;
-	}
+	public int getQuantity() { return quantity; }
 
-	public void setQuantityPurchased(int quantityPurchased)
-	{
-		this.quantityPurchased = quantityPurchased;
-	}
-	
-	public void setTotalPrice(double totalPrice)
-	{
-		this.totalPrice = totalPrice;
+	//setter
+	/*package*/ void addQuantity(int quantity) {
+		this.quantity += quantity;
 	}
 }

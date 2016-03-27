@@ -1,21 +1,20 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.MemberManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.DiscountManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.*;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.checkout.CheckoutPanel;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.function.Function;
 
 /**
@@ -23,7 +22,7 @@ import java.util.function.Function;
  */
 public class StoreApplication {
     private static final String
-            CHECK_OUT = "Check Out", DISCOUNT = "Discount",
+            CHECK_OUT = "Checkout", DISCOUNT = "Discount",
             INVENTORY = "Inventory", NEW_MEMBER = "New Member",
             NEW_PRODUCT = "New Product", NEW_CATEGORY = "New Category",
             REPORTS = "Reports", NULL = "NULL";
@@ -34,6 +33,8 @@ public class StoreApplication {
         ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
         MemberManager memberManager = new MemberManager("data/Members.dat");
         DiscountManager discountManager = new DiscountManager("data/Discounts.dat");
+        TransactionManager transactionManager =
+                new TransactionManager("data/Transactions.dat", productManager, memberManager);
 
         MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -67,13 +68,30 @@ public class StoreApplication {
         inventoryPanel.setTableModel(productManager.getUnderstockTableModel());
         inventoryPanel.addInventoryPanelListener(uil -> productManager.generatePurchaseOrder(uil));
 
+        CheckoutPanel checkoutPanel = new CheckoutPanel() {
+            @Override
+            protected Product getProduct(String id) {
+                return productManager.getProduct(id);
+            }
+
+            @Override
+            protected Member getMember(String id) {
+                return memberManager.getMember(id);
+            }
+
+            @Override
+            protected Discount getDiscount(Customer customer) {
+                return discountManager.getMaxDiscount(customer);
+            }
+        };
+        checkoutPanel.addCheckoutPanelListener(t -> transactionManager.addTransaction(t));
 
         mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
         mainFrame.addFeaturePanel(NEW_MEMBER, memberPanel);
         mainFrame.addFeaturePanel(NEW_PRODUCT, productPanel);
         mainFrame.addFeaturePanel(INVENTORY, inventoryPanel);
         mainFrame.addFeaturePanel(DISCOUNT, discountPanel);
-        mainFrame.addFeaturePanel(CHECK_OUT, new CheckoutPanel());
+        mainFrame.addFeaturePanel(CHECK_OUT, checkoutPanel);
         //TODO: Temp panel
         Function<String, FeaturePanel> getTempPanel = s -> new FeaturePanel() {
             {
