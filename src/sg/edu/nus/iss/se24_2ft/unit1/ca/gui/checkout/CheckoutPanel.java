@@ -24,7 +24,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
     private JTextField productField;
     private JLabel memberField, subTotalField;
     private JFormattedTextField quantityField;
-    private JButton addItemButton;
+    private JButton addItemButton, proceedPaymentButton;
 
     private java.util.List<CheckoutPanelListener> checkoutPanelListenerList;
 
@@ -113,6 +113,8 @@ public abstract class CheckoutPanel extends FeaturePanel {
 
             productField.setText(null);
             quantityField.setValue(1);
+            if (transaction.getTransactionItemList().size() == 1)
+                proceedPaymentButton.setEnabled(true);
         });
         panel.add(addItemButton, gbc);
 
@@ -151,7 +153,8 @@ public abstract class CheckoutPanel extends FeaturePanel {
 
         // Proceed to Payment
         gbc.gridx++;
-        JButton proceedPaymentButton = new JButton("Proceed to Payment");
+        proceedPaymentButton = new JButton("Proceed to Payment");
+        proceedPaymentButton.setEnabled(false);
         proceedPaymentButton.addActionListener(e -> {
             transaction.setDiscount(getDiscount(transaction.getCustomer()));
             ConfirmPaymentDialog cpd = new ConfirmPaymentDialog(this, transaction);
@@ -241,6 +244,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
         setTableModel(transaction.getTableModel());
         memberField.setText(null);
         subTotalField.setText(Utils.formatDollar(0));
+        proceedPaymentButton.setEnabled(false);
     }
 
     abstract protected Product getProduct(String id);

@@ -59,6 +59,8 @@ public class Transaction {
 
     public double getPayment() { return payment; }
 
+    public double getSubtotal() { return subtotal; }
+
     public double getDiscountAmount() {
         if (discount == null) return 0;
 
@@ -72,6 +74,8 @@ public class Transaction {
     public double getBalance() {
         return getSubtotalAfterDiscount() - payment - loyaltyPoint;
     }
+
+    public List<TransactionItem> getTransactionItemList() { return transactionItemList; }
 
     public TableModel getTableModel() {
         if (tableModel != null) return tableModel;
@@ -108,8 +112,6 @@ public class Transaction {
             }
         };
     }
-
-    public double getSubtotal() { return subtotal; }
 
     public Stream<String> toStringStream() {
         String idString = Integer.toString(id);
