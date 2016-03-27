@@ -1,7 +1,7 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui.checkout;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.Transaction;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.TransactionItem;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.Transaction;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.TransactionItem;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;

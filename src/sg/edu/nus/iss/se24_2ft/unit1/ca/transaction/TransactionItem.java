@@ -1,4 +1,4 @@
-package sg.edu.nus.iss.se24_2ft.unit1.ca;
+package sg.edu.nus.iss.se24_2ft.unit1.ca.transaction;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 
