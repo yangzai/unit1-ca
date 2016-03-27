@@ -40,6 +40,10 @@ public final class Utils {
         return SDF.format(date);
     }
 
+    public static String formatDollar(double amount) {
+        return "$" + String.format("%.2f", amount);
+    }
+
     public static String[] splitCsv(String string) {
         if (string == null) return new String[0];
         return string.split(",");

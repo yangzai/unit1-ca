@@ -1,60 +1,218 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import java.util.Date;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class Transaction {
-	
-	private int transactionID;
-	private String productId;
-	private String memberID;
-	private int quantity;
-	private String date;
-	
-	/**
-	 * created by Srishti
-	 */
-	
-	public Transaction(int transactionID, String productId,String memberID, int quantity,String date)
-	{
-		this.transactionID = transactionID;
-		this.productId = productId;
-		this.memberID = memberID;
-		this.quantity = quantity;
-		this.date=date;
-	}
-	
-	public int getTransactionID() {
-		return transactionID;
-	}
-	public void setTransactionID(int transactionID) {
-		this.transactionID = transactionID;
-	}
-	public void setProductId(String productId) {
-		this.productId = productId;
-	}
-	public void setMemberID(String memberID) {
-		this.memberID = memberID;
-	}
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-	public void setDate(String date) {
-		this.date = date;
-	}
-	public String getProductId() {
-		return productId;
-	}
-	public String getMemberID() {
-		return memberID;
-	}
-	public int getQuantity() {
-		return quantity;
-	}
-	public String getDate() {
-		return date;
-	}
-	
-	
 
-	
+    private Integer id;
+    private Customer customer;
+    private Date date;
+
+    //derived
+    private double subtotal;
+
+    //not persisted
+    private Discount discount;
+    private int loyaltyPoint;
+    private double payment;
+
+    private List<TransactionItem> transactionItemList;
+    private Map<String, TransactionItem> transactionItemMap;
+    private AbstractTableModel tableModel;
+
+
+    /**
+     * created by Srishti
+     */
+
+    public Transaction() {
+        id = null;
+        customer = null;
+        date = null;
+        subtotal = 0;
+        discount = null;
+        loyaltyPoint = 0;
+        payment = 0;
+        tableModel = null;
+
+
+        transactionItemList = new ArrayList<>();
+        transactionItemMap = new HashMap<>();
+//		transactionListenerList = new ArrayList<>();
+    }
+
+    public int getId() { return id; }
+
+    public Customer getCustomer() { return customer; }
+
+    public Discount getDiscount() { return discount; }
+
+    public int getLoyaltyPoint() { return loyaltyPoint; }
+
+    public double getPayment() { return payment; }
+
+    public double getDiscountAmount() {
+        if (discount == null) return 0;
+
+        return (discount.getPercent() / 100.0) * subtotal;
+    }
+
+    public double getSubtotalAfterDiscount() {
+        return subtotal - getDiscountAmount();
+    }
+
+    public double getBalance() {
+        return getSubtotalAfterDiscount() - payment - loyaltyPoint;
+    }
+
+    public TableModel getTableModel() {
+        if (tableModel != null) return tableModel;
+
+        return tableModel = new AbstractTableModel() {
+            private final String[] COLUMN_NAMES =
+                    { "Qty", "ID", "Description", "Unit Price" };
+
+            @Override
+            public String getColumnName(int column) {
+                return COLUMN_NAMES[column];
+            }
+
+            @Override
+            public int getRowCount() {
+                return transactionItemList.size();
+            }
+
+            @Override
+            public int getColumnCount() {
+                return COLUMN_NAMES.length;
+            }
+
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                TransactionItem item = transactionItemList.get(rowIndex);
+                switch (columnIndex) {
+                    case 0: return item.getQuantity();
+                    case 1: return item.getProduct().getId();
+                    case 2: return item.getProduct().getDescription();
+                    case 3: return Utils.formatDollar(item.getProduct().getPrice());
+                    default: return null;
+                }
+            }
+        };
+    }
+
+    public double getSubtotal() { return subtotal; }
+
+    public Stream<String> toStringStream() {
+        String idString = Integer.toString(id);
+        String customerId = customer != null ? customer.getId() : "PUBLIC";
+        String dateString = Utils.formatDateOrDefault(date, null);
+
+        return transactionItemList.stream()
+                .sorted(Comparator.comparing(i -> {
+                    Product product = i.getProduct();
+                    return product != null ? product.getId() : null;
+                }))
+                .map(i -> {
+                    Product product = i.getProduct();
+                    StringJoiner stringJoiner = new StringJoiner(",");
+                    return stringJoiner.add(idString)
+                            .add(product != null ? product.getId() : null)
+                            .add(customerId)
+                            .add(Integer.toString(i.getQuantity()))
+                            .add(dateString)
+                            .toString();
+                });
+    }
+
+    //setters
+    public boolean addTransactionItem(TransactionItem transactionItem) {
+        //allow adding only before id is set
+        if (id != null) return false;
+
+        Product product = transactionItem.getProduct();
+
+        if (product == null) return false;
+        String productId = product.getId();
+
+        if (productId == null) return false;
+
+        TransactionItem existingItem = transactionItemMap.get(productId);
+
+        if (existingItem == null) {
+            transactionItemList.add(transactionItem);
+            transactionItemMap.put(productId, transactionItem);
+
+            if (tableModel != null) {
+                int rowIndex = transactionItemList.size() - 1;
+                tableModel.fireTableRowsInserted(rowIndex, rowIndex);
+            }
+        } else {
+            existingItem.addQuantity(transactionItem.getQuantity());
+
+            if (tableModel != null) {
+                int rowIndex = transactionItemList.indexOf(existingItem);
+                if (rowIndex >= 0)
+                    tableModel.fireTableCellUpdated(rowIndex, 0);
+            }
+        }
+
+        subtotal += transactionItem.getQuantity() * product.getPrice();
+
+        return true;
+    }
+
+    public boolean setCustomer(Customer customer) {
+        //only allow before id is set
+        if (id != null) return false;
+
+        this.customer = customer;
+        return true;
+    }
+
+    public boolean setDate(Date date) {
+        //only allow before id is set
+        if (id != null) return false;
+
+        this.date = date;
+        return true;
+    }
+
+    public boolean setDiscount(Discount discount) {
+        //only allow before id is set
+        if (id != null) return false;
+
+        this.discount = discount;
+
+        double total = getSubtotalAfterDiscount();
+        if (loyaltyPoint > total) loyaltyPoint = (int) total;
+
+        return true;
+    }
+
+    public boolean setLoyaltyPoint(int loyaltyPoint) {
+        //only allow before id is set
+        if (id != null || loyaltyPoint < 0) return false;
+
+        this.loyaltyPoint = loyaltyPoint;
+        return true;
+    }
+
+    public boolean setPayment(double payment) {
+        //only allow before id is set
+        if (id != null || payment < 0) return false;
+
+        this.payment = payment;
+        return true;
+    }
+
+    /*package*/ void setId(int id) { this.id = id; }
 }

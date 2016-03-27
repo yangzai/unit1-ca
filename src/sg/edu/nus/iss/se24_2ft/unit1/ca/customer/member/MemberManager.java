@@ -70,6 +70,28 @@ public class MemberManager {
         return true;
     }
 
+    public boolean debitLoyaltyPoint(String id, int loyaltyPoint) {
+        Member member = memberMap.get(id);
+        //TODO: may not update view
+//        for (Member m : memberList) {
+//
+//        }
+        if (member == null) return false;
+        if (loyaltyPoint == 0) return true;
+        if (member.getLoyaltyPoint() < loyaltyPoint) return false;
+
+        member.removeLoyaltyPoint(loyaltyPoint);
+        return true;
+    }
+
+    public boolean creditLoyaltyPoint(String id, int loyaltyPoint) {
+        Member member = memberMap.get(id);
+        if (member == null) return false;
+
+        member.addLoyaltyPoint(loyaltyPoint);
+        return true;
+    }
+
     //TODO: KIV
 //    public Customer getCustomer(String id) {
 //        if (id == null || id.equalsIgnoreCase("PUBLIC"))

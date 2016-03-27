@@ -1,52 +1,27 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import java.util.Date;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 
 public class TransactionItem {
-	private int quantityPurchased;
-	private String productId;
-	private String memberID;
-	private double price ;
-	private int discount ;
-	private int tranId;
-	private String date; 
-	
-	/**
-	 * created by Srishti
-	 */
-	
-	public TransactionItem(int quantityPurchased, String productId,String memberID, double price, int discount, int tranId, String date) {
-		super();
-		this.quantityPurchased = quantityPurchased;
-		this.productId = productId;
-		this.price = price;
-		this.discount = discount;
-		this.tranId = tranId;
-		this.date = date;
-		this.memberID = memberID;
-	}
-	
+    //TODO: this might be a package/inner class
+    private Product product;
+    private int quantity;
 
-	public int getQuantityPurchased() {
-		return quantityPurchased;
-	}
+    /**
+     * created by Srishti
+     */
 
-	public String getProductId() {
-		return productId;
-	}
+    public TransactionItem(Product product, int quantity) {
+        this.product = product;
+        this.quantity = quantity;
+    }
 
-	public double getPrice() {
-		return price;
-	}
+    public Product getProduct() { return product; }
 
-	public int getDiscount() {
-		return discount;
-	}
+    public int getQuantity() { return quantity; }
 
-	public int getTranId() {
-		return tranId;
-	}
-
-
-
+    //setter
+    /*package*/ void addQuantity(int quantity) {
+        this.quantity += quantity;
+    }
 }

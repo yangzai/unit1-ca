@@ -50,6 +50,22 @@ public class Member implements Customer {
         this.loyaltyPoint = loyaltyPoint;
     }
 
+    /*package*/ void addLoyaltyPoint(int loyaltyPoint) {
+        if (this.loyaltyPoint < 0) setLoyaltyPoint(loyaltyPoint);
+        else this.loyaltyPoint += loyaltyPoint;
+    }
+
+    /*package*/ int removeLoyaltyPoint(int loyaltyPoint) {
+        //remove at most curr pts
+        if (this.loyaltyPoint < 0) return 0;
+        int diff = this.loyaltyPoint = loyaltyPoint;
+        if (diff < 0) {
+            loyaltyPoint = this.loyaltyPoint;
+            this.loyaltyPoint = 0;
+        } else this.loyaltyPoint = diff;
+
+        return loyaltyPoint;
+    }
     //TODO: to be verified with CheckoutPanel
 //    public int setRedeemPoint(int point){
 //        if (loyaltyPoint < 0){
