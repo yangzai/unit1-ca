@@ -24,7 +24,7 @@ import java.awt.*;
 
     /*package*/ ConfirmPaymentDialog(Component parentComponent, Transaction transaction) {
         super((JFrame) SwingUtilities.windowForComponent(parentComponent),
-				"Payment Details", true);
+                "Payment Details", true);
 
         isConfirmed = false;
         this.transaction = transaction;
@@ -42,7 +42,7 @@ import java.awt.*;
     }
 
     private JPanel getPaymentPanel() {
-		JPanel panel = new JPanel(new GridBagLayout());
+        JPanel panel = new JPanel(new GridBagLayout());
         // Setting
         GridBagConstraints gbc = new GridBagConstraints();
         Insets defaultInsets = gbc.insets;
@@ -221,14 +221,14 @@ import java.awt.*;
         });
         panel.add(confirmButton, gbc);
 
-		return panel;
+        return panel;
     }
 
     /*package*/ boolean isConfirmed() {
-		return isConfirmed;
-	}
+        return isConfirmed;
+    }
 
-	private String discountLabelFormat(double percent) {
+    private String discountLabelFormat(double percent) {
         return "Discount (" + percent + "%):";
     }
 

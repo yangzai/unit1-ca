@@ -11,208 +11,208 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class Transaction {
-	
-	private Integer id;
-	private Customer customer;
-	private Date date;
 
-	//derived
-	private double subtotal;
+    private Integer id;
+    private Customer customer;
+    private Date date;
 
-	//not persisted
-	private Discount discount;
-	private int loyaltyPoint;
-	private double payment;
+    //derived
+    private double subtotal;
 
-	private List<TransactionItem> transactionItemList;
-	private Map<String, TransactionItem> transactionItemMap;
-	private AbstractTableModel tableModel;
+    //not persisted
+    private Discount discount;
+    private int loyaltyPoint;
+    private double payment;
 
-
-	/**
-	 * created by Srishti
-	 */
-
-	public Transaction() {
-		id = null;
-		customer = null;
-		date = null;
-		subtotal = 0;
-		discount = null;
-		loyaltyPoint = 0;
-		payment = 0;
-		tableModel = null;
+    private List<TransactionItem> transactionItemList;
+    private Map<String, TransactionItem> transactionItemMap;
+    private AbstractTableModel tableModel;
 
 
-		transactionItemList = new ArrayList<>();
-		transactionItemMap = new HashMap<>();
+    /**
+     * created by Srishti
+     */
+
+    public Transaction() {
+        id = null;
+        customer = null;
+        date = null;
+        subtotal = 0;
+        discount = null;
+        loyaltyPoint = 0;
+        payment = 0;
+        tableModel = null;
+
+
+        transactionItemList = new ArrayList<>();
+        transactionItemMap = new HashMap<>();
 //		transactionListenerList = new ArrayList<>();
-	}
+    }
 
-	public int getId() { return id; }
+    public int getId() { return id; }
 
-	public Customer getCustomer() { return customer; }
+    public Customer getCustomer() { return customer; }
 
-	public Discount getDiscount() { return discount; }
+    public Discount getDiscount() { return discount; }
 
-	public int getLoyaltyPoint() { return loyaltyPoint; }
+    public int getLoyaltyPoint() { return loyaltyPoint; }
 
-	public double getPayment() { return payment; }
+    public double getPayment() { return payment; }
 
-	public double getDiscountAmount() {
-		if (discount == null) return 0;
+    public double getDiscountAmount() {
+        if (discount == null) return 0;
 
-		return (discount.getPercent() / 100.0) * subtotal;
-	}
+        return (discount.getPercent() / 100.0) * subtotal;
+    }
 
-	public double getSubtotalAfterDiscount() {
-		return subtotal - getDiscountAmount();
-	}
+    public double getSubtotalAfterDiscount() {
+        return subtotal - getDiscountAmount();
+    }
 
-	public double getBalance() {
-		return getSubtotalAfterDiscount() - payment - loyaltyPoint;
-	}
+    public double getBalance() {
+        return getSubtotalAfterDiscount() - payment - loyaltyPoint;
+    }
 
-	public TableModel getTableModel() {
-		if (tableModel != null) return tableModel;
+    public TableModel getTableModel() {
+        if (tableModel != null) return tableModel;
 
-		return tableModel = new AbstractTableModel() {
-			private final String[] COLUMN_NAMES =
-					{ "Qty", "ID", "Description", "Unit Price" };
+        return tableModel = new AbstractTableModel() {
+            private final String[] COLUMN_NAMES =
+                    { "Qty", "ID", "Description", "Unit Price" };
 
-			@Override
-			public String getColumnName(int column) {
-				return COLUMN_NAMES[column];
-			}
+            @Override
+            public String getColumnName(int column) {
+                return COLUMN_NAMES[column];
+            }
 
-			@Override
-			public int getRowCount() {
-				return transactionItemList.size();
-			}
+            @Override
+            public int getRowCount() {
+                return transactionItemList.size();
+            }
 
-			@Override
-			public int getColumnCount() {
-				return COLUMN_NAMES.length;
-			}
+            @Override
+            public int getColumnCount() {
+                return COLUMN_NAMES.length;
+            }
 
-			@Override
-			public Object getValueAt(int rowIndex, int columnIndex) {
-				TransactionItem item = transactionItemList.get(rowIndex);
-				switch (columnIndex) {
-					case 0: return item.getQuantity();
-					case 1: return item.getProduct().getId();
-					case 2: return item.getProduct().getDescription();
-					case 3: return Utils.formatDollar(item.getProduct().getPrice());
-					default: return null;
-				}
-			}
-		};
-	}
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                TransactionItem item = transactionItemList.get(rowIndex);
+                switch (columnIndex) {
+                    case 0: return item.getQuantity();
+                    case 1: return item.getProduct().getId();
+                    case 2: return item.getProduct().getDescription();
+                    case 3: return Utils.formatDollar(item.getProduct().getPrice());
+                    default: return null;
+                }
+            }
+        };
+    }
 
-	public double getSubtotal() { return subtotal; }
+    public double getSubtotal() { return subtotal; }
 
-	public Stream<String> toStringStream() {
-		String idString = Integer.toString(id);
-		String customerId = customer != null ? customer.getId() : "PUBLIC";
-		String dateString = Utils.formatDateOrDefault(date, null);
+    public Stream<String> toStringStream() {
+        String idString = Integer.toString(id);
+        String customerId = customer != null ? customer.getId() : "PUBLIC";
+        String dateString = Utils.formatDateOrDefault(date, null);
 
-		return transactionItemList.stream()
-				.sorted(Comparator.comparing(i -> {
-					Product product = i.getProduct();
-					return product != null ? product.getId() : null;
-				}))
-				.map(i -> {
-					Product product = i.getProduct();
-					StringJoiner stringJoiner = new StringJoiner(",");
-					return stringJoiner.add(idString)
-							.add(product != null ? product.getId() : null)
-							.add(customerId)
-							.add(Integer.toString(i.getQuantity()))
-							.add(dateString)
-							.toString();
-				});
-	}
+        return transactionItemList.stream()
+                .sorted(Comparator.comparing(i -> {
+                    Product product = i.getProduct();
+                    return product != null ? product.getId() : null;
+                }))
+                .map(i -> {
+                    Product product = i.getProduct();
+                    StringJoiner stringJoiner = new StringJoiner(",");
+                    return stringJoiner.add(idString)
+                            .add(product != null ? product.getId() : null)
+                            .add(customerId)
+                            .add(Integer.toString(i.getQuantity()))
+                            .add(dateString)
+                            .toString();
+                });
+    }
 
-	//setters
-	public boolean addTransactionItem(TransactionItem transactionItem) {
-		//allow adding only before id is set
-		if (id != null) return false;
+    //setters
+    public boolean addTransactionItem(TransactionItem transactionItem) {
+        //allow adding only before id is set
+        if (id != null) return false;
 
-		Product product = transactionItem.getProduct();
+        Product product = transactionItem.getProduct();
 
-		if (product == null) return false;
-		String productId = product.getId();
+        if (product == null) return false;
+        String productId = product.getId();
 
-		if (productId == null) return false;
+        if (productId == null) return false;
 
-		TransactionItem existingItem = transactionItemMap.get(productId);
+        TransactionItem existingItem = transactionItemMap.get(productId);
 
-		if (existingItem == null) {
-			transactionItemList.add(transactionItem);
-			transactionItemMap.put(productId, transactionItem);
+        if (existingItem == null) {
+            transactionItemList.add(transactionItem);
+            transactionItemMap.put(productId, transactionItem);
 
-			if (tableModel != null) {
-				int rowIndex = transactionItemList.size() - 1;
-				tableModel.fireTableRowsInserted(rowIndex, rowIndex);
-			}
-		} else {
-			existingItem.addQuantity(transactionItem.getQuantity());
+            if (tableModel != null) {
+                int rowIndex = transactionItemList.size() - 1;
+                tableModel.fireTableRowsInserted(rowIndex, rowIndex);
+            }
+        } else {
+            existingItem.addQuantity(transactionItem.getQuantity());
 
-			if (tableModel != null) {
-				int rowIndex = transactionItemList.indexOf(existingItem);
-				if (rowIndex >= 0)
-					tableModel.fireTableCellUpdated(rowIndex, 0);
-			}
-		}
+            if (tableModel != null) {
+                int rowIndex = transactionItemList.indexOf(existingItem);
+                if (rowIndex >= 0)
+                    tableModel.fireTableCellUpdated(rowIndex, 0);
+            }
+        }
 
-		subtotal += transactionItem.getQuantity() * product.getPrice();
+        subtotal += transactionItem.getQuantity() * product.getPrice();
 
-		return true;
-	}
+        return true;
+    }
 
-	public boolean setCustomer(Customer customer) {
-		//only allow before id is set
-		if (id != null) return false;
+    public boolean setCustomer(Customer customer) {
+        //only allow before id is set
+        if (id != null) return false;
 
-		this.customer = customer;
-		return true;
-	}
+        this.customer = customer;
+        return true;
+    }
 
-	public boolean setDate(Date date) {
-		//only allow before id is set
-		if (id != null) return false;
+    public boolean setDate(Date date) {
+        //only allow before id is set
+        if (id != null) return false;
 
-		this.date = date;
-		return true;
-	}
+        this.date = date;
+        return true;
+    }
 
-	public boolean setDiscount(Discount discount) {
-		//only allow before id is set
-		if (id != null) return false;
+    public boolean setDiscount(Discount discount) {
+        //only allow before id is set
+        if (id != null) return false;
 
-		this.discount = discount;
+        this.discount = discount;
 
-		double total = getSubtotalAfterDiscount();
-		if (loyaltyPoint > total) loyaltyPoint = (int) total;
+        double total = getSubtotalAfterDiscount();
+        if (loyaltyPoint > total) loyaltyPoint = (int) total;
 
-		return true;
-	}
+        return true;
+    }
 
-	public boolean setLoyaltyPoint(int loyaltyPoint) {
-		//only allow before id is set
-		if (id != null || loyaltyPoint < 0) return false;
+    public boolean setLoyaltyPoint(int loyaltyPoint) {
+        //only allow before id is set
+        if (id != null || loyaltyPoint < 0) return false;
 
-		this.loyaltyPoint = loyaltyPoint;
-		return true;
-	}
+        this.loyaltyPoint = loyaltyPoint;
+        return true;
+    }
 
-	public boolean setPayment(double payment) {
-		//only allow before id is set
-		if (id != null || payment < 0) return false;
+    public boolean setPayment(double payment) {
+        //only allow before id is set
+        if (id != null || payment < 0) return false;
 
-		this.payment = payment;
-		return true;
-	}
+        this.payment = payment;
+        return true;
+    }
 
-	/*package*/ void setId(int id) { this.id = id; }
+    /*package*/ void setId(int id) { this.id = id; }
 }
