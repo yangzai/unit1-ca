@@ -80,7 +80,7 @@ public class MemberPanel extends FeaturePanel {
         gbc.gridx++;
         gbc.anchor = GridBagConstraints.WEST;
         JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> backActionPerformed(e));
+        backButton.addActionListener(this::backActionPerformed);
         add(backButton, gbc);
     }
 

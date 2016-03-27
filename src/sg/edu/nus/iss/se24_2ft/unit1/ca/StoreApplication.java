@@ -48,15 +48,15 @@ public class StoreApplication {
 
         DiscountPanel discountPanel = new DiscountPanel();
         discountPanel.setTableModel(discountManager.getTableModel());
-        discountPanel.addDiscountPanelListener(d -> discountManager.addDiscount(d));
+        discountPanel.addDiscountPanelListener(discountManager::addDiscount);
         
         CategoryPanel categoryPanel = new CategoryPanel();
         categoryPanel.setTableModel(categoryManager.getTableModel());
-        categoryPanel.addCategoryPanelListener(c -> categoryManager.addCategory(c));
+        categoryPanel.addCategoryPanelListener(categoryManager::addCategory);
 
         MemberPanel memberPanel = new MemberPanel();
         memberPanel.setTableModel(memberManager.getTableModel());
-        memberPanel.addMemberPanelistener(m -> memberManager.addMember(m));
+        memberPanel.addMemberPanelistener(memberManager::addMember);
 
         ProductPanel productPanel = new ProductPanel();
         productPanel.setTableModel(productManager.getTableModel());
@@ -66,7 +66,7 @@ public class StoreApplication {
 
         InventoryPanel inventoryPanel = new InventoryPanel();
         inventoryPanel.setTableModel(productManager.getUnderstockTableModel());
-        inventoryPanel.addInventoryPanelListener(uil -> productManager.generatePurchaseOrder(uil));
+        inventoryPanel.addInventoryPanelListener(productManager::generatePurchaseOrder);
 
         CheckoutPanel checkoutPanel = new CheckoutPanel() {
             @Override
@@ -84,7 +84,7 @@ public class StoreApplication {
                 return discountManager.getMaxDiscount(customer);
             }
         };
-        checkoutPanel.addCheckoutPanelListener(t -> transactionManager.addTransaction(t));
+        checkoutPanel.addCheckoutPanelListener(transactionManager::addTransaction);
 
         mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
         mainFrame.addFeaturePanel(NEW_MEMBER, memberPanel);

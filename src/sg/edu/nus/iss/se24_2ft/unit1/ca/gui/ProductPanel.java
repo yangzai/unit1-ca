@@ -140,7 +140,7 @@ public class ProductPanel extends FeaturePanel {
         // Back Button
         c.gridy++;
         JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> backActionPerformed(e));
+        backButton.addActionListener(this::backActionPerformed);
         add(backButton, c);
     }
 

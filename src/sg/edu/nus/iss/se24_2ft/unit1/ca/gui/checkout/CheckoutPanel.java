@@ -178,7 +178,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
         // Back button
         gbc.gridx++;
         JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> backActionPerformed(e));
+        backButton.addActionListener(this::backActionPerformed);
         panel.add(backButton, gbc);
 
         return panel;

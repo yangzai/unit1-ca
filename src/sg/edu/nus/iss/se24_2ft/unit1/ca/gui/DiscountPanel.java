@@ -149,7 +149,7 @@ public class DiscountPanel extends FeaturePanel {
         // add Back btn
         c.gridy++;
         JButton backBtn = new JButton("Back");
-        backBtn.addActionListener(e -> backActionPerformed(e));
+        backBtn.addActionListener(this::backActionPerformed);
         add(backBtn, c);
     }
 
