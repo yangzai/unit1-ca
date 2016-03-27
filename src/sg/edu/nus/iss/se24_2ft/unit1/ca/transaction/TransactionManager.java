@@ -21,7 +21,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
  */
 
 public class TransactionManager {
-	private static final int VALUE_TO_LOYALITY_RATE = 20;
+	private static final int VALUE_TO_LOYALTY_RATE = 20;
 	private String filename;
 	private ProductManager productManager;
 	private MemberManager memberManager;
@@ -103,7 +103,7 @@ public class TransactionManager {
 			if (!memberManager.debitLoyaltyPoint(memberId, debitPoint)) return false;
 
 			//floor
-			int creditPoint = (int) (transaction.getSubtotal() / VALUE_TO_LOYALITY_RATE);
+			int creditPoint = (int) (transaction.getSubtotal() / VALUE_TO_LOYALTY_RATE);
 			memberManager.creditLoyaltyPoint(memberId, creditPoint);
 		}
 
