@@ -1,32 +1,26 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
-import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.table.TableModel;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.swing.*;
+import javax.swing.table.*;
 
 public class ReportPanel extends FeaturePanel {
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 400;
 	private static final int VISIBLE_ROW = 5;
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
     private JTable categoryTable, productTable, transactionTable, memberTable;
-    private Date startDate, endDate;
+	private JFormattedTextField startDateField, endDateField;
+	private TableRowSorter<TableModel> transactionSorter;
     
 	public ReportPanel() {
-		
+		transactionSorter = null;
+
 		// Initial setting
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -38,7 +32,7 @@ public class ReportPanel extends FeaturePanel {
 		JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT); //enables to use scrolling tabs.
 		
-		JPanel categoryReportPanel = createCategorReportyPanel();
+		JPanel categoryReportPanel = createCategoryReportPanel();
 		tabbedPane.add("Category Report", categoryReportPanel);
 		
 		JPanel productReportPanel = createProductReportPanel();
@@ -51,22 +45,24 @@ public class ReportPanel extends FeaturePanel {
 		tabbedPane.add("Member Report", memberReportPanel);
 		
 		gbc.gridx = gbc.gridy = 0;
+		gbc.weightx = gbc.weighty = 1;
+		gbc.fill = GridBagConstraints.BOTH;
 		tabbedPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		add(tabbedPane, gbc);
 		
 		//Add button
 		gbc.gridy++;
-		gbc.gridx++;
+		gbc.weighty = 0;
 		gbc.weightx = 0.5;
 		gbc.gridwidth = 1;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
 		JButton backButton = new JButton("Back");
-		backButton.addActionListener(e -> backActionPerformed(e));
+		backButton.addActionListener(this::backActionPerformed);
 		add(backButton, gbc);
 	}
 
-	private JPanel createCategorReportyPanel() {
+	private JPanel createCategoryReportPanel() {
 		JPanel panel = new JPanel(new BorderLayout());
 		categoryTable = new JTable();
 		panel.add(new JScrollPane(categoryTable));
@@ -93,9 +89,7 @@ public class ReportPanel extends FeaturePanel {
 		panel.add(new JLabel("Start Date: "), gbc);
 		
 		gbc.gridy++;
-		startDate = new Date();
-		JFormattedTextField startDateField = new JFormattedTextField(DATE_FORMAT);
-		startDateField.setValue(startDate);
+		startDateField = new JFormattedTextField(Utils.DATE_FORMAT);
 		panel.add(startDateField, gbc);
 		
 		gbc.gridx++;
@@ -103,9 +97,7 @@ public class ReportPanel extends FeaturePanel {
 		panel.add(new JLabel("End Date: "), gbc);
 		
 		gbc.gridy++;
-		endDate = new Date();
-		JFormattedTextField endDateField = new JFormattedTextField(DATE_FORMAT);
-		endDateField.setValue(endDate);
+		endDateField = new JFormattedTextField(Utils.DATE_FORMAT);
 		panel.add(endDateField, gbc);
 		
 		gbc.gridy--;
@@ -114,12 +106,23 @@ public class ReportPanel extends FeaturePanel {
 		gbc.gridheight = 2;
 		JButton getButton = new JButton("Get Report");
 		getButton.addActionListener(l -> {
-			startDate = (Date) startDateField.getValue();
-			endDate = (Date) endDateField.getValue();
+			Date startDate = (Date) startDateField.getValue();
+			Date endDate = (Date) endDateField.getValue();
 			if (startDate.after(endDate)) {
 				JOptionPane.showMessageDialog(this, "End Date is before Start Date, please correct");
-			} else {
-				getTransactionBasedOnDate(startDate, endDate);
+			} else if (transactionSorter != null) {
+				List<RowFilter<Object, Object>> lowerBoundFilterList = new ArrayList<>(2);
+				lowerBoundFilterList.add(RowFilter.dateFilter(RowFilter.ComparisonType.AFTER, startDate));
+				lowerBoundFilterList.add(RowFilter.dateFilter(RowFilter.ComparisonType.EQUAL, startDate));
+
+				List<RowFilter<Object, Object>> upperBoundFilterList = new ArrayList<>(2);
+				upperBoundFilterList.add(RowFilter.dateFilter(RowFilter.ComparisonType.BEFORE, endDate));
+				upperBoundFilterList.add(RowFilter.dateFilter(RowFilter.ComparisonType.EQUAL, endDate));
+
+				List<RowFilter<Object, Object>> filterList = new ArrayList<>(2);
+				filterList.add(RowFilter.orFilter(lowerBoundFilterList));
+				filterList.add(RowFilter.orFilter(upperBoundFilterList));
+				transactionSorter.setRowFilter(RowFilter.andFilter(filterList));
 			}
 		});
 		panel.add(getButton, gbc);	
@@ -129,18 +132,13 @@ public class ReportPanel extends FeaturePanel {
 		gbc.gridy = 2;
 		gbc.gridheight = 1;
 		gbc.gridwidth = 3;
-		gbc.weightx = 0;
+		gbc.weightx = gbc.weighty = 1;
 		transactionTable = new JTable();
 		JScrollPane scrollPane= new JScrollPane(transactionTable);
 		scrollPane.setPreferredSize(new Dimension(WIDTH-5, transactionTable.getRowHeight() * VISIBLE_ROW));
 		panel.add(scrollPane, gbc);
 		
 		return panel;
-	}
-	
-	private void getTransactionBasedOnDate(Date start, Date end) {
-		// TODO Fire Event to get Transaction data based on the startDate and endDate
-		System.out.println("Start Date: " + start.toString() + ", End Date: " + end.toString());
 	}
 
 	private JPanel createMemberReportPanel() {
@@ -155,8 +153,9 @@ public class ReportPanel extends FeaturePanel {
         categoryTable.setModel(tableModel);
         categoryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         categoryTable.setPreferredSize(new Dimension(WIDTH, categoryTable.getRowHeight() * VISIBLE_ROW ));
-        categoryTable.getColumnModel().getColumn(0).setPreferredWidth((int) (WIDTH*0.2));
-        categoryTable.getColumnModel().getColumn(1).setPreferredWidth((int) (WIDTH*0.8));
+		TableColumnModel columnModel = categoryTable.getColumnModel();
+		columnModel.getColumn(0).setPreferredWidth((int) (WIDTH*0.2));
+		columnModel.getColumn(1).setPreferredWidth((int) (WIDTH*0.8));
     }
     
     public void setMemberTableModel(TableModel tableModel) {
@@ -168,8 +167,23 @@ public class ReportPanel extends FeaturePanel {
     }
     
     public void setTransactionTableModel(TableModel tableModel) {
-    	transactionTable.setModel(tableModel);
-    }
-    
-    
+		int dateColumnIndex = tableModel.getColumnCount() - 1;
+		startDateField.setValue(tableModel.getValueAt(0, dateColumnIndex));
+		endDateField.setValue(tableModel.getValueAt(tableModel.getRowCount() - 1, dateColumnIndex));
+		transactionSorter = new TableRowSorter<>(tableModel);
+		transactionTable.setModel(tableModel);
+		transactionTable.setRowSorter(transactionSorter);
+		//TODO: Consider replacing with localdate
+		TableCellRenderer tableCellRenderer = new DefaultTableCellRenderer() {
+
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+														   boolean hasFocus, int row, int column) {
+				if( value instanceof Date)
+					value = Utils.formatDateOrDefault((Date) value, null);
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			}
+		};
+		transactionTable.getColumnModel().getColumn(dateColumnIndex).setCellRenderer(tableCellRenderer);
+	}
 }

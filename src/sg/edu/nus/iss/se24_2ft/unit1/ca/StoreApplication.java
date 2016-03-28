@@ -87,12 +87,19 @@ public class StoreApplication {
         };
         checkoutPanel.addCheckoutPanelListener(transactionManager::addTransaction);
 
+        ReportPanel reportPanel = new ReportPanel();
+        reportPanel.setCategoryTableModel(categoryManager.getTableModel());
+        reportPanel.setProductTableModel(productManager.getTableModel());
+        reportPanel.setTransactionTableModel(transactionManager.getTableModel());
+        reportPanel.setMemberTableModel(memberManager.getTableModel());
+
         mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
         mainFrame.addFeaturePanel(NEW_MEMBER, memberPanel);
         mainFrame.addFeaturePanel(NEW_PRODUCT, productPanel);
         mainFrame.addFeaturePanel(INVENTORY, inventoryPanel);
         mainFrame.addFeaturePanel(DISCOUNT, discountPanel);
         mainFrame.addFeaturePanel(CHECK_OUT, checkoutPanel);
+        mainFrame.addFeaturePanel(REPORTS, reportPanel);
         //TODO: Temp panel
         Function<String, FeaturePanel> getTempPanel = s -> new FeaturePanel() {
             {
@@ -104,7 +111,6 @@ public class StoreApplication {
                 });
             }
         };
-        mainFrame.addFeaturePanel(REPORTS, getTempPanel.apply(REPORTS));
         mainFrame.addFeaturePanel(NULL, getTempPanel.apply(NULL));
 
         mainFrame.resizeAndPack();
