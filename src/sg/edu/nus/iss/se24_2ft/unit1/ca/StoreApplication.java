@@ -206,5 +206,11 @@ public class StoreApplication {
 //        ****************** understock test ****************************************
 //        productManager.addProduct(categoryManager.getCategory("CLO"), new Product("t", "t", 1, 10.5, 101, 5, 5));
 //        productManager.addProduct(categoryManager.getCategory("CLO"), new Product("z", "z", 1, 10.5, 102, 10, 5));
+        
+////      ****************** Tran Test on Report Panel ********************************
+//        ReportPanel reportPanel = new ReportPanel();
+//        reportPanel.setCategoryTableModel(categoryManager.getTableModel());
+//        reportPanel.setMemberTableModel(memberManager.getTableModel());
+//        mainFrame.addFeaturePanel(REPORTS, reportPanel);
     }
 }
