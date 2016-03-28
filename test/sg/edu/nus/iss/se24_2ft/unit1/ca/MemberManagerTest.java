@@ -92,18 +92,21 @@ public class MemberManagerTest extends TestCase {
     @Test
     public void testGetMemberList() {
         assertNull(memberManager);
+        int count = 0;
         try {
             memberManager = new MemberManager("data/Members.dat");
             memberManager.addMember(member1);
+            count++;
             memberManager.addMember(member2);
+            count++;
         } catch (IOException e) {
             e.printStackTrace();
             fail("Exception thrown");
         }
         List<Member> memberList = memberManager.getMemberList();
         assertTrue(memberManager != null);
-        assertEquals(member3, memberList.get(2));
-        assertEquals(member1, memberList.get(3));
-        assertEquals(member2, memberList.get(4));
+        assertTrue(memberList.contains(member1));
+        assertTrue(memberList.contains(member2));
+        assertTrue(memberList.contains(member3));
     }
 }

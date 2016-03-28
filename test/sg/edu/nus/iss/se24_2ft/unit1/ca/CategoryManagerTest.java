@@ -72,11 +72,7 @@ public class CategoryManagerTest extends TestCase {
             fail("Exception thrown!");
         }
         assertTrue(categoryManager != null);
-        assertEquals(category3.getRequestedId(), categoryManager.getCategory("CLO").getRequestedId());
-        // System.out.println(categoryManager.getCategory("CLO").getRequestedId());
-        // System.out.println(categoryManager.getCategory("CLO").getName());
-        // System.out.println(category3.getName());
-        assertEquals(category3.getName(), categoryManager.getCategory("CLO").getName());
+        assertEquals(category3, categoryManager.getCategory("CLO"));
     }
 
     @Test
@@ -100,15 +96,16 @@ public class CategoryManagerTest extends TestCase {
         assertNull(categoryManager);
         try {
             categoryManager = new CategoryManager("data/Category.dat");
+            categoryManager.addCategory(category1);
+            categoryManager.addCategory(category2);
         } catch (IOException e) {
             e.printStackTrace();
             fail("Exception thrown");
         }
         List<Category> categoryList = categoryManager.getCategoryList();
         assertTrue(categoryManager != null);
-        assertEquals(category3.getRequestedId(), categoryManager.getCategory("CLO").getRequestedId());
-        assertEquals(category3.getName(), categoryManager.getCategory("CLO").getName());
-        assertEquals(category1, categoryList.get(4));
-        assertEquals(category2, categoryList.get(5));
+        assertTrue(categoryList.contains(category1));
+        assertTrue(categoryList.contains(category2));
+        assertTrue(categoryList.contains(category3));
     }
 }
