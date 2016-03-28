@@ -28,7 +28,6 @@ public class Transaction {
     private Map<String, TransactionItem> transactionItemMap;
     private AbstractTableModel tableModel;
 
-
     /**
      * created by Srishti
      */
@@ -52,6 +51,8 @@ public class Transaction {
     public int getId() { return id; }
 
     public Customer getCustomer() { return customer; }
+
+    public Date getDate() { return date; }
 
     public Discount getDiscount() { return discount; }
 
@@ -114,25 +115,12 @@ public class Transaction {
     }
 
     public Stream<String> toStringStream() {
-        String idString = Integer.toString(id);
-        String customerId = customer != null ? customer.getId() : "PUBLIC";
-        String dateString = Utils.formatDateOrDefault(date, null);
-
         return transactionItemList.stream()
                 .sorted(Comparator.comparing(i -> {
                     Product product = i.getProduct();
                     return product != null ? product.getId() : null;
                 }))
-                .map(i -> {
-                    Product product = i.getProduct();
-                    StringJoiner stringJoiner = new StringJoiner(",");
-                    return stringJoiner.add(idString)
-                            .add(product != null ? product.getId() : null)
-                            .add(customerId)
-                            .add(Integer.toString(i.getQuantity()))
-                            .add(dateString)
-                            .toString();
-                });
+                .map(TransactionItem::toString);
     }
 
     //setters
@@ -150,6 +138,7 @@ public class Transaction {
         TransactionItem existingItem = transactionItemMap.get(productId);
 
         if (existingItem == null) {
+            transactionItem.setParent(this);
             transactionItemList.add(transactionItem);
             transactionItemMap.put(productId, transactionItem);
 
