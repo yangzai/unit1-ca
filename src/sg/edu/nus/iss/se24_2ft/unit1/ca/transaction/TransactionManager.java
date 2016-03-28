@@ -106,7 +106,12 @@ public class TransactionManager {
 			int creditPoint = (int) (transaction.getSubtotal() / VALUE_TO_LOYALTY_RATE);
 			memberManager.creditLoyaltyPoint(memberId, creditPoint);
 		}
-
+		
+		for (TransactionItem item : transaction.getTransactionItemList()) {
+			productManager.deductQuantity(item.getProduct(), item.getQuantity());
+			//TODO: Add logic to update Product file here;
+		}
+		
 		transaction.setId(++maxId);
 		transactionList.add(transaction);
 		transactionMap.put(transaction.getId(), transaction);

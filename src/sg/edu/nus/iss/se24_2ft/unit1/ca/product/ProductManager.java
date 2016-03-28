@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 import javax.swing.table.AbstractTableModel;
@@ -111,11 +112,21 @@ public class ProductManager {
 
         if (!product.isUnderstock()) return;
 
-        understockProductList.add(product);
+        understockProductList.add(product);   
         rowIndex = understockProductList.size() - 1;
 
         if (understockTableModel != null)
             understockTableModel.fireTableRowsInserted(rowIndex, rowIndex);
+    }
+    
+    public boolean deductQuantity(String id, int quantity) {
+        Product product = productMap.get(id);
+        if (product == null) return false;
+        else return deductQuantity(product, quantity);
+    }
+    
+    public boolean deductQuantity(Product product, int quantity){
+    	return product.deduct(quantity);
     }
 
     public void generatePurchaseOrder(List<Integer> understockIndexList) {
