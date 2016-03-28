@@ -7,6 +7,9 @@ import org.junit.Test;
 import junit.framework.TestCase;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 
+/**
+ * Created by chenyao on 26/3/16
+ */
 public class MemberTest extends TestCase {
     // Test Fixtures
     private Member member1 = null;

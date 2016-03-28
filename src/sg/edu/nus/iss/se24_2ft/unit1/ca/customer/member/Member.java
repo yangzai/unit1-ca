@@ -91,6 +91,7 @@ public class Member implements Customer {
     // return addPoint;
     // }
 
+    // override the equals method for testing
     public boolean equals(Object member) {
         if (member instanceof Member) {
             Member m = (Member) member;

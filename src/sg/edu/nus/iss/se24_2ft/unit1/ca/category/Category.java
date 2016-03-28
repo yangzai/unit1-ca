@@ -12,10 +12,38 @@ public class Category {
         this.name = name;
     }
 
-    public String getId() { return id; }
-    public String getRequestedId() { return requestedId; }
-    public String getName() { return name; }
+    public String getId() {
+        return id;
+    }
 
-    //setters
-    /*package*/ void setId() { id = requestedId; }
+    public String getRequestedId() {
+        return requestedId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    // setters
+    /* package */ void setId() {
+        id = requestedId;
+    }
+
+    // override the equals method for testing
+    public boolean equals(Object category) {
+        if (category instanceof Category) {
+            Category c = (Category) category;
+            if (this.getRequestedId().equals(c.getRequestedId())) {
+                if (this.getName() == null)
+                    if (c.getName() == null)
+                        return true;
+                    else
+                        return false;
+                else if (c.getName() != null)
+                    if (this.getName().equals(c.getName()))
+                        return true;
+            }
+        }
+        return false;
+    }
 }
