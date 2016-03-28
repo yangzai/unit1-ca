@@ -52,15 +52,17 @@ public class CategoryManager {
         return categoryList;
     }
 
-    public boolean addCategory(Category category) {
-        // Needs to check if already exist as per requirement
-        //TODO: return false or throw error?
-
+    public void addCategory(Category category) {
 //        //null implies success, not null implies collision
 //        return categoryMap.putIfAbsent(category.getId(), category) == null;
 
         String categoryId = category.getRequestedId();
-        if (categoryMap.get(categoryId) != null) return false;
+        //Check if categoryId is empty
+        if ((categoryId == null) || (categoryId.isEmpty())) {
+        	throw new IllegalArgumentException("Category ID is blank, please input again");
+		} else if (categoryMap.get(categoryId) != null) {
+			throw new IllegalArgumentException("Category " + categoryId + " already existed. Please input again");
+		}
 
         category.setId();
         categoryMap.put(categoryId, category);
@@ -69,8 +71,8 @@ public class CategoryManager {
         int insertedRowIndex = categoryList.size() - 1;
         if (tableModel != null)
             tableModel.fireTableRowsInserted(insertedRowIndex, insertedRowIndex);
-        return true;
         //TODO: persist immediately?
+        
     }
 
     public TableModel getTableModel() {

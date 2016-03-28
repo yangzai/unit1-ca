@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -124,8 +125,13 @@ public class ProductPanel extends FeaturePanel {
 
             Product product = new Product(name, destination, quantity, price,
                     barCode, threshold, orderQuantity);
-
-            productPanelListenerList.forEach(l -> l.addProductRequested(categoryId, product));
+            
+            try {
+            	productPanelListenerList.forEach(l -> l.addProductRequested(categoryId, product));
+			} catch (IllegalArgumentException iae) {
+				JOptionPane.showMessageDialog(this, iae.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
+            
             categoryTextField.setText(null);
             nameTextField.setText(null);
             desTextField.setText(null);
