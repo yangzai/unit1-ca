@@ -10,6 +10,8 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -86,8 +88,18 @@ public abstract class CheckoutPanel extends FeaturePanel {
 
         gbc.gridy++;
         quantityField = new JFormattedTextField(NumberFormat.getNumberInstance());
-        quantityField.setValue(1);
+        //workaround for http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6256502:
+        //1. use setText instead of setValue
+        //2. reset text on focus gained
+        quantityField.setText("1");
         quantityField.addActionListener(e -> addItemButton.doClick());
+        quantityField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+                quantityField.setText(quantityField.getText());
+            }
+        });
         panel.add(quantityField, gbc);
 
         // Add Add Item button
@@ -119,7 +131,8 @@ public abstract class CheckoutPanel extends FeaturePanel {
             subTotalField.setText(Utils.formatDollar(transaction.getSubtotal()));
 
             productField.setText(null);
-            quantityField.setValue(1);
+//            quantityField.setValue(1);
+            quantityField.setText("1");
             if (transaction.getTransactionItemList().size() == 1)
                 proceedPaymentButton.setEnabled(true);
         });
