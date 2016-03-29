@@ -17,7 +17,7 @@ public class StoreKeeper {
     
     public StoreKeeper(String name, String password) {
     	this.name = name.trim();
-    	this.password = password; //assumed valid and not trimmed
+    	this.password = password.trim();
     }
     
     /*Attribute accessor: Access the name of store keeper */
