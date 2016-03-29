@@ -20,8 +20,8 @@ public class Product {
         id = null;
         category = null;
 
-        this.name = name;
-        this.description = description;
+        this.name = name.trim();
+        this.description = description.trim();
         this.quantity = quantity;
         this.price = price;
         this.barCode = barCode;
@@ -58,7 +58,7 @@ public class Product {
     }
 
     //setters
-    /*package*/ void setId(String id) { this.id = id; }
+    /*package*/ void setId(String id) { this.id = id.trim(); }
 
     /*package*/ void setCategory(Category category) { this.category = category; }
 

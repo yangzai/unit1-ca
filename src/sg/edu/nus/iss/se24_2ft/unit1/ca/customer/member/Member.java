@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
  */
 public class Member implements Customer {
     private String id, requestedId, name;
-    private int loyaltyPoint, redeemPoint, addPoint;
+    private int loyaltyPoint;
 
     public Member(String requestedId, String name) {
         //TODO: chk all other list methods, try validation
         id = null;
 
-        this.requestedId = requestedId;
-        this.name = name;
+        this.requestedId = requestedId.trim();
+        this.name = name.trim();
         loyaltyPoint = -1;
     }
 

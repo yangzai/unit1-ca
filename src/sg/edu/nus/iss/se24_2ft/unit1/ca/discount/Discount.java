@@ -15,10 +15,12 @@ public class Discount {
     private double percent; // or restrict to int
     private boolean memberOnly;
 
-    public Discount(String requestedCode, String description, Date start, int period, double percent, boolean memberOnly) {
+    public Discount(String requestedCode, String description,
+                    Date start, int period, double percent, boolean memberOnly) {
         code = null;
-        this.requestedCode = requestedCode.toUpperCase();
-        this.description = description;
+
+        this.requestedCode = requestedCode.trim().toUpperCase();
+        this.description = description.trim();
         this.start = start;
         this.period = period;
         this.percent = percent;

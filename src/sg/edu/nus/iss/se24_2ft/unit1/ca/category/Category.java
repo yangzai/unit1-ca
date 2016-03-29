@@ -8,8 +8,8 @@ public class Category {
 
     public Category(String requestedId, String name) {
         id = null;
-        this.requestedId = requestedId;
-        this.name = name;
+        this.requestedId = requestedId.trim();
+        this.name = name.trim();
     }
 
     public String getId() { return id; }

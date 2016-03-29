@@ -45,7 +45,6 @@ public class Transaction {
 
         transactionItemList = new ArrayList<>();
         transactionItemMap = new HashMap<>();
-//		transactionListenerList = new ArrayList<>();
     }
 
     public int getId() { return id; }
