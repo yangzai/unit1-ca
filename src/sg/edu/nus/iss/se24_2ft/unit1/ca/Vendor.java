@@ -12,31 +12,9 @@ public class Vendor {
         this.description = description;
     }
 
-    public String getCategoryId() {
-        return categoryId;
-    }
+    public String getCategoryId() { return categoryId; }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public boolean equals(Object vendor) {
-        if (vendor instanceof Vendor) {
-            Vendor v = (Vendor) vendor;
-            if (this.getCategoryId().equals(v.getCategoryId()) && this.getName().equals(v.getName()))
-                if (this.getDescription() == null) {
-                    if (v.getDescription() == null)
-                        return true;
-                    else
-                        return false;
-                } else if (v.getDescription() != null)
-                    if (this.getDescription().equals(v.getDescription()))
-                        return true;
-        }
-        return false;
-    }
+    public String getDescription() { return description; }
 }
