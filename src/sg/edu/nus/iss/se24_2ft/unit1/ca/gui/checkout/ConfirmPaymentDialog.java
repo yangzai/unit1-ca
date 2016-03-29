@@ -26,13 +26,14 @@ import java.awt.*;
         super((JFrame) SwingUtilities.windowForComponent(parentComponent),
                 "Payment Details", true);
 
-        isConfirmed = false;
         this.transaction = transaction;
-        balance = transaction.getBalance();
-        Customer customer = transaction.getCustomer();
+        isConfirmed = false;
+
+        Customer customer = transaction != null ? transaction.getCustomer() : null;
         member = customer != null && customer instanceof Member ?
                 (Member) customer : null;
-        discount = transaction.getDiscount();
+        discount = transaction != null ? transaction.getDiscount() : null;
+        balance = getBalance();
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setResizable(false);
@@ -60,7 +61,7 @@ import java.awt.*;
         gbc.gridx++;
         gbc.weightx = 1;
         gbc.gridwidth = 3;
-        JTextArea subtotalTA = new JTextArea(Utils.formatDollar(transaction.getSubtotal()));
+        JTextArea subtotalTA = new JTextArea(Utils.formatDollar(getSubtotal()));
         subtotalTA.setEditable(false);
         panel.add(subtotalTA, gbc);
 
@@ -74,7 +75,7 @@ import java.awt.*;
 
         gbc.gridx++;
         gbc.gridwidth = 3;
-        JTextArea redeemTA = new JTextArea(Integer.toString(transaction.getLoyaltyPoint()));
+        JTextArea redeemTA = new JTextArea(Integer.toString(getRedeemPoint()));
         redeemTA.setEditable(false);
         redeemTA.setVisible(member != null);
         panel.add(redeemTA, gbc);
@@ -83,12 +84,12 @@ import java.awt.*;
         gbc.gridy++;
         gbc.gridx--;
         gbc.gridwidth = 1;
-        String lblDiscount = discountLabelFormat(discount.getPercent());
+        String lblDiscount = discountLabelFormat(discount != null ? getDiscountPercent() : 0);
         panel.add(new JLabel(lblDiscount), gbc);
 
         gbc.gridx++;
         gbc.gridwidth = 3;
-        JTextArea discountTA = new JTextArea(Utils.formatDollar(transaction.getDiscountAmount()));
+        JTextArea discountTA = new JTextArea(Utils.formatDollar(getDiscountAmount()));
         discountTA.setEditable(false);
         panel.add(discountTA, gbc);
 
@@ -101,9 +102,7 @@ import java.awt.*;
 
         gbc.gridx++;
         gbc.gridwidth = 3;
-        JTextArea totalTA = new JTextArea(Utils.formatDollar(
-                transaction.getSubtotalAfterDiscount() /*- transaction.getLoyaltyPoint()*/
-        ));
+        JTextArea totalTA = new JTextArea(Utils.formatDollar(getSubtotalAfterDiscount()));
         totalTA.setEditable(false);
         panel.add(totalTA, gbc);
 
@@ -116,7 +115,7 @@ import java.awt.*;
 
         gbc.gridx++;
         gbc.gridwidth = 3;
-        JTextArea payTA = new JTextArea(Utils.formatDollar(transaction.getPayment()));
+        JTextArea payTA = new JTextArea(Utils.formatDollar(getPayment()));
         payTA.setEditable(false);
         panel.add(payTA, gbc);
 
@@ -144,7 +143,7 @@ import java.awt.*;
             if (member == null) return;
 
             String redeemText = redeemTA.getText();
-            int maxPoint = member.getLoyaltyPoint();
+            int maxPoint = member != null ? member.getLoyaltyPoint() : 0;
             if (maxPoint < 0) maxPoint = 0;
             String message = "Enter Redeem Point (Max. "
                     + String.valueOf(maxPoint) + "):";
@@ -166,12 +165,13 @@ import java.awt.*;
                 return;
             }
 
-            double total = transaction.getSubtotalAfterDiscount();
+            double total = getSubtotalAfterDiscount();
             if (redeemPoint > total) redeemPoint = (int) total;
 
-            transaction.setLoyaltyPoint(redeemPoint);
+            if (transaction != null)
+                transaction.setLoyaltyPoint(redeemPoint);
             redeemTA.setText(Integer.toString(redeemPoint));
-            double currentBalance = transaction.getBalance();
+            double currentBalance = getBalance();
             if (currentBalance != balance) balanceChanged(currentBalance);
         });
         panel.add(redeemButton, gbc);
@@ -207,7 +207,7 @@ import java.awt.*;
 
             transaction.setPayment(paidAmount);
             payTA.setText(Utils.formatDollar(paidAmount));
-            double currentBalance = transaction.getBalance();
+            double currentBalance = getBalance();
             if (currentBalance != balance) balanceChanged(currentBalance);
         });
         panel.add(paymentButton, gbc);
@@ -217,11 +217,38 @@ import java.awt.*;
         confirmButton.setEnabled(balance <= 0);
         confirmButton.addActionListener(l -> {
             isConfirmed = true;
-            this.setVisible(false);
+            dispose();
         });
         panel.add(confirmButton, gbc);
 
         return panel;
+    }
+    private double getBalance() {
+        return transaction != null ? transaction.getBalance() : 0;
+    }
+
+    private double getPayment() {
+        return transaction != null ? transaction.getPayment() : 0;
+    }
+
+    private double getSubtotal() {
+        return transaction != null ? transaction.getSubtotal() : 0;
+    }
+
+    private double getSubtotalAfterDiscount() {
+        return transaction != null ? transaction.getSubtotalAfterDiscount() : 0;
+    }
+
+    private double getDiscountPercent() {
+        return discount != null ? discount.getPercent() : 0;
+    }
+
+    private double getDiscountAmount() {
+        return transaction != null ? transaction.getDiscountAmount() : 0;
+    }
+
+    private int getRedeemPoint() {
+        return transaction != null ? transaction.getLoyaltyPoint() : 0;
     }
 
     /*package*/ boolean isConfirmed() {
