@@ -136,7 +136,7 @@ public class TransactionManager {
         };
     }
 
-    public boolean addTransaction(Transaction transaction) {
+    public void addTransaction(Transaction transaction) {
         Customer customer = transaction.getCustomer();
 
         int debitPoint = transaction.getLoyaltyPoint();
@@ -148,16 +148,25 @@ public class TransactionManager {
             transaction.setLoyaltyPoint((int) subtotalAfterDiscount);
 
         //insufficient
-        if (transaction.getPayment() + debitPoint < subtotalAfterDiscount) return false;
+        if (transaction.getPayment() + debitPoint < subtotalAfterDiscount)
+            throw new IllegalArgumentException("Insufficient Amount");
 
         if (customer instanceof Member) {
             String memberId = customer.getId();
-            if (!memberManager.debitLoyaltyPoint(memberId, debitPoint)) return false;
+            //throws IllegalArgumentException
+            memberManager.debitLoyaltyPoint(memberId, debitPoint);
 
             //floor
             int creditPoint = (int) (transaction.getSubtotal() / VALUE_TO_LOYALTY_RATE);
             memberManager.creditLoyaltyPoint(memberId, creditPoint);
         }
+
+        transaction.getTransactionItemList().forEach(i -> {
+            Product p = i.getProduct();
+            if (p == null) return;
+            productManager.deductQuantity(p.getId(), i.getQuantity());
+            //TODO: Add logic to update Product file here;
+        });
 
         transaction.setId(++maxId);
         transactionList.add(transaction);
@@ -177,8 +186,6 @@ public class TransactionManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return true;
     }
 
     private void store() throws IOException {

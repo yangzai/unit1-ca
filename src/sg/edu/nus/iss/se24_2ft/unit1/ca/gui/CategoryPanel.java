@@ -27,47 +27,54 @@ public class CategoryPanel extends FeaturePanel {
 
         c.gridx = c.gridy = 0;
         c.weightx = c.weighty = 1;
-        c.gridwidth = 2;
+        c.gridwidth = 3;
         c.fill = GridBagConstraints.BOTH;
         add(scrollPane, c);
 
         c.gridy++;
-        c.gridwidth--;
+        c.gridwidth = 1;
         c.weighty = 0;
         c.fill = GridBagConstraints.NONE;
         add(new JLabel("ID"), c);
 
         c.gridx++;
+        c.gridwidth++;
         c.fill = GridBagConstraints.HORIZONTAL;
         JTextField idTextField = new JTextField();
         add(idTextField, c);
 
         c.gridx--;
         c.gridy++;
+        c.gridwidth--;
         c.fill = GridBagConstraints.NONE;
         add(new JLabel("Name"), c);
 
         c.gridx++;
+        c.gridwidth++;
         c.fill = GridBagConstraints.HORIZONTAL;
         JTextField nameTextField = new JTextField();
         add(nameTextField, c);
 
-        c.gridx--;
         c.gridy++;
-        c.gridwidth++;
-        c.fill = GridBagConstraints.NONE;
+        c.gridwidth--;
         c.anchor = GridBagConstraints.EAST;
         JButton addCategoryButton = new JButton("Add");
         addCategoryButton.addActionListener(e -> {
             Category category = new Category(idTextField.getText(), nameTextField.getText());
             //TODO: validate category
-            categoryPanelListenerList.forEach(l -> l.addCategoryRequested(category));
+            categoryPanelListenerList.forEach(l -> {
+                try { l.addCategoryRequested(category); }
+                catch (IllegalArgumentException iae) {
+                    JOptionPane.showMessageDialog(this, iae.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+            
             idTextField.setText(null);
             nameTextField.setText(null);
         });
         add(addCategoryButton, c);
 
-        c.gridy++;
+        c.gridx++;
         JButton backButton = new JButton("Back");
         backButton.addActionListener(this::backActionPerformed);
         add(backButton, c);

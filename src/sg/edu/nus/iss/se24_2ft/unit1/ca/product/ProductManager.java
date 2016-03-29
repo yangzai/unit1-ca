@@ -79,19 +79,21 @@ public class ProductManager {
 
     public List<Product> getProductList() { return productList; }
 
-    public boolean addProduct(Category category, Product product) {
-        if (category == null || product == null) return false;
+    public void addProduct(Category category, Product product) {
+        if (category == null)
+            throw new IllegalArgumentException("Category is not valid");
+        if (product == null)
+            throw new IllegalArgumentException("Product is not valid");
 
         String categoryId = category.getId();
-        if (categoryId == null) return false;
+        if (categoryId == null)
+            throw new IllegalArgumentException("Category ID is empty. Please input again");
 
         int subId = maxSubIdMap.getOrDefault(categoryId, 0) + 1;
         maxSubIdMap.put(categoryId, subId);
         String id = categoryId + '/' + subId;
 
         addProduct(category, product, id);
-
-        return true;
     }
 
     private void addProduct(Category category, Product product, String id) {
@@ -112,6 +114,11 @@ public class ProductManager {
 
         if (understockTableModel != null)
             understockTableModel.fireTableRowsInserted(rowIndex, rowIndex);
+    }
+    
+    public boolean deductQuantity(String id, int quantity) {
+        Product product = productMap.get(id);
+        return product != null && product.deductQuantity(quantity);
     }
 
     public void generatePurchaseOrder(List<Integer> understockIndexList) {

@@ -67,4 +67,10 @@ public class Product {
         quantity += orderQuantity;
         return true;
     }
+    
+    /*package*/ boolean deductQuantity(int quantity) {
+    	if (this.quantity < quantity) return false;
+		this.quantity -= quantity;
+    	return true;
+    }
 }
