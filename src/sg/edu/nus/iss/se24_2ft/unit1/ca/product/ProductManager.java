@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 import javax.swing.table.AbstractTableModel;
@@ -79,19 +80,23 @@ public class ProductManager {
 
     public List<Product> getProductList() { return productList; }
 
-    public boolean addProduct(Category category, Product product) {
-        if (category == null || product == null) return false;
+    public void addProduct(Category category, Product product) {
+    	if (category == null) {
+			throw new IllegalArgumentException("Category is not valid");
+		} else if (product == null){
+			throw new IllegalArgumentException("Product is not valid");
+		}
 
         String categoryId = category.getId();
-        if (categoryId == null) return false;
+        if (categoryId == null) {
+			throw new IllegalArgumentException("Category ID is empty. Please input again");
+		}
 
         int subId = maxSubIdMap.getOrDefault(categoryId, 0) + 1;
         maxSubIdMap.put(categoryId, subId);
         String id = categoryId + '/' + subId;
 
         addProduct(category, product, id);
-
-        return true;
     }
 
     private void addProduct(Category category, Product product, String id) {
@@ -107,11 +112,21 @@ public class ProductManager {
 
         if (!product.isUnderstock()) return;
 
-        understockProductList.add(product);
+        understockProductList.add(product);   
         rowIndex = understockProductList.size() - 1;
 
         if (understockTableModel != null)
             understockTableModel.fireTableRowsInserted(rowIndex, rowIndex);
+    }
+    
+    public boolean deductQuantity(String id, int quantity) {
+        Product product = productMap.get(id);
+        if (product == null) return false;
+        else return deductQuantity(product, quantity);
+    }
+    
+    public boolean deductQuantity(Product product, int quantity){
+    	return product.deduct(quantity);
     }
 
     public void generatePurchaseOrder(List<Integer> understockIndexList) {

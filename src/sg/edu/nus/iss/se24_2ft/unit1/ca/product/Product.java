@@ -67,4 +67,10 @@ public class Product {
         quantity += orderQuantity;
         return true;
     }
+    
+    /*package*/ boolean deduct(int quantityDeduct){
+    	if (quantity < quantityDeduct) return false;
+		else quantity -= quantityDeduct;
+    	return true;
+    }
 }

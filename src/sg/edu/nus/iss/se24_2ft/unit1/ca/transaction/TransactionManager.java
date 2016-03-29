@@ -148,15 +148,24 @@ public class TransactionManager {
             transaction.setLoyaltyPoint((int) subtotalAfterDiscount);
 
         //insufficient
-        if (transaction.getPayment() + debitPoint < subtotalAfterDiscount) return false;
+        if (transaction.getPayment() + debitPoint < subtotalAfterDiscount) throw new IllegalArgumentException("Insufficient Amount");
 
         if (customer instanceof Member) {
             String memberId = customer.getId();
-            if (!memberManager.debitLoyaltyPoint(memberId, debitPoint)) return false;
+            try {
+                memberManager.debitLoyaltyPoint(memberId, debitPoint);
+            } catch (IllegalArgumentException e) {
+                return false;
+            }
 
             //floor
             int creditPoint = (int) (transaction.getSubtotal() / VALUE_TO_LOYALTY_RATE);
             memberManager.creditLoyaltyPoint(memberId, creditPoint);
+        }
+
+        for (TransactionItem item : transaction.getTransactionItemList()) {
+            productManager.deductQuantity(item.getProduct(), item.getQuantity());
+            //TODO: Add logic to update Product file here;
         }
 
         transaction.setId(++maxId);

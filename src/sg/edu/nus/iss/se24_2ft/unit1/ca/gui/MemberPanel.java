@@ -71,7 +71,12 @@ public class MemberPanel extends FeaturePanel {
         JButton addButton = new JButton("Add");
         addButton.addActionListener(e -> {
             Member member = new Member(idTextField.getText(), nameTextField.getText());
-            memberPanelListenerList.forEach(l -> l.addMemberRequested(member));
+            try {
+                memberPanelListenerList.forEach(l -> l.addMemberRequested(member));
+			} catch (IllegalArgumentException iae) {
+				JOptionPane.showMessageDialog(this, iae.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
+
             idTextField.setText(null);
             nameTextField.setText(null);
         });

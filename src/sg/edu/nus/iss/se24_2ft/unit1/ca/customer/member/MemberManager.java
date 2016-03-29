@@ -48,9 +48,11 @@ public class MemberManager {
         }
     }
 
-    public boolean addMember(Member member) {
+    public void addMember(Member member) {
         String id = member.getRequestedId();
-        if (memberMap.containsKey(id)) return false;
+//        if (memberMap.containsKey(id)) return false;
+        if ((id == null) || (id.isEmpty())) throw new IllegalArgumentException("Member ID field is blank. Please input again");
+        if (memberMap.containsKey(id)) throw new IllegalArgumentException("Member ID " + id + " already existed. Please input again");
 
         member.setId();
         memberList.add(member);
@@ -66,8 +68,6 @@ public class MemberManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return true;
     }
 
     public boolean debitLoyaltyPoint(String id, int loyaltyPoint) {
@@ -76,9 +76,9 @@ public class MemberManager {
 //        for (Member m : memberList) {
 //
 //        }
-        if (member == null) return false;
+        if (member == null) throw new IllegalArgumentException("Member is not valid");
         if (loyaltyPoint == 0) return true;
-        if (member.getLoyaltyPoint() < loyaltyPoint) return false;
+        if (member.getLoyaltyPoint() < loyaltyPoint) throw new IllegalArgumentException("Loyalty Point is not enough");
 
         member.removeLoyaltyPoint(loyaltyPoint);
         return true;
