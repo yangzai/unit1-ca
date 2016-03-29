@@ -14,6 +14,7 @@ import java.text.NumberFormat;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
@@ -173,6 +174,19 @@ public abstract class CheckoutPanel extends FeaturePanel {
                 //TODO: print receipt here
                 System.out.println("Print receipt");
             }
+            
+            //Display Alert and list of product understock
+            DefaultTableModel model = new DefaultTableModel(new Object[]{"Product", "Quantity Available"},0);
+            for (TransactionItem item : transaction.getTransactionItemList()) {
+            	Product product = item.getProduct();
+				if (product.isUnderstock()) {
+					model.addRow(new Object[]{product.getId(), product.getQuantity()});
+				}
+			}
+            if (model.getRowCount()>0) {
+				JScrollPane scroll = new JScrollPane(new JTable(model));
+				JOptionPane.showMessageDialog(this, scroll, "Alert! Product Understock", JOptionPane.WARNING_MESSAGE);
+			}
 
             newTransactionRequested();
         });
