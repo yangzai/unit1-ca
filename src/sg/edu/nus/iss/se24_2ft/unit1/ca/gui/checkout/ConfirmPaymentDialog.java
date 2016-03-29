@@ -13,7 +13,6 @@ import java.awt.*;
     private static final int WIDTH = 600;
     private static final int HEIGHT = 210;
     private Transaction transaction;
-    private double balance;
     private Member member;
     private Discount discount;
 
@@ -33,7 +32,6 @@ import java.awt.*;
         member = customer != null && customer instanceof Member ?
                 (Member) customer : null;
         discount = transaction != null ? transaction.getDiscount() : null;
-        balance = getBalance();
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setResizable(false);
@@ -120,6 +118,7 @@ import java.awt.*;
         panel.add(payTA, gbc);
 
         // Balance
+        double balance = getBalance();
         gbc.insets = top20Insets;
         gbc.gridy++;
         gbc.gridx--;
@@ -171,8 +170,9 @@ import java.awt.*;
             if (transaction != null)
                 transaction.setLoyaltyPoint(redeemPoint);
             redeemTA.setText(Integer.toString(redeemPoint));
+            double balanceLabelValue = Utils.parseDoubleOrDefault(balanceLabel.getText(), 0);
             double currentBalance = getBalance();
-            if (currentBalance != balance) balanceChanged(currentBalance);
+            if (currentBalance != balanceLabelValue) balanceChanged(currentBalance);
         });
         panel.add(redeemButton, gbc);
 
