@@ -103,16 +103,16 @@ public abstract class CheckoutPanel extends FeaturePanel {
             }
 
             int quantity = Utils.parseIntOrDefault(quantityField.getText(), 0);
-            if (quantity <= 0){
-            	JOptionPane.showMessageDialog(this, "Quantity cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
-            	return;
-            };
+            if (quantity <= 0) {
+                JOptionPane.showMessageDialog(this, "Quantity cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             Product product = getProduct(productId);
-            if (product == null){
-            	JOptionPane.showMessageDialog(this, "Product ID is not valid", "Error", JOptionPane.ERROR_MESSAGE);
-            	return;
-            };
+            if (product == null) {
+                JOptionPane.showMessageDialog(this, "Product ID is not valid", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             TransactionItem transactionItem = new TransactionItem(product, quantity);
             transaction.addTransactionItem(transactionItem);
@@ -146,10 +146,10 @@ public abstract class CheckoutPanel extends FeaturePanel {
                     JOptionPane.PLAIN_MESSAGE, null, null, memberFieldText);
 
             if (id == null) {
-            	JOptionPane.showMessageDialog(this, "Member ID is not valid");
-            	return;
+                JOptionPane.showMessageDialog(this, "Member ID is not valid");
+                return;
             }
-	        if (id.equals(memberFieldText)) return;    
+            if (id.equals(memberFieldText)) return;
 
             Member member = getMember(id);
             if (!id.isEmpty() && member == null) {
@@ -186,17 +186,18 @@ public abstract class CheckoutPanel extends FeaturePanel {
             }
             
             //Display Alert and list of product understock
-            DefaultTableModel model = new DefaultTableModel(new Object[]{"Product", "Quantity Available"},0);
-            for (TransactionItem item : transaction.getTransactionItemList()) {
-            	Product product = item.getProduct();
-				if (product.isUnderstock()) {
-					model.addRow(new Object[]{product.getId(), product.getQuantity()});
-				}
-			}
-            if (model.getRowCount()>0) {
-				JScrollPane scroll = new JScrollPane(new JTable(model));
-				JOptionPane.showMessageDialog(this, scroll, "Alert! Product Understock", JOptionPane.WARNING_MESSAGE);
-			}
+            DefaultTableModel model
+                    = new DefaultTableModel(new Object[] {"Product", "Quantity Available"}, 0);
+            transaction.getTransactionItemList().stream()
+                    .map(TransactionItem::getProduct)
+                    .forEach(p -> {
+                        if (p.isUnderstock()) return;
+                        model.addRow(new Object[] {p.getId(), p.getQuantity()});
+                    });
+            if (model.getRowCount() > 0) {
+                JScrollPane scroll = new JScrollPane(new JTable(model));
+                JOptionPane.showMessageDialog(this, scroll, "Alert! Product Understock", JOptionPane.WARNING_MESSAGE);
+            }
 
             newTransactionRequested();
         });

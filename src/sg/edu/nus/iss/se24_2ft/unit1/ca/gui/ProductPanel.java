@@ -125,13 +125,14 @@ public class ProductPanel extends FeaturePanel {
 
             Product product = new Product(name, destination, quantity, price,
                     barCode, threshold, orderQuantity);
-            
-            try {
-            	productPanelListenerList.forEach(l -> l.addProductRequested(categoryId, product));
-			} catch (IllegalArgumentException iae) {
-				JOptionPane.showMessageDialog(this, iae.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-			}
-            
+
+            productPanelListenerList.forEach(l -> {
+                try { l.addProductRequested(categoryId, product); }
+                catch (IllegalArgumentException iae) {
+                    JOptionPane.showMessageDialog(this, iae.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+
             categoryTextField.setText(null);
             nameTextField.setText(null);
             desTextField.setText(null);

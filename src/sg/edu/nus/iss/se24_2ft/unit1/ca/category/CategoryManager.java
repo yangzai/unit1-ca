@@ -58,11 +58,10 @@ public class CategoryManager {
 
         String categoryId = category.getRequestedId();
         //Check if categoryId is empty
-        if ((categoryId == null) || (categoryId.isEmpty())) {
+        if (categoryId == null || categoryId.isEmpty())
         	throw new IllegalArgumentException("Category ID is blank, please input again");
-		} else if (categoryMap.get(categoryId) != null) {
+        if (categoryMap.get(categoryId) != null)
 			throw new IllegalArgumentException("Category " + categoryId + " already existed. Please input again");
-		}
 
         category.setId();
         categoryMap.put(categoryId, category);
@@ -72,7 +71,6 @@ public class CategoryManager {
         if (tableModel != null)
             tableModel.fireTableRowsInserted(insertedRowIndex, insertedRowIndex);
         //TODO: persist immediately?
-        
     }
 
     public TableModel getTableModel() {

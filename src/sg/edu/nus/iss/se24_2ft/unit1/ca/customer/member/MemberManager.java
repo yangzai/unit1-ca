@@ -50,9 +50,10 @@ public class MemberManager {
 
     public void addMember(Member member) {
         String id = member.getRequestedId();
-//        if (memberMap.containsKey(id)) return false;
-        if ((id == null) || (id.isEmpty())) throw new IllegalArgumentException("Member ID field is blank. Please input again");
-        if (memberMap.containsKey(id)) throw new IllegalArgumentException("Member ID " + id + " already existed. Please input again");
+        if (id == null || id.isEmpty())
+            throw new IllegalArgumentException("Member ID field is blank. Please input again");
+        if (memberMap.containsKey(id))
+            throw new IllegalArgumentException("Member ID " + id + " already existed. Please input again");
 
         member.setId();
         memberList.add(member);
@@ -70,18 +71,19 @@ public class MemberManager {
         }
     }
 
-    public boolean debitLoyaltyPoint(String id, int loyaltyPoint) {
+    public void debitLoyaltyPoint(String id, int loyaltyPoint) {
         Member member = memberMap.get(id);
         //TODO: may not update view
 //        for (Member m : memberList) {
 //
 //        }
-        if (member == null) throw new IllegalArgumentException("Member is not valid");
-        if (loyaltyPoint == 0) return true;
-        if (member.getLoyaltyPoint() < loyaltyPoint) throw new IllegalArgumentException("Loyalty Point is not enough");
+        if (member == null)
+            throw new IllegalArgumentException("Member is not valid");
+        if (loyaltyPoint == 0) return;
+        if (member.getLoyaltyPoint() < loyaltyPoint)
+            throw new IllegalArgumentException("Loyalty Point is not enough");
 
         member.removeLoyaltyPoint(loyaltyPoint);
-        return true;
     }
 
     public boolean creditLoyaltyPoint(String id, int loyaltyPoint) {

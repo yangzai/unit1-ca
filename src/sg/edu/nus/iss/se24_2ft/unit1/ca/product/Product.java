@@ -68,9 +68,9 @@ public class Product {
         return true;
     }
     
-    /*package*/ boolean deduct(int quantityDeduct){
-    	if (quantity < quantityDeduct) return false;
-		else quantity -= quantityDeduct;
+    /*package*/ boolean deductQuantity(int quantity) {
+    	if (this.quantity < quantity) return false;
+		this.quantity -= quantity;
     	return true;
     }
 }

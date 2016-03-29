@@ -62,11 +62,12 @@ public class CategoryPanel extends FeaturePanel {
         addCategoryButton.addActionListener(e -> {
             Category category = new Category(idTextField.getText(), nameTextField.getText());
             //TODO: validate category
-            try {
-            	categoryPanelListenerList.forEach(l -> l.addCategoryRequested(category));
-			} catch (IllegalArgumentException iae) {
-				JOptionPane.showMessageDialog(this, iae.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-			}
+            categoryPanelListenerList.forEach(l -> {
+                try { l.addCategoryRequested(category); }
+                catch (IllegalArgumentException iae) {
+                    JOptionPane.showMessageDialog(this, iae.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
             
             idTextField.setText(null);
             nameTextField.setText(null);
