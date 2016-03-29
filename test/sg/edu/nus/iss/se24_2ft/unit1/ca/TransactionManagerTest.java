@@ -153,10 +153,15 @@ public class TransactionManagerTest extends TestCase {
             tm = new TransactionManager("data/Transactions.dat", pm, mm);
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Exception thrown!");
+            fail("Fail to create TransactionManager.");
         }
+
         t1 = new Transaction();
-        assertTrue(tm.addTransaction(t1));
+        try {
+            tm.addTransaction(t1);
+        } catch (IllegalArgumentException e) {
+            fail("Fail to add transaction.");
+        }
     }
 
 }

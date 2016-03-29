@@ -90,16 +90,28 @@ public class ProductManagerTest extends TestCase {
 
         Product product1 = new Product("Test1", "NUS test", 525, 10.26, 5555, 50, 200);
 
-        assertTrue(productManager.addProduct(category, product1));
+        try {
+            productManager.addProduct(category, product1);
+        } catch (IllegalArgumentException e) {
+            fail("Fail to add product.");
+        }
 
         assertEquals(product1, productManager.getProduct("TST/1"));
 
         Product product2 = new Product("Test2", "NUS test", 600, 10.26, 6666, 50, 200);
-        assertTrue(productManager.addProduct(category, product2));
+        try {
+            productManager.addProduct(category, product2);
+        } catch (IllegalArgumentException e) {
+            fail("Fail to add product.");
+        }
         assertEquals(product2, productManager.getProduct("TST/2"));
 
         Product product3 = new Product("Test3", "NUS test", 600, 20, 7890, 30, 200);
-        assertTrue(productManager.addProduct(category, product3));
+        try {
+            productManager.addProduct(category, product3);
+        } catch (IllegalArgumentException e) {
+            fail("Fail to add product.");
+        }
         assertTrue(productManager.getProductList().size() == count + 3);
     }
 
@@ -111,8 +123,11 @@ public class ProductManagerTest extends TestCase {
         categoryManager.addCategory(category);
 
         Product product1 = new Product("Test1", "NUS test", 20, 10.26, 5555, 50, 200);
-
-        assertTrue(productManager.addProduct(category, product1));
+        try {
+            productManager.addProduct(category, product1);
+        } catch (IllegalArgumentException e) {
+            fail("Fail to add product.");
+        }
 
         List<Integer> understockIndexList = null;
         productManager.generatePurchaseOrder(understockIndexList);
