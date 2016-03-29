@@ -103,10 +103,16 @@ public abstract class CheckoutPanel extends FeaturePanel {
             }
 
             int quantity = Utils.parseIntOrDefault(quantityField.getText(), 0);
-            if (quantity <= 0) return;
+            if (quantity <= 0){
+            	JOptionPane.showMessageDialog(this, "Quantity cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            	return;
+            };
 
             Product product = getProduct(productId);
-            if (product == null) return;
+            if (product == null){
+            	JOptionPane.showMessageDialog(this, "Product ID is not valid", "Error", JOptionPane.ERROR_MESSAGE);
+            	return;
+            };
 
             TransactionItem transactionItem = new TransactionItem(product, quantity);
             transaction.addTransactionItem(transactionItem);
@@ -139,11 +145,15 @@ public abstract class CheckoutPanel extends FeaturePanel {
             String id = (String) JOptionPane.showInputDialog(this, "Membership ID", "Customer Detail",
                     JOptionPane.PLAIN_MESSAGE, null, null, memberFieldText);
 
-            if (id == null || id.equals(memberFieldText)) return;
+            if (id == null) {
+            	JOptionPane.showMessageDialog(this, "Member ID is not valid");
+            	return;
+            }
+	        if (id.equals(memberFieldText)) return;    
 
             Member member = getMember(id);
             if (!id.isEmpty() && member == null) {
-                JOptionPane.showMessageDialog(this, "No such member.");
+                JOptionPane.showMessageDialog(this, "Member ID is not valid");
                 return;
             }
 

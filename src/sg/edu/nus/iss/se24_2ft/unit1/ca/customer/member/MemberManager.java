@@ -76,9 +76,9 @@ public class MemberManager {
 //        for (Member m : memberList) {
 //
 //        }
-        if (member == null) return false;
+        if (member == null) throw new IllegalArgumentException("Member is not valid");
         if (loyaltyPoint == 0) return true;
-        if (member.getLoyaltyPoint() < loyaltyPoint) return false;
+        if (member.getLoyaltyPoint() < loyaltyPoint) throw new IllegalArgumentException("Loyalty Point is not enough");
 
         member.removeLoyaltyPoint(loyaltyPoint);
         return true;
