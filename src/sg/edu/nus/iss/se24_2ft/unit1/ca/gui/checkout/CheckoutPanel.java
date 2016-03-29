@@ -172,9 +172,11 @@ public abstract class CheckoutPanel extends FeaturePanel {
             if (option == 0) {
                 //TODO: print receipt here
                 System.out.println("Print receipt");
+                ReceiptDialog receipt = new ReceiptDialog(this, transaction);
+                receipt.setVisible(true);
             }
 
-            newTransactionRequested();
+          //  newTransactionRequested();
         });
         panel.add(proceedPaymentButton, gbc);
 
