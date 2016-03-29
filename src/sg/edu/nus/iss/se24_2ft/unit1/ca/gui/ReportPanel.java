@@ -79,6 +79,7 @@ public class ReportPanel extends FeaturePanel {
     }
 
     private JPanel createTransactionReportPanel() {
+        Date today = new Date();
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         // Selection field for Start Date/ End Date and button Get
@@ -90,6 +91,7 @@ public class ReportPanel extends FeaturePanel {
 
         gbc.gridy++;
         startDateField = new JFormattedTextField(Utils.DATE_FORMAT);
+        startDateField.setValue(today);
         panel.add(startDateField, gbc);
 
         gbc.gridx++;
@@ -98,6 +100,7 @@ public class ReportPanel extends FeaturePanel {
 
         gbc.gridy++;
         endDateField = new JFormattedTextField(Utils.DATE_FORMAT);
+        endDateField.setValue(today);
         panel.add(endDateField, gbc);
 
         gbc.gridy--;
@@ -167,12 +170,11 @@ public class ReportPanel extends FeaturePanel {
     }
     
     public void setTransactionTableModel(TableModel tableModel) {
-        int dateColumnIndex = tableModel.getColumnCount() - 1;
-        startDateField.setValue(tableModel.getValueAt(0, dateColumnIndex));
-        endDateField.setValue(tableModel.getValueAt(tableModel.getRowCount() - 1, dateColumnIndex));
-        transactionSorter = new TableRowSorter<>(tableModel);
         transactionTable.setModel(tableModel);
+        transactionSorter = new TableRowSorter<>(tableModel);
         transactionTable.setRowSorter(transactionSorter);
+
+        int dateColumnIndex = tableModel.getColumnCount() - 1;
         //TODO: Consider replacing with localdate
         TableCellRenderer tableCellRenderer = new DefaultTableCellRenderer() {
 
@@ -185,5 +187,11 @@ public class ReportPanel extends FeaturePanel {
             }
         };
         transactionTable.getColumnModel().getColumn(dateColumnIndex).setCellRenderer(tableCellRenderer);
+
+        int rowCount = tableModel.getRowCount();
+        if (rowCount == 0) return;
+
+        startDateField.setValue(tableModel.getValueAt(0, dateColumnIndex));
+        endDateField.setValue(tableModel.getValueAt(tableModel.getRowCount() - 1, dateColumnIndex));
     }
 }
