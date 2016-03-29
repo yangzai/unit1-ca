@@ -27,7 +27,7 @@ public class ProductManager {
     private AbstractTableModel tableModel;
     private AbstractTableModel understockTableModel;
 
-    public ProductManager(String filename, CategoryManager categoryManager) throws IOException {
+    public ProductManager(String filename, CategoryManager categoryManager) {
         tableModel = null;
         understockTableModel = null;
 
@@ -42,7 +42,7 @@ public class ProductManager {
         initData();
     }
 
-    public void initData() throws IOException {
+    public void initData() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Utils::splitCsv).forEach(a -> {
                 String id = a[0], name = a[1], description = a[2];
@@ -72,6 +72,8 @@ public class ProductManager {
 
                 addProduct(category, product, id);
             });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

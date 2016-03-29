@@ -1,7 +1,5 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import java.io.IOException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,28 +55,18 @@ public class TransactionTest extends TestCase {
     @Test
     public void testAddTransactionItem() {
         assertNull(cm1);
-        try {
-            cm1 = new CategoryManager("data/Category.dat");
-            cm1.addCategory(c1);
-            cm1.addCategory(c2);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("exception thrown!");
-        }
+        cm1 = new CategoryManager("data/Category.dat");
+        cm1.addCategory(c1);
+        cm1.addCategory(c2);
         assertTrue(null != cm1);
 
         assertNull(pm1);
-        try {
-            pm1 = new ProductManager("data/Products.dat", cm1);
-            pm1.addProduct(c1, p1);
-            pm1.addProduct(c2, p2);
-            // for testing the setID of the product
-            // System.out.println(p1.getId());
-            // System.out.println(p2.getId());
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("exception thrown!");
-        }
+        pm1 = new ProductManager("data/Products.dat", cm1);
+        pm1.addProduct(c1, p1);
+        pm1.addProduct(c2, p2);
+        // for testing the setID of the product
+        // System.out.println(p1.getId());
+        // System.out.println(p2.getId());
 
         assertNull(t1);
         t1 = new Transaction();

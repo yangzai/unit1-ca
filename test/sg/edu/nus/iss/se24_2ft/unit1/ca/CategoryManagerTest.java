@@ -37,56 +37,24 @@ public class CategoryManagerTest extends TestCase {
     }
 
     // Test for CategoryManager
-    @Test
     public void testCategoryManager() {
-        // non-existed file name
         assertNull(categoryManager);
-        try {
-            categoryManager = new CategoryManager("data/non-existed_file.dat");
-            fail("error path");
-        } catch (IOException e) {
-        }
-
-        if (null != categoryManager)
-            categoryManager = null;
-
-        // correct file name
-        assertNull(categoryManager);
-        try {
-            categoryManager = new CategoryManager("data/Category.dat");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
+        categoryManager = new CategoryManager("data/Category.dat");
         assertTrue(categoryManager != null);
     }
-
     @Test
     public void testGetCategory() {
         assertNull(categoryManager);
-        try {
-            categoryManager = new CategoryManager("data/Category.dat");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
-        assertTrue(categoryManager != null);
+        categoryManager = new CategoryManager("data/Category.dat");
         assertEquals(category3, categoryManager.getCategory("CLO"));
     }
 
     @Test
     public void testAddCategory() {
         assertNull(categoryManager);
-        try {
-            categoryManager = new CategoryManager("data/Category.dat");
-            categoryManager.addCategory(category1);
-            categoryManager.addCategory(category2);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown");
-        }
-        assertTrue(categoryManager != null);
+        categoryManager = new CategoryManager("data/Category.dat");
+        categoryManager.addCategory(category1);
+        categoryManager.addCategory(category2);
         assertEquals(category1, categoryManager.getCategory("BOK"));
         assertEquals(category2, categoryManager.getCategory("COM"));
     }
@@ -94,16 +62,10 @@ public class CategoryManagerTest extends TestCase {
     @Test
     public void testGetCategoryList() {
         assertNull(categoryManager);
-        try {
-            categoryManager = new CategoryManager("data/Category.dat");
-            categoryManager.addCategory(category1);
-            categoryManager.addCategory(category2);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown");
-        }
+        categoryManager = new CategoryManager("data/Category.dat");
+        categoryManager.addCategory(category1);
+        categoryManager.addCategory(category2);
         List<Category> categoryList = categoryManager.getCategoryList();
-        assertTrue(categoryManager != null);
         assertTrue(categoryList.contains(category1));
         assertTrue(categoryList.contains(category2));
         assertTrue(categoryList.contains(category3));

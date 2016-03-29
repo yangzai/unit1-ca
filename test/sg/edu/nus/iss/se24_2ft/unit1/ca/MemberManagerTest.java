@@ -1,6 +1,5 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.junit.After;
@@ -38,37 +37,16 @@ public class MemberManagerTest extends TestCase {
     // Test for MemberManger
     @Test
     public void testMemberManager() {
-        // non-existed file name
-        assertNull(memberManager);
-        try {
-            memberManager = new MemberManager("data/non-existed_file.dat");
-            fail("error path");
-        } catch (IOException e) {
-        }
-
-        if (null != memberManager)
-            memberManager = null;
-
         // correct file name
         assertNull(memberManager);
-        try {
-            memberManager = new MemberManager("data/Members.dat");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
+        memberManager = new MemberManager("data/Members.dat");
         assertTrue(memberManager != null);
     }
 
     @Test
     public void testGetMember() {
         assertNull(memberManager);
-        try {
-            memberManager = new MemberManager("data/Members.dat");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown");
-        }
+        memberManager = new MemberManager("data/Members.dat");
         assertTrue(memberManager != null);
         assertEquals(member3, memberManager.getMember("R64565FG4"));
     }
@@ -76,14 +54,9 @@ public class MemberManagerTest extends TestCase {
     @Test
     public void testAddMember() {
         assertNull(memberManager);
-        try {
-            memberManager = new MemberManager("data/Members.dat");
-            memberManager.addMember(member1);
-            memberManager.addMember(member2);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown");
-        }
+        memberManager = new MemberManager("data/Members.dat");
+        memberManager.addMember(member1);
+        memberManager.addMember(member2);
         assertTrue(memberManager != null);
         assertEquals(member1, memberManager.getMember("E0015280"));
         assertEquals(member2, memberManager.getMember("E0015270"));
@@ -92,17 +65,9 @@ public class MemberManagerTest extends TestCase {
     @Test
     public void testGetMemberList() {
         assertNull(memberManager);
-        int count = 0;
-        try {
-            memberManager = new MemberManager("data/Members.dat");
-            memberManager.addMember(member1);
-            count++;
-            memberManager.addMember(member2);
-            count++;
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown");
-        }
+        memberManager = new MemberManager("data/Members.dat");
+        memberManager.addMember(member1);
+        memberManager.addMember(member2);
         List<Member> memberList = memberManager.getMemberList();
         assertTrue(memberManager != null);
         assertTrue(memberList.contains(member1));

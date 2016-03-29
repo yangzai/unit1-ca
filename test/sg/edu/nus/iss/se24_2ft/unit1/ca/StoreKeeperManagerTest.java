@@ -1,6 +1,5 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -35,27 +34,9 @@ public class StoreKeeperManagerTest extends TestCase {
     // Test for store keeper manager
     @Test
     public void testStoreKeeperManager() {
-        // non-existed file name
         assertNull(storeKeeperManager);
-        try {
-            storeKeeperManager = new StoreKeeperManager("data/non-existed_file.dat");
-            fail("error execution path");
-        } catch (IOException e) {
-        }
-
-        if (null != storeKeeperManager)
-            storeKeeperManager = null;
-
-        // correct file name
-        assertNull(storeKeeperManager);
-        try {
-            storeKeeperManager = new StoreKeeperManager("data/Storekeepers.dat");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
+        storeKeeperManager = new StoreKeeperManager("data/Storekeepers.dat");
         assertTrue(storeKeeperManager != null);
-
     }
 
     @Test
@@ -65,14 +46,8 @@ public class StoreKeeperManagerTest extends TestCase {
 
     @Test
     public void testLogin() {
-
         assertNull(storeKeeperManager);
-        try {
-            storeKeeperManager = new StoreKeeperManager("data/Storekeepers.dat");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
+        storeKeeperManager = new StoreKeeperManager("data/Storekeepers.dat");
 
         // reflect the member storeKeeperMap
         Field field;

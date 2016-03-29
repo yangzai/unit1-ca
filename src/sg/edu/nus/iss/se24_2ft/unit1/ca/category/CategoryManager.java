@@ -21,7 +21,7 @@ public class CategoryManager {
 
     private AbstractTableModel tableModel;
 
-    public CategoryManager(String filename) throws IOException {
+    public CategoryManager(String filename) {
         tableModel = null;
 
         this.filename = filename;
@@ -31,7 +31,7 @@ public class CategoryManager {
         initData();
     }
 
-    private void initData() throws IOException {
+    private void initData() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Utils::splitCsv).forEach(a -> {
                 String id = a[0], name = a[1];
@@ -41,6 +41,8 @@ public class CategoryManager {
                 categoryMap.put(id, category);
                 categoryList.add(category);
             });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -15,7 +15,6 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.TransactionManager;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.util.function.Function;
 
 /**
@@ -28,7 +27,7 @@ public class StoreApplication {
             NEW_PRODUCT = "New Product", NEW_CATEGORY = "New Category",
             REPORTS = "Reports", NULL = "NULL";
 
-    public static void main (String args[]) throws IOException {
+    public static void main (String args[]) {
         //TODO: handle IOException within managers' constructors
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
         ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);

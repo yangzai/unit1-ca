@@ -4,7 +4,6 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca.discount;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -21,16 +20,16 @@ public class DiscountManager {
     private Map<String, Discount> discountMap;
     private AbstractTableModel tableModel;
 
-    public DiscountManager(String fileaname) throws IOException {
+    public DiscountManager(String filename) {
         tableModel = null;
-        this.filename = fileaname;
+        this.filename = filename;
         discountList = new ArrayList<>();
         discountMap = new HashMap<>();
 
         initData();
     }
 
-    private void initData() throws IOException {
+    private void initData() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Utils::splitCsv).forEach(a -> {
                 String code = a[0], description = a[1];
@@ -52,6 +51,8 @@ public class DiscountManager {
                 discountList.add(discount);
                 discountMap.put(code, discount);
             });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -92,12 +93,7 @@ public class DiscountManager {
         if (tableModel != null)
             tableModel.fireTableRowsInserted(rowIndex, rowIndex);
 
-        //TODO: KIV try/catch for IO
-        try {
-            store();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        store();
 
         return true;
     }
@@ -146,12 +142,15 @@ public class DiscountManager {
         };
     }
 
-    private void store() throws IOException {
+    private void store() {
         Stream<String> stream = discountList.stream()
                 .sorted(Comparator.comparing(Discount::getCode))
                 .map(Discount::toString);
 
-        Files.write(Paths.get(filename), (Iterable<String>) stream::iterator,
-                StandardOpenOption.CREATE);
+        try {
+            Files.write(Paths.get(filename), (Iterable<String>) stream::iterator);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

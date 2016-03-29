@@ -1,7 +1,5 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import java.io.IOException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,98 +61,48 @@ public class TransactionManagerTest extends TestCase {
     @Test
     public void testTransactionManager() {
         assertNull(mm);
-        try {
-            mm = new MemberManager("data/Members.dat");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
+        mm = new MemberManager("data/Members.dat");
         assertTrue(mm != null);
 
         assertNull(cm);
-        try {
-            cm = new CategoryManager("data/Category.dat");
-            cm.addCategory(c1);
-            cm.addCategory(c2);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
+        cm = new CategoryManager("data/Category.dat");
+        cm.addCategory(c1);
+        cm.addCategory(c2);
+
         assertTrue(cm != null);
 
         assertNull(pm);
-        try {
-            pm = new ProductManager("data/Products.dat", cm);
-            pm.addProduct(c1, p1);
-            pm.addProduct(c2, p2);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
+        pm = new ProductManager("data/Products.dat", cm);
+        pm.addProduct(c1, p1);
+        pm.addProduct(c2, p2);
         assertTrue(pm != null);
-
-        // non-existed file name
-        assertNull(tm);
-        try {
-            tm = new TransactionManager("data/non-existed_file.dat", pm, mm);
-            fail("error path");
-        } catch (IOException e) {
-        }
-
-        if (null != tm)
-            tm = null;
 
         // correct file name
         assertNull(tm);
-        try {
-            tm = new TransactionManager("data/Transactions.dat", pm, mm);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
+        tm = new TransactionManager("data/Transactions.dat", pm, mm);
         assertTrue(tm != null);
     }
 
     @Test
     public void testAddTransaction() {
         assertNull(mm);
-        try {
-            mm = new MemberManager("data/Members.dat");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
+        mm = new MemberManager("data/Members.dat");
         assertTrue(mm != null);
 
         assertNull(cm);
-        try {
-            cm = new CategoryManager("data/Category.dat");
-            cm.addCategory(c1);
-            cm.addCategory(c2);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
+        cm = new CategoryManager("data/Category.dat");
+        cm.addCategory(c1);
+        cm.addCategory(c2);
         assertTrue(cm != null);
 
         assertNull(pm);
-        try {
-            pm = new ProductManager("data/Products.dat", cm);
-            pm.addProduct(c1, p1);
-            pm.addProduct(c2, p2);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Exception thrown!");
-        }
+        pm = new ProductManager("data/Products.dat", cm);
+        pm.addProduct(c1, p1);
+        pm.addProduct(c2, p2);
         assertTrue(pm != null);
 
         assertNull(tm);
-        try {
-            tm = new TransactionManager("data/Transactions.dat", pm, mm);
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Fail to create TransactionManager.");
-        }
+        tm = new TransactionManager("data/Transactions.dat", pm, mm);
 
         t1 = new Transaction();
         try {

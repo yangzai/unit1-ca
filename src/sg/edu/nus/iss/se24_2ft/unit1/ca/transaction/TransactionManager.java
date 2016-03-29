@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -34,7 +33,7 @@ public class TransactionManager {
     private List<TransactionItem> transactionItemList;
     private AbstractTableModel tableModel;
 
-    public TransactionManager(String filename, ProductManager productManager, MemberManager memberManager) throws IOException {
+    public TransactionManager(String filename, ProductManager productManager, MemberManager memberManager) {
         maxId = 0;
         tableModel = null;
 
@@ -49,7 +48,7 @@ public class TransactionManager {
         initData();
     }
 
-    private void initData() throws IOException {
+    private void initData() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Utils::splitCsv).forEach(a -> {
                 int id = Utils.parseIntOrDefault(a[0], 0),
@@ -89,6 +88,8 @@ public class TransactionManager {
             });
 
             transactionMap.forEach((id, t) -> t.setId(id));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -97,7 +98,7 @@ public class TransactionManager {
 
         return tableModel = new AbstractTableModel() {
             private final String[] COLUMN_NAMES =
-                    { "ID", "Product ID", "Product Name", "Product Description", "Member ID",  "Qty", "Date" };
+                    {"ID", "Product ID", "Product Name", "Product Description", "Member ID",  "Qty", "Date"};
 
             @Override
             public String getColumnName(int column) {
@@ -181,19 +182,18 @@ public class TransactionManager {
         }
 
         //TODO: consider append
-        try {
-            store();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        store();
     }
 
-    private void store() throws IOException {
+    private void store() {
         //assume list is already chronologically sorted
         Stream<String> stream = transactionList.stream()
                 .flatMap(Transaction::toStringStream);
 
-        Files.write(Paths.get(filename), (Iterable<String>) stream::iterator,
-                StandardOpenOption.CREATE);
+        try {
+            Files.write(Paths.get(filename), (Iterable<String>) stream::iterator);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

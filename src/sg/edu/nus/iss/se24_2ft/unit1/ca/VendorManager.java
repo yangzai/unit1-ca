@@ -18,14 +18,14 @@ public class VendorManager {
     private String directory;
     private Map<String, List<Vendor>> vendorMap;
 
-    public VendorManager(String directory) throws IOException {
+    public VendorManager(String directory) {
         this.directory = directory;
         vendorMap = new HashMap<>();
 
         initData();
     }
 
-    private void initData() throws IOException {
+    private void initData() {
         try (Stream<Path> pathStream = Files.list(Paths.get(directory))) {
             pathStream.filter(p -> p.getFileName() //filter vendor files
                     .toString()
@@ -45,7 +45,9 @@ public class VendorManager {
                 }
             });
         } catch (UncheckedIOException e) {
-            throw e.getCause();
+            e.getCause().printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

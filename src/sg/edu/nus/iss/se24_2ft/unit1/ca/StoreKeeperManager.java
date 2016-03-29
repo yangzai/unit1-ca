@@ -24,7 +24,7 @@ public class StoreKeeperManager {
     private String filename;
     private Map<String, StoreKeeper> storeKeeperMap;
 
-    public StoreKeeperManager(String fileName) throws IOException {
+    public StoreKeeperManager(String fileName) {
         this.filename = fileName;
         storeKeeperMap = new HashMap<>();
 
@@ -35,13 +35,15 @@ public class StoreKeeperManager {
      * Initialize the data from csv file for the store keepers
      *
      */
-    private void initData() throws IOException {
+    private void initData() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Utils::splitCsv).forEach(a -> {
                 String name = a[0], password = a[1];
                 StoreKeeper storeKeeper = new StoreKeeper(name, password);
                 storeKeeperMap.put(name, storeKeeper);
             });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

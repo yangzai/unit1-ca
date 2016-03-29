@@ -5,7 +5,6 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -21,7 +20,7 @@ public class MemberManager {
     private String filename;
     private AbstractTableModel tableModel;
 
-    public MemberManager(String filename) throws IOException {
+    public MemberManager(String filename) {
         tableModel = null;
         this.filename = filename;
 
@@ -31,7 +30,7 @@ public class MemberManager {
         initData();
     }
 
-    private void initData() throws IOException {
+    private void initData() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Utils::splitCsv).forEach(a -> {
                 String name = a[0], id = a[1];
@@ -45,6 +44,8 @@ public class MemberManager {
                 memberList.add(member);
                 memberMap.put(id, member);
             });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -63,12 +64,7 @@ public class MemberManager {
         if (tableModel != null)
             tableModel.fireTableRowsInserted(rowIndex, rowIndex);
 
-        //TODO: KIV try/catch for IO
-        try {
-            store();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        store();
     }
 
     public void debitLoyaltyPoint(String id, int loyaltyPoint) {
@@ -146,12 +142,15 @@ public class MemberManager {
         };
     }
 
-    private void store() throws IOException {
+    private void store() {
         Stream<String> stream = memberList.stream()
                 .sorted(Comparator.comparing(Member::getId))
                 .map(Member::toString);
 
-        Files.write(Paths.get(filename), (Iterable<String>) stream::iterator,
-                StandardOpenOption.CREATE);
+        try {
+            Files.write(Paths.get(filename), (Iterable<String>) stream::iterator);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
