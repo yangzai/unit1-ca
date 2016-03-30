@@ -28,7 +28,17 @@ public class StoreApplication {
             REPORTS = "Reports", NULL = "NULL";
 
     public static void main (String args[]) {
-        //TODO: handle IOException within managers' constructors
+        StoreKeeperManager storeKeeperManager = new StoreKeeperManager("data/Storekeepers.dat");
+        LoginPanel loginPanel = new LoginPanel() {
+            @Override
+            protected boolean login(String username, String password) {
+                return storeKeeperManager.login(username, password);
+            }
+        };
+        loginPanel.setVisible(true);
+
+        if (!loginPanel.isSuccess()) System.exit(0);
+
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
         ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
         MemberManager memberManager = new MemberManager("data/Members.dat");

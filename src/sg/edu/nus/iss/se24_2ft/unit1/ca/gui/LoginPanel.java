@@ -4,18 +4,11 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
  * @author Srishti Miglani
  *  
  */
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -23,26 +16,25 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-
-
-public class LoginPanel extends JFrame {
-
-	private JTextField username,password;
-	private JButton login;
-	private static final String USER_NAME = "Username";
-	private static final String Password_ = "Password";
-	private LoginPanelListener l;
+public abstract class LoginPanel extends JDialog {
+	private static final String USERNAME = "Username";
+	private static final String PASSWORD = "Password";
+	private JTextField username, password;
 	private MouseAdapter adapter;
+	private boolean success;
 
 	public LoginPanel() {
+		setModal(true);
+		setTitle("Login");
 
-		adapter = new java.awt.event.MouseAdapter() {
-			public void mousePressed(java.awt.event.MouseEvent evt) {
+		success = false;
+		adapter = new MouseAdapter() {
+			public void mousePressed(MouseEvent evt) {
 				textFieldMousePressed(evt);
 			}
 			public void mouseExited(MouseEvent e)
 			{
-				textfieldFocusLost(e);
+				textFieldFocusLost(e);
 			}
 		};
 		// TODO Auto-generated constructor stub
@@ -53,7 +45,7 @@ public class LoginPanel extends JFrame {
 		gbc.gridx = gbc.gridy = 0;
 
 		//*****Adding Main heading **//
-		JLabel lblUniversitySouvenir = new JLabel("Welcome to the University Souviner");
+		JLabel lblUniversitySouvenir = new JLabel("University Souvenir Store Staff Login");
 		lblUniversitySouvenir.setForeground(Color.BLACK);
 		lblUniversitySouvenir.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUniversitySouvenir.setFont(new Font("Tahoma", Font.PLAIN, 31));
@@ -68,12 +60,10 @@ public class LoginPanel extends JFrame {
 		gbc.gridheight = 2;
 		add(getButtonPanel(), gbc);
 
-		setVisible(true);
 		setSize(600,400);
 	}   
 
-
-	public JPanel getMainPanel(){ 
+	public JPanel getMainPanel() {
 		JPanel panel = new JPanel();
 
 		// *** Adding border to the username-password panel *** /
@@ -92,24 +82,20 @@ public class LoginPanel extends JFrame {
 		gc.insets = new Insets(3,3,3,3);
 
 		// *** Adding border to the username-password labels and textfields *** /
-		JLabel username_ = new JLabel(USER_NAME +":");
-		gc.gridx= 0;
-		gc.gridy =1 ;
+		gc.gridx = 0;
+		gc.gridy = 1;
 		gc.anchor = GridBagConstraints.CENTER;
-		panel.add(username_, gc);
+		panel.add(new JLabel(USERNAME +":"), gc);
 
-
-		gc.gridx= gc.gridy =1;
+		gc.gridx = gc.gridy = 1;
 		gc.anchor = GridBagConstraints.CENTER;
 		gc.insets = new Insets(3,3,3,3);
-		username = new JTextField(USER_NAME);
+		username = new JTextField(USERNAME);
 		username.addMouseListener(adapter);
-		username.addKeyListener(new KeyAdapter()
-		{
-			public void keyPressed(KeyEvent ke)
-			{
-				if(!(ke.getKeyChar()==27||ke.getKeyChar()==65535))//this section will execute only when user is editing the JTextField
-				{
+		username.addKeyListener(new KeyAdapter() {
+			//this section will execute only when user is editing the JTextField
+			public void keyPressed(KeyEvent ke) {
+				if(ke.getKeyChar()!=27 && ke.getKeyChar()!=65535) {
 					username.removeMouseListener(adapter);
 					username.setForeground(Color.black);
 				}
@@ -120,79 +106,67 @@ public class LoginPanel extends JFrame {
 
 		panel.add(username,gc);
 
-		JLabel password_ = new JLabel(Password_+":");
-		gc.gridx= 0;
-		gc.gridy =2 ;
+		gc.gridx = 0;
+		gc.gridy = 2;
 		gc.anchor = GridBagConstraints.CENTER;
-		panel.add(password_, gc);
+		panel.add(new JLabel(PASSWORD +":"), gc);
 
-		gc.gridx= 1;
-		gc.gridy =2 ;
+		gc.gridx = 1;
+		gc.gridy = 2;
 		gc.anchor = GridBagConstraints.CENTER;
 		password = new JPasswordField(18);
 		password.setPreferredSize(new Dimension(200,30));
 		password.setForeground(Color.LIGHT_GRAY);
-		password.setText(Password_);
+		password.setText(PASSWORD);
 		password.addMouseListener(adapter);
-		password.addKeyListener(new KeyAdapter()
-		{
-			public void keyPressed(KeyEvent ke)
-			{
-				if(!(ke.getKeyChar()==27||ke.getKeyChar()==65535))//this section will execute only when user is editing the JTextField
-				{
+		password.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent ke) {
+				//this section will execute only when user is editing the JTextField
+				if (ke.getKeyChar()!=27 && ke.getKeyChar()!=65535) {
 					password.removeMouseListener(adapter);
 					password.setForeground(Color.black);
 				}
 			}
 		});
-		panel.add(password,gc);
+		panel.add(password, gc);
 
 		return panel;
-
 	}
 
-	public JPanel getButtonPanel(){
+	private JPanel getButtonPanel() {
 		JPanel buttonPanel  = new JPanel(new BorderLayout());
-		login = new JButton("LOGIN");
+		JButton login = new JButton("LOGIN");
 		buttonPanel.add(login,BorderLayout.NORTH);		
 
 		login.setPreferredSize(new Dimension(200,35));
 		getRootPane().setDefaultButton(login);
 		login.setSelected(true);
-		login.addActionListener(e ->{boolean success = false; 
-		success = l.login(username.getText(),password.getText());	
-		if(success== false)
-		{
-			JFrame frame = new JFrame();
-			JOptionPane.showMessageDialog(frame, "Incorrect Username/Password.");  
-		}
-		else{
-			l.setSuccess(true);
-			dispose();
-		}
-
+		login.addActionListener(e ->{
+			if (!login(username.getText(),password.getText())) {
+				JFrame frame = new JFrame();
+				JOptionPane.showMessageDialog(frame, "Incorrect Username/Password.");
+			} else {
+				success = true;
+				dispose();
+			}
 		});
 		return buttonPanel;
 	}
 
-
-	private void textFieldMousePressed(java.awt.event.MouseEvent evt) {
-
+	private void textFieldMousePressed(MouseEvent evt) {
 		if(evt.getSource() == username)
-			username.setText("");else
-				password.setText("");
+			username.setText("");
+		else password.setText("");
 
 	}
 
-	public void textfieldFocusLost(java.awt.event.MouseEvent evt) {    
+	private void textFieldFocusLost(MouseEvent evt) {
 		if(evt.getSource() == username)
-			username.setText(USER_NAME);else
-				password.setText(Password_);
-
+			username.setText(USERNAME);
+		else password.setText(PASSWORD);
 	}
 
-	public void addLoginListener(LoginPanelListener l)
-	{
-		this.l = l;
-	}
+	public boolean isSuccess() { return success; }
+
+	abstract protected boolean login(String username, String password);
 }
