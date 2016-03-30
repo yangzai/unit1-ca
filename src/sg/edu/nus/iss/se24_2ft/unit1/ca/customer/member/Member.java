@@ -58,7 +58,7 @@ public class Member implements Customer {
     /*package*/ int removeLoyaltyPoint(int loyaltyPoint) {
         //remove at most curr pts
         if (this.loyaltyPoint < 0) return 0;
-        int diff = this.loyaltyPoint = loyaltyPoint;
+        int diff = this.loyaltyPoint - loyaltyPoint;
         if (diff < 0) {
             loyaltyPoint = this.loyaltyPoint;
             this.loyaltyPoint = 0;

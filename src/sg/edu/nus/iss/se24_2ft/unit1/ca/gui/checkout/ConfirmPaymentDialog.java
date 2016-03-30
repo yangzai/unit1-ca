@@ -4,14 +4,13 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.Transaction;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.TransactionManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
 
 /*package*/ class ConfirmPaymentDialog extends JDialog {
-    private static final int WIDTH = 600;
-    private static final int HEIGHT = 210;
     private Transaction transaction;
     private Member member;
     private Discount discount;
@@ -33,7 +32,6 @@ import java.awt.*;
                 (Member) customer : null;
         discount = transaction != null ? transaction.getDiscount() : null;
 
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setResizable(false);
         setContentPane(getPaymentPanel());
 
@@ -63,21 +61,6 @@ import java.awt.*;
         subtotalTA.setEditable(false);
         panel.add(subtotalTA, gbc);
 
-        // Redeem Value
-        gbc.gridy++;
-        gbc.gridx--;
-        gbc.gridwidth = 1;
-        JLabel redeemLabel = new JLabel("Redeem: ");
-        redeemLabel.setVisible(member != null);
-        panel.add(redeemLabel, gbc);
-
-        gbc.gridx++;
-        gbc.gridwidth = 3;
-        JTextArea redeemTA = new JTextArea(Integer.toString(getRedeemPoint()));
-        redeemTA.setEditable(false);
-        redeemTA.setVisible(member != null);
-        panel.add(redeemTA, gbc);
-
         // Discount Amount
         gbc.gridy++;
         gbc.gridx--;
@@ -92,7 +75,6 @@ import java.awt.*;
         panel.add(discountTA, gbc);
 
         // Total Price - Using top padding;
-        gbc.insets = top20Insets;
         gbc.gridy++;
         gbc.gridx--;
         gbc.gridwidth = 1;
@@ -103,6 +85,38 @@ import java.awt.*;
         JTextArea totalTA = new JTextArea(Utils.formatDollar(getSubtotalAfterDiscount()));
         totalTA.setEditable(false);
         panel.add(totalTA, gbc);
+
+        // Redeem Value
+        gbc.insets = top20Insets;
+        gbc.gridy++;
+        gbc.gridx--;
+        gbc.gridwidth = 1;
+        JLabel redeemLabel = new JLabel("Redeem (1 point = $"+
+                TransactionManager.POINT_TO_DOLLAR + "): ");
+        redeemLabel.setVisible(member != null);
+        panel.add(redeemLabel, gbc);
+
+        gbc.gridx++;
+        gbc.gridwidth = 3;
+        JTextArea redeemTA = new JTextArea(Integer.toString(getRedeemPoint()));
+        redeemTA.setEditable(false);
+        redeemTA.setVisible(member != null);
+        panel.add(redeemTA, gbc);
+
+        gbc.insets = defaultInsets;
+        gbc.gridy++;
+        gbc.gridx--;
+        gbc.gridwidth = 1;
+        JLabel redeemValueLabel = new JLabel("Redeem Value: ");
+        redeemLabel.setVisible(member != null);
+        panel.add(redeemValueLabel, gbc);
+
+        gbc.gridx++;
+        gbc.gridwidth = 3;
+        JTextArea redeemValueTA = new JTextArea(Utils.formatDollar(getRedeemPointValue()));
+        redeemTA.setEditable(false);
+        redeemTA.setVisible(member != null);
+        panel.add(redeemValueTA, gbc);
 
         // Amount Paid
         gbc.insets = defaultInsets;
@@ -142,11 +156,14 @@ import java.awt.*;
             if (member == null) return;
 
             String redeemText = redeemTA.getText();
-            int maxPoint = member != null ? member.getLoyaltyPoint() : 0;
-            if (maxPoint < 0) maxPoint = 0;
-            String message = "Enter Redeem Point (Max. "
-                    + String.valueOf(maxPoint) + "):";
-            String point = (String) JOptionPane.showInputDialog(this, message, "Redeem",
+            int maxPoint = (int) (transaction.getSubtotalAfterDiscount() / TransactionManager.POINT_TO_DOLLAR);
+            int memberPoint = member != null ? member.getLoyaltyPoint() : 0;
+            if (memberPoint < 0) memberPoint = 0;
+            if (memberPoint < maxPoint) maxPoint = memberPoint;
+            String[] messages = { "Member Point Balance: " + memberPoint,
+                    "Redeem Point (Max. "
+                    + String.valueOf(maxPoint) + "):"};
+            String point = (String) JOptionPane.showInputDialog(this, messages, "Redeem",
                     JOptionPane.PLAIN_MESSAGE, null, null, redeemText);
 
             if (point == null || redeemText.equals(point)) return;
@@ -159,7 +176,7 @@ import java.awt.*;
                 return;
             }
 
-            if (redeemPoint < 0 || redeemPoint > maxPoint) {
+            if (redeemPoint < 0 || redeemPoint > memberPoint) {
                 JOptionPane.showMessageDialog(this, "Out of range.");
                 return;
             }
@@ -168,8 +185,9 @@ import java.awt.*;
             if (redeemPoint > total) redeemPoint = (int) total;
 
             if (transaction != null)
-                transaction.setLoyaltyPoint(redeemPoint);
+                transaction.setRedeemPoint(redeemPoint);
             redeemTA.setText(Integer.toString(redeemPoint));
+            redeemValueTA.setText(Utils.formatDollar(getRedeemPointValue()));
             double balanceLabelValue = Utils.parseDoubleOrDefault(balanceLabel.getText(), 0);
             double currentBalance = getBalance();
             if (currentBalance != balanceLabelValue) balanceChanged(currentBalance);
@@ -248,7 +266,10 @@ import java.awt.*;
     }
 
     private int getRedeemPoint() {
-        return transaction != null ? transaction.getLoyaltyPoint() : 0;
+        return transaction != null ? transaction.getRedeemPoint() : 0;
+    }
+    private double getRedeemPointValue() {
+        return transaction != null ? transaction.getRedeemPointValue() : 0;
     }
 
     /*package*/ boolean isConfirmed() {

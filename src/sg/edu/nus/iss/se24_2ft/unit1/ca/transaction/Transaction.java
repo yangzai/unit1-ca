@@ -20,13 +20,14 @@ public class Transaction {
 
     //not persisted
     private Discount discount;
-    private int loyaltyPoint;
+    private int redeemPoint;
     private double payment;
     private int creditPoint;
 
     private List<TransactionItem> transactionItemList;
     private Map<String, TransactionItem> transactionItemMap;
     private AbstractTableModel tableModel;
+
 
     /**
      * created by Srishti
@@ -38,9 +39,10 @@ public class Transaction {
         date = null;
         subtotal = 0;
         discount = null;
-        loyaltyPoint = 0;
+        redeemPoint = 0;
         payment = 0;
         creditPoint = 0;
+
         tableModel = null;
 
         transactionItemList = new ArrayList<>();
@@ -55,7 +57,7 @@ public class Transaction {
 
     public Discount getDiscount() { return discount; }
 
-    public int getLoyaltyPoint() { return loyaltyPoint; }
+    public int getRedeemPoint() { return redeemPoint; }
 
     public double getPayment() { return payment; }
 
@@ -74,7 +76,11 @@ public class Transaction {
     }
 
     public double getBalance() {
-        return getSubtotalAfterDiscount() - payment - loyaltyPoint;
+        return getSubtotalAfterDiscount() - payment - getRedeemPointValue();
+    }
+
+    public double getRedeemPointValue() {
+        return redeemPoint * TransactionManager.POINT_TO_DOLLAR;
     }
 
     public List<TransactionItem> getTransactionItemList() { return transactionItemList; }
@@ -185,16 +191,16 @@ public class Transaction {
         this.discount = discount;
 
         double total = getSubtotalAfterDiscount();
-        if (loyaltyPoint > total) loyaltyPoint = (int) total;
+        if (redeemPoint > total) redeemPoint = (int) total;
 
         return true;
     }
 
-    public boolean setLoyaltyPoint(int loyaltyPoint) {
+    public boolean setRedeemPoint(int loyaltyPoint) {
         //only allow before id is set
         if (id != null || loyaltyPoint < 0) return false;
 
-        this.loyaltyPoint = loyaltyPoint;
+        this.redeemPoint = loyaltyPoint;
         return true;
     }
 
@@ -210,7 +216,7 @@ public class Transaction {
 
     /*package*/ boolean setCreditPoint(int creditPoint) {
         //only allow before id is set
-        if (id != null || loyaltyPoint < 0) return false;
+        if (id != null || redeemPoint < 0) return false;
 
         this.creditPoint = creditPoint;
         return true;

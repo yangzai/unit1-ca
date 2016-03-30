@@ -23,7 +23,9 @@ import javax.swing.table.TableModel;
  */
 
 public class TransactionManager {
-    private static final int VALUE_TO_LOYALTY_RATE = 20;
+    public static final int DOLLAR_TO_POINT = 10;
+    public static final int POINT_TO_DOLLAR = 5;
+
     private String filename;
     private ProductManager productManager;
     private MemberManager memberManager;
@@ -140,16 +142,21 @@ public class TransactionManager {
     public void addTransaction(Transaction transaction) {
         Customer customer = transaction.getCustomer();
 
-        int debitPoint = transaction.getLoyaltyPoint();
-        if (debitPoint < 0) debitPoint = 0;
+        int debitPoint = transaction.getRedeemPoint();
+        int debitPointDollarValue = debitPoint * POINT_TO_DOLLAR;
+
+        if (debitPointDollarValue < 0) debitPointDollarValue = 0;
         double subtotalAfterDiscount = transaction.getSubtotalAfterDiscount();
 
         //to prevent converting points to change
-        if (debitPoint > subtotalAfterDiscount)
-            transaction.setLoyaltyPoint((int) subtotalAfterDiscount);
+        if (debitPointDollarValue > subtotalAfterDiscount) {
+            debitPoint = (int) (subtotalAfterDiscount / POINT_TO_DOLLAR);
+            transaction.setRedeemPoint(debitPoint);
+            debitPointDollarValue = debitPoint * POINT_TO_DOLLAR;
+        }
 
         //insufficient
-        if (transaction.getPayment() + debitPoint < subtotalAfterDiscount)
+        if (transaction.getPayment() + debitPointDollarValue < subtotalAfterDiscount)
             throw new IllegalArgumentException("Insufficient Amount");
 
         if (customer instanceof Member) {
@@ -158,7 +165,7 @@ public class TransactionManager {
             memberManager.debitLoyaltyPoint(memberId, debitPoint);
 
             //floor
-            int creditPoint = (int) (transaction.getSubtotal() / VALUE_TO_LOYALTY_RATE);
+            int creditPoint = (int) (transaction.getSubtotal() / DOLLAR_TO_POINT);
             //throws IllegalArgumentException
             memberManager.creditLoyaltyPoint(memberId, creditPoint);
             transaction.setCreditPoint(creditPoint);

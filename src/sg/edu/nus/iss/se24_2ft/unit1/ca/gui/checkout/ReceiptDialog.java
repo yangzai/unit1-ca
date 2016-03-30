@@ -15,6 +15,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.Transaction;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.TransactionManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
 
 /**
@@ -109,17 +110,17 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
         gbc.gridy++;
         gbc.weightx = 0.2;
         gbc.anchor = GridBagConstraints.EAST;
-        JLabel redeemPointTextLabel = new JLabel("Points Redeemed:");
-        redeemPointTextLabel.setVisible(member != null);
-        infoPanel.add(redeemPointTextLabel, gbc);
+        JLabel redeemValueTextLabel = new JLabel("Redeemed Value:");
+        redeemValueTextLabel.setVisible(member != null);
+        infoPanel.add(redeemValueTextLabel, gbc);
 
         gbc.gridx++;
         gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
-        int redeemPoint = transaction != null ? transaction.getLoyaltyPoint() : 0;
-        JLabel redeemPointValueLabel = new JLabel(Integer.toString(redeemPoint));
-        redeemPointValueLabel.setVisible(member != null);
-        infoPanel.add(redeemPointValueLabel, gbc);
+        double redeemValue = transaction != null ? transaction.getRedeemPointValue() : 0;
+        JLabel redeemValueLabel = new JLabel(Utils.formatDollar(redeemValue));
+        redeemValueLabel.setVisible(member != null);
+        infoPanel.add(redeemValueLabel, gbc);
 
         gbc.gridx--;
         gbc.gridy++;
@@ -149,7 +150,25 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
         gbc.gridy++;
         gbc.weightx = 0.2;
         gbc.anchor = GridBagConstraints.EAST;
-        JLabel creditPointTextLabel = new JLabel("Points Credited:");
+        JLabel redeemPointTextLabel = new JLabel("Redeemed (1 point = $"+
+                TransactionManager.POINT_TO_DOLLAR + "):");
+        redeemPointTextLabel.setVisible(member != null);
+        infoPanel.add(redeemPointTextLabel, gbc);
+
+        gbc.gridx++;
+        gbc.weightx = 0.5;
+        gbc.anchor = GridBagConstraints.WEST;
+        int redeemPoint = transaction != null ? transaction.getRedeemPoint() : 0;
+        JLabel redeemPointLabel = new JLabel(Integer.toString(redeemPoint));
+        redeemPointLabel.setVisible(member != null);
+        infoPanel.add(redeemPointLabel, gbc);
+
+        gbc.gridx--;
+        gbc.gridy++;
+        gbc.weightx = 0.2;
+        gbc.anchor = GridBagConstraints.EAST;
+        JLabel creditPointTextLabel = new JLabel("Credited ($1 = "+
+                TransactionManager.DOLLAR_TO_POINT + " point(s)): ");
         creditPointTextLabel.setVisible(member != null);
         infoPanel.add(creditPointTextLabel, gbc);
 
@@ -157,9 +176,9 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
         gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
         int creditPoint = transaction != null ? transaction.getCreditPoint() : 0;
-        JLabel creditPointValueLabel = new JLabel(Integer.toString(creditPoint));
-        creditPointValueLabel.setVisible(member != null);
-        infoPanel.add(creditPointValueLabel, gbc);
+        JLabel creditPointLabel = new JLabel(Integer.toString(creditPoint));
+        creditPointLabel.setVisible(member != null);
+        infoPanel.add(creditPointLabel, gbc);
         p.add(infoPanel, BorderLayout.EAST);
 
         gbc.gridx--;
@@ -174,9 +193,9 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
         gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
         int balancePoint = member != null ? member.getLoyaltyPoint() : 0;
-        JLabel balancePointValueLabel = new JLabel(Integer.toString(balancePoint));
-        balancePointValueLabel.setVisible(member != null);
-        infoPanel.add(balancePointValueLabel, gbc);
+        JLabel balancePointLabel = new JLabel(Integer.toString(balancePoint));
+        balancePointLabel.setVisible(member != null);
+        infoPanel.add(balancePointLabel, gbc);
         p.add(infoPanel, BorderLayout.EAST);
 
         return p;
