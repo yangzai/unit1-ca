@@ -1,7 +1,7 @@
 @ECHO OFF
 REM Pre-Condition: None
 REM ********************************
-REM Created by Navy Gao on 29/3/1016
+REM Created by Navy Gao on 29/3/2016
 REM ********************************
 REM %1 = Compile switch, compile all and compile mini
 
@@ -16,13 +16,28 @@ IF "%~1"=="" (
 
 SETLOCAL ENABLEDELAYEDEXPANSION
 REM //Setup enviorment
-CALL setenv.bat
+
+IF EXIST setenv.bat (
+	CALL setenv.bat
+) ELSE (
+	pause
+	REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java Development Kit\1.8" /v 
+
+JavaHome | findstr "JavaHome">>temp.dat
+	FOR /F "Tokens=1,2,*" %%s IN (temp.dat) DO (
+		SET JAVA_HOME=%%u
+		SET PATH=!JAVA_HOME!\bin;!PATH!
+	)
+	DEL temp.dat /Q 1>NUL 2>&1
+)
 
 SET /A pstatus=0
 SET ClassDir=%cd%\classes
 SET SourcePath_Prefix=src\sg\edu\nus\iss\se24_2ft\unit1\ca
 SET FullSourcePath_Prefix=%cd%\src\sg\edu\nus\iss\se24_2ft\unit1\ca
-SET CLASSPATH=.;%JAVA_HOME%\lib;%JAVA_HOME%\lib\tools.jar;%cd%\classses;%cd%\src;%CLASSPATH%;
+SET CLASSPATH=.;%JAVA_HOME%\lib;%JAVA_HOME%\lib\tools.jar;%cd%\classses;%cd%\src;
+
+%CLASSPATH%;
 
 REM //Create classes path
 IF EXIST "%ClassDir%" RMDIR /Q /S "%ClassDir%" 1>NUL 2>&1
@@ -60,7 +75,9 @@ GOTO :EOF
 REM //Compile only related files which application running needs
 :CompileMini
 
-javac -d "%cd%\classes" -cp classes -sourcepath src %SourcePath_Prefix%\*.java 1>>%~n0.log 2>>&1
+javac -d "%cd%\classes" -cp classes -sourcepath src %SourcePath_Prefix%\*.java 1>>
+
+%~n0.log 2>>&1
 IF %ERRORLEVEL% EQU 0 (
 	EXIT /B 0
 ) ELSE (
