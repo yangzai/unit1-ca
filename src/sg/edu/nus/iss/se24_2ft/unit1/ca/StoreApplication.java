@@ -22,7 +22,6 @@ import java.util.function.Function;
  * Created by yangzai on 26/2/16.
  */
 public class StoreApplication {
-	
     private static final String
             CHECK_OUT = "Checkout", DISCOUNT = "Discount",
             INVENTORY = "Inventory", NEW_MEMBER = "New Member",
@@ -31,36 +30,6 @@ public class StoreApplication {
 
     public static void main (String args[]) throws IOException {
         //TODO: handle IOException within managers' constructors
-    	LoginPanel loginPanel = new LoginPanel();
-    	
-    	StoreKeeperManager storeKeeper = new StoreKeeperManager("data/Storekeepers.dat");
-    	loginPanel.addLoginListener(new LoginPanelListener() {
-			
-			@Override
-			public void setSuccess(boolean value) {
-				// TODO Auto-generated method stub
-				if(value == true){
-					try {
-						new StoreApplication().startApplication();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					}
-			}
-			
-			@Override
-			public boolean login(String username, String password) {
-				// TODO Auto-generated method stub
-				 return storeKeeper.login(username,password);
-			}
-		});
-    	
-        //TODO: handle IOException within managers' constructors
-       
-    }
-    
-   public void startApplication()  throws IOException { 	
-    
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
         ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
         MemberManager memberManager = new MemberManager("data/Members.dat");
