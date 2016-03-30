@@ -131,7 +131,6 @@ public abstract class CheckoutPanel extends FeaturePanel {
             subTotalField.setText(Utils.formatDollar(transaction.getSubtotal()));
 
             productField.setText(null);
-//            quantityField.setValue(1);
             quantityField.setText("1");
             if (transaction.getTransactionItemList().size() == 1)
                 proceedPaymentButton.setEnabled(true);
@@ -189,13 +188,11 @@ public abstract class CheckoutPanel extends FeaturePanel {
             transaction.setDate(new Date());
             checkoutPanelListenerList.forEach(l -> l.addTransactionRequested(transaction));
 
-            String[] selectionList= {"Print Receipt and Return", "Return"};
+            String[] selectionList = {"Print Receipt and Return", "Return"};
             int option = JOptionPane.showOptionDialog(this, "Transaction Completed", "Transaction Completed",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, selectionList, selectionList[0]);
 
             if (option == 0) {
-                //TODO: print receipt here
-                System.out.println("Print receipt");
                 ReceiptDialog receipt = new ReceiptDialog(this, transaction);
                 receipt.setVisible(true);
             }
@@ -214,7 +211,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
                 JOptionPane.showMessageDialog(this, scroll, "Alert! Product Understock", JOptionPane.WARNING_MESSAGE);
             }
 
-          //  newTransactionRequested();
+            newTransactionRequested();
         });
         panel.add(proceedPaymentButton, gbc);
 
