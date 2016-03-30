@@ -11,7 +11,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class Transaction {
-
     private Integer id;
     private Customer customer;
     private Date date;
@@ -23,6 +22,7 @@ public class Transaction {
     private Discount discount;
     private int loyaltyPoint;
     private double payment;
+    private int creditPoint;
 
     private List<TransactionItem> transactionItemList;
     private Map<String, TransactionItem> transactionItemMap;
@@ -40,8 +40,8 @@ public class Transaction {
         discount = null;
         loyaltyPoint = 0;
         payment = 0;
+        creditPoint = 0;
         tableModel = null;
-
 
         transactionItemList = new ArrayList<>();
         transactionItemMap = new HashMap<>();
@@ -58,6 +58,8 @@ public class Transaction {
     public int getLoyaltyPoint() { return loyaltyPoint; }
 
     public double getPayment() { return payment; }
+
+    public int getCreditPoint() { return creditPoint; }
 
     public double getSubtotal() { return subtotal; }
 
@@ -205,4 +207,12 @@ public class Transaction {
     }
 
     /*package*/ void setId(int id) { this.id = id; }
+
+    /*package*/ boolean setCreditPoint(int creditPoint) {
+        //only allow before id is set
+        if (id != null || loyaltyPoint < 0) return false;
+
+        this.creditPoint = creditPoint;
+        return true;
+    }
 }

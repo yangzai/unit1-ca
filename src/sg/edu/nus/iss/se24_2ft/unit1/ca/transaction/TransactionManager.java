@@ -159,7 +159,9 @@ public class TransactionManager {
 
             //floor
             int creditPoint = (int) (transaction.getSubtotal() / VALUE_TO_LOYALTY_RATE);
+            //throws IllegalArgumentException
             memberManager.creditLoyaltyPoint(memberId, creditPoint);
+            transaction.setCreditPoint(creditPoint);
         }
 
         transaction.getTransactionItemList().forEach(i -> {

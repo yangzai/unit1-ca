@@ -82,12 +82,12 @@ public class MemberManager {
         member.removeLoyaltyPoint(loyaltyPoint);
     }
 
-    public boolean creditLoyaltyPoint(String id, int loyaltyPoint) {
+    public void creditLoyaltyPoint(String id, int loyaltyPoint) {
         Member member = memberMap.get(id);
-        if (member == null) return false;
+        if (member == null)
+            throw new IllegalArgumentException("Member is not valid");
 
         member.addLoyaltyPoint(loyaltyPoint);
-        return true;
     }
 
     //TODO: KIV
