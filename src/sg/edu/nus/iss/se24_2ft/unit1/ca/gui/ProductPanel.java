@@ -1,12 +1,16 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -26,95 +30,154 @@ public class ProductPanel extends FeaturePanel {
     private List<ProductPanelListener> productPanelListenerList;
 
     public ProductPanel() {
-        super(new GridBagLayout());
+        // super(new GridBagLayout());
+
+        super(new BorderLayout());
 
         table = new JTable();
         productPanelListenerList = new ArrayList<>();
         GridBagConstraints c = new GridBagConstraints();
-
         c.gridx = c.gridy = 0;
-        add(new JLabel("Product"), c);
+        c.fill = GridBagConstraints.BOTH;
+        add(detailPanel(), BorderLayout.CENTER);
 
         c.gridy++;
-        c.gridheight = 18;
+        c.fill = GridBagConstraints.BOTH;
+        add(newProductPanel(), BorderLayout.SOUTH);
+    }
+
+    public void addProductPanelListener(ProductPanelListener l) {
+        productPanelListenerList.add(l);
+    }
+
+    public void setTableModel(TableModel tableModel) {
+        table.setModel(tableModel);
+        Dimension d = table.getPreferredSize();
+        scrollPane.setPreferredSize(new Dimension(d.width, table.getRowHeight() * VISIBLE_ROW + 1));
+    }
+
+    private JPanel detailPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        c.gridx = c.gridy = 0;
+        panel.add(new JLabel("Product"), c);
+        c.gridwidth = 2;
+
+        c.gridy++;
+        c.gridwidth = 1;
         c.weightx = c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
         scrollPane = new JScrollPane(table);
-        add(scrollPane, c);
+        panel.add(scrollPane, c);
 
-        // input field for product category
+        // Back Button
         c.gridx++;
-        c.gridheight = 1;
-        c.weightx = c.weighty = 0;
-        c.fill = GridBagConstraints.HORIZONTAL;
         c.anchor = GridBagConstraints.NORTH;
-        add(new JLabel("Category ID"), c);
+        c.weightx = 0;
+        c.weighty = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
 
-        c.gridy++;
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(this::backActionPerformed);
+        panel.add(backButton, c);
+
+        return panel;
+    }
+
+    private JPanel newProductPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        //
+        // c.gridx = 1;
+        // c.gridy = 0;
+        // c.anchor = GridBagConstraints.CENTER;
+        // panel.add(new JLabel("Add New Product"), c);
+        c.gridwidth = 5;
+
+        // input field for product categoryId
+        c.gridy = 0;
+        c.gridx = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        // c.anchor = GridBagConstraints.WEST;
+        c.gridwidth = 1;
+        c.weightx = 0.5;
+        c.weighty = 0;
+        panel.add(new JLabel("Category ID"), c);
+
+        c.gridx++;
+        c.weightx = 0.5;
         JTextField categoryTextField = new JTextField();
-        add(categoryTextField, c);
+        panel.add(categoryTextField, c);
 
         // input field for product name
-        c.gridy++;
-        add(new JLabel("Name"), c);
+        c.gridx++;
+        panel.add(new JLabel("Name"), c);
 
-        c.gridy++;
+        c.gridx++;
         JTextField nameTextField = new JTextField();
-        add(nameTextField, c);
+        panel.add(nameTextField, c);
 
         // input field for product description
+        c.gridx = 0;
         c.gridy++;
-        add(new JLabel("Description"), c);
+        panel.add(new JLabel("Description"), c);
 
-        c.gridy++;
+        c.gridx++;
         JTextField desTextField = new JTextField();
-        add(desTextField, c);
+        panel.add(desTextField, c);
 
         // input field for product available quantity
-        c.gridy++;
-        add(new JLabel("Quantity"), c);
+        c.gridx++;
+        panel.add(new JLabel("Quantity"), c);
 
-        c.gridy++;
+        c.gridx++;
         JTextField aqTextField = new JTextField();
-        add(aqTextField, c);
+        panel.add(aqTextField, c);
 
         // input field for product product price
+        c.gridx = 0;
         c.gridy++;
-        add(new JLabel("Price"), c);
+        panel.add(new JLabel("Price"), c);
 
-        c.gridy++;
+        c.gridx++;
         JTextField priceTextField = new JTextField();
-        add(priceTextField, c);
+        panel.add(priceTextField, c);
 
         // input field for product product bar code number
-        c.gridy++;
-        add(new JLabel("Barcode"), c);
+        c.gridx++;
+        panel.add(new JLabel("Barcode"), c);
 
-        c.gridy++;
+        c.gridx++;
         JTextField barcodeTextField = new JTextField();
-        add(barcodeTextField, c);
+        panel.add(barcodeTextField, c);
 
         // input field for product product threshold
+        c.gridx = 0;
         c.gridy++;
-        add(new JLabel("Threshold"), c);
+        panel.add(new JLabel("Threshold"), c);
 
-        c.gridy++;
+        c.gridx++;
         JTextField thresholdTextField = new JTextField();
-        add(thresholdTextField, c);
+        panel.add(thresholdTextField, c);
 
         // input field for product product orderQuantity
-        c.gridy++;
-        add(new JLabel("Order Qty"), c);
+        c.gridx++;
+        panel.add(new JLabel("Order Qty"), c);
 
-        c.gridy++;
+        c.gridx++;
         JTextField orderQuantityTextField = new JTextField();
-        add(orderQuantityTextField, c);
+        panel.add(orderQuantityTextField, c);
 
         // Add Button
-        c.gridy++;
+        c.gridx++;
+        c.gridy = 0;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
         JButton addButton = new JButton("Add");
         addButton.addActionListener(e -> {
-            //TODO: change to Integer.parse, catch NFE, return message dialog
+            // TODO: change to Integer.parse, catch NFE, return message dialog
             String name = nameTextField.getText(), destination = desTextField.getText(),
                     categoryId = categoryTextField.getText();
             int quantity = Utils.parseIntOrDefault(aqTextField.getText(), 0),
@@ -123,12 +186,12 @@ public class ProductPanel extends FeaturePanel {
                     orderQuantity = Utils.parseIntOrDefault(orderQuantityTextField.getText(), 0);
             double price = Utils.parseDoubleOrDefault(priceTextField.getText(), 0);
 
-            Product product = new Product(name, destination, quantity, price,
-                    barCode, threshold, orderQuantity);
+            Product product = new Product(name, destination, quantity, price, barCode, threshold, orderQuantity);
 
             productPanelListenerList.forEach(l -> {
-                try { l.addProductRequested(categoryId, product); }
-                catch (IllegalArgumentException iae) {
+                try {
+                    l.addProductRequested(categoryId, product);
+                } catch (IllegalArgumentException iae) {
                     JOptionPane.showMessageDialog(this, iae.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
@@ -142,22 +205,20 @@ public class ProductPanel extends FeaturePanel {
             thresholdTextField.setText(null);
             orderQuantityTextField.setText(null);
         });
-        add(addButton, c);
+        panel.add(addButton, c);
 
-        // Back Button
+        // reset button
+        // c.anchor = GridBagConstraints.SOUTH;
         c.gridy++;
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(this::backActionPerformed);
-        add(backButton, c);
-    }
+        c.weightx = 0;
+        c.weighty = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        JButton resetButton = new JButton("Reset");
+        resetButton.addActionListener(e -> {
 
-    public void addProductPanelListener(ProductPanelListener l) {
-        productPanelListenerList.add(l);
-    }
+        });
+        panel.add(resetButton, c);
 
-    public void setTableModel(TableModel tableModel) {
-        table.setModel(tableModel);
-        Dimension d = table.getPreferredSize();
-        scrollPane.setPreferredSize(new Dimension(d.width, table.getRowHeight() * VISIBLE_ROW + 1));
+        return panel;
     }
 }
