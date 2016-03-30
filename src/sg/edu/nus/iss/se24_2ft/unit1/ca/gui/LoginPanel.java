@@ -74,21 +74,20 @@ public class LoginPanel extends JFrame {
 
 
 	public JPanel getMainPanel(){ 
-		JPanel panel_4 = new JPanel();
+		JPanel panel = new JPanel();
 
 		// *** Adding border to the username-password panel *** /
-		panel_4.setBackground(new Color(192, 192, 192));
+		panel.setBackground(new Color(192, 192, 192));
 
 		TitledBorder titled = BorderFactory.createTitledBorder(
 				new CompoundBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), new BevelBorder(BevelBorder.RAISED, null, null, null, null)), "Login to Continue");
 		titled.setTitleFont(new Font("SansSerif", Font.BOLD, 17));
-		panel_4.setBorder(titled);
-		panel_4.setPreferredSize(new Dimension(200,200));
-		panel_4.setBackground(new Color(192, 192, 192));
+		panel.setBorder(titled);
+		panel.setPreferredSize(new Dimension(200,200));
+		panel.setBackground(new Color(192, 192, 192));
 
-		GridBagLayout gbl_panel_4 = new GridBagLayout();
-		panel_4.setLayout(gbl_panel_4);
-		panel_4.setPreferredSize(new Dimension(200,200));
+		panel.setLayout(new GridBagLayout());
+		panel.setPreferredSize(new Dimension(200,200));
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.insets = new Insets(3,3,3,3);
 
@@ -97,7 +96,7 @@ public class LoginPanel extends JFrame {
 		gc.gridx= 0;
 		gc.gridy =1 ;
 		gc.anchor = GridBagConstraints.CENTER;
-		panel_4.add(username_, gc);
+		panel.add(username_, gc);
 
 
 		gc.gridx= gc.gridy =1;
@@ -119,13 +118,13 @@ public class LoginPanel extends JFrame {
 		username.setPreferredSize(new Dimension(200,30));
 		username.setForeground(Color.LIGHT_GRAY);
 
-		panel_4.add(username,gc);
+		panel.add(username,gc);
 
 		JLabel password_ = new JLabel(Password_+":");
 		gc.gridx= 0;
 		gc.gridy =2 ;
 		gc.anchor = GridBagConstraints.CENTER;
-		panel_4.add(password_, gc);
+		panel.add(password_, gc);
 
 		gc.gridx= 1;
 		gc.gridy =2 ;
@@ -146,9 +145,9 @@ public class LoginPanel extends JFrame {
 				}
 			}
 		});
-		panel_4.add(password,gc);
+		panel.add(password,gc);
 
-		return panel_4;
+		return panel;
 
 	}
 
