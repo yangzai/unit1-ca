@@ -2,24 +2,18 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by yangzai on 29/2/16.
  */
 public class MainFrame extends JFrame {
-    private static final String
-            CHECK_OUT = "Check Out", DISCOUNT = "Discount",
-            INVENTORY = "Inventory", NEW_MEMBER = "New Member",
-            NEW_PRODUCT = "New Product", NEW_CATEGORY = "New Category",
-            REPORTS = "Reports", NULL = "NULL";
-    private static final String[] FEATURE_ARRAY =
-            {CHECK_OUT, DISCOUNT, INVENTORY, NEW_MEMBER,
-            NEW_PRODUCT, NEW_CATEGORY, REPORTS, NULL};
-    private static final ArrayList<String> FEATURE_LIST =
-            new ArrayList<>(Arrays.asList(FEATURE_ARRAY));
+
+    private static final int ROW_BUTTON_COUNT = 2;
+    private JPanel mainPanel;
+    private JPanel currentPanel;
+    GridBagConstraints c;
 
     public MainFrame() {
         super("University Souvenir Store");
@@ -28,36 +22,42 @@ public class MainFrame extends JFrame {
         JPanel contentPane = new JPanel(cardLayout);
         setContentPane(contentPane);
 
-        JPanel mainPanel = new JPanel(new GridBagLayout());
+        currentPanel = mainPanel = new JPanel(new GridBagLayout());
         contentPane.add(mainPanel, "Main");
 
-        GridBagConstraints c = new GridBagConstraints();
+        c = new GridBagConstraints();
+        c.gridx = c.gridy = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
+    }
 
-        int i = 0;
-        for (String feature : FEATURE_LIST) {
-            c.gridx = i % 2;
-            c.gridy = i++/2 % 4;
+    public void addFeaturePanel(String name, FeaturePanel featurePanel) {
+        Container contentPane = getContentPane();
+        CardLayout cardLayout = (CardLayout) contentPane.getLayout();
 
-            JButton button = new JButton(feature);
-            button.addActionListener(
-                    e->cardLayout.show(contentPane, feature)
-            );
-            mainPanel.add(button, c);
+        featurePanel.addBackActionListener(e -> {
+            cardLayout.show(contentPane, "Main");
+            currentPanel = mainPanel;
+            resizeAndPack();
+        });
+        contentPane.add(featurePanel, name);
 
-            //TODO: FeaturePanel abstract class
-            JPanel panel = new JPanel();
-            panel.add(new JLabel(feature));
+        JButton button = new JButton(name);
+        button.addActionListener(e -> {
+            cardLayout.show(contentPane, name);
+            currentPanel = featurePanel;
+            resizeAndPack();
+        });
+        mainPanel.add(button, c);
 
-            JButton backButton = new JButton("Back");
-            backButton.addActionListener(
-                    e->cardLayout.show(contentPane, "Main")
-            );
-            panel.add(backButton);
-
-            contentPane.add(panel, feature);
+        if (++c.gridx >= ROW_BUTTON_COUNT) {
+            c.gridx %= ROW_BUTTON_COUNT;
+            c.gridy++;
         }
+    }
 
+    //resize to currentPanel
+    public void resizeAndPack() {
+        getContentPane().setPreferredSize(currentPanel.getPreferredSize());
         pack();
     }
 }
