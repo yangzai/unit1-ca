@@ -1,3 +1,6 @@
+
+REM Created by Navy Gao on 29/3/2016
+REM ********************************
 @ECHO OFF
 SETLOCAL
 
@@ -17,6 +20,9 @@ REM Populate directories
 XCOPY "%cd%\src" "%cd%\submission\src" /S /R /I
 XCOPY "%cd%\test" "%cd%\submission\test" /S /R /I
 XCOPY "%cd%\data-sample" "%cd%\submission\data" /S /R /I
+
+REM //Create an empty class folder for subsequence use of compiling
+MKDIR "%cd%\submission\classes"
 
 REM zip
 rem CD /D %~dp0
