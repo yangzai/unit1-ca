@@ -55,9 +55,6 @@ public class CategoryManager {
     }
 
     public void addCategory(Category category) {
-//        //null implies success, not null implies collision
-//        return categoryMap.putIfAbsent(category.getId(), category) == null;
-
         String categoryId = category.getRequestedId();
         //Check if categoryId is empty
         if (categoryId == null || categoryId.isEmpty())
