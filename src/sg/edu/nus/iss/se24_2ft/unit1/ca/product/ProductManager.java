@@ -39,10 +39,10 @@ public class ProductManager {
         understockProductList = new ArrayList<>();
         maxSubIdMap = new HashMap<>();
 
-        initData();
+        load();
     }
 
-    public void initData() {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Util::splitCsv).forEach(a -> {
                 String id = a[0], name = a[1], description = a[2];

@@ -28,14 +28,14 @@ public class StoreKeeperManager {
         this.filename = fileName;
         storeKeeperMap = new HashMap<>();
 
-        initData();
+        load();
     }
 
     /**
      * Initialize the data from csv file for the store keepers
      *
      */
-    private void initData() {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Util::splitCsv).forEach(a -> {
                 String name = a[0], password = a[1];

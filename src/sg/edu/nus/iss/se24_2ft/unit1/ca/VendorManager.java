@@ -22,10 +22,10 @@ public class VendorManager {
         this.directory = directory;
         vendorMap = new HashMap<>();
 
-        initData();
+        load();
     }
 
-    private void initData() {
+    private void load() {
         try (Stream<Path> pathStream = Files.list(Paths.get(directory))) {
             pathStream.filter(p -> p.getFileName() //filter vendor files
                     .toString()

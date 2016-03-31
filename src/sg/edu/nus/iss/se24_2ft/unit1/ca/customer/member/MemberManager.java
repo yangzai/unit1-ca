@@ -27,10 +27,10 @@ public class MemberManager {
         memberList = new ArrayList<>();
         memberMap = new HashMap<>();
 
-        initData();
+        load();
     }
 
-    private void initData() {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Util::splitCsv).forEach(a -> {
                 String name = a[0], id = a[1];

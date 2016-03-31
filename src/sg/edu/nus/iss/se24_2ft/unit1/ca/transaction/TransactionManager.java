@@ -47,10 +47,10 @@ public class TransactionManager {
         transactionMap = new HashMap<>();
         transactionItemList = new ArrayList<>();
 
-        initData();
+        load();
     }
 
-    private void initData() {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Util::splitCsv).forEach(a -> {
                 int id = Util.parseIntOrDefault(a[0], 0),

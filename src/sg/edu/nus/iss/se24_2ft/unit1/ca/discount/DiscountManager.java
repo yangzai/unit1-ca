@@ -26,10 +26,10 @@ public class DiscountManager {
         discountList = new ArrayList<>();
         discountMap = new HashMap<>();
 
-        initData();
+        load();
     }
 
-    private void initData() {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.map(Util::splitCsv).forEach(a -> {
                 String code = a[0], description = a[1];
@@ -43,7 +43,7 @@ public class DiscountManager {
 
                 //TODO: try filter
                 //if id already exist, skip
-                //TODO: conditions for other initData
+                //TODO: conditions for other load
                 if (discountMap.containsKey(code)) return;
 
                 discount.setCode();
