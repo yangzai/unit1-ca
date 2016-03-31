@@ -1,7 +1,7 @@
+@ECHO OFF
 
 REM Created by Navy Gao on 29/3/2016
 REM ********************************
-@ECHO OFF
 SETLOCAL
 
 IF "%~1"=="" (
@@ -31,24 +31,27 @@ CALL :ZipFile "%cd%\submission\" "%cd%\%zipfile%" || SET /A pstatus=1
 EXIT /B %pstatus%
 
 :ZipFile <Source folder> <newzipfile>
-SET vbsfile="temp.vbs"
-IF EXIST %vbs% DEL /F /Q %vbsfile%
+rem SET vbsfile="temp.vbs"
+rem IF EXIST %vbs% DEL /F /Q %vbsfile%
 
-ECHO CreateObject("Scripting.FileSystemObject").CreateTextFile(%2, True).Write "PK" ^& Chr(5) ^& Chr(6) ^& String(18, vbNullChar)>%vbsfile%
-ECHO Set objShell = CreateObject("Shell.Application")>>%vbsfile%
-ECHO Set source = objShell.NameSpace(%1).Items>>%vbsfile%
-ECHO objShell.NameSpace(%2).CopyHere(source)>>%vbsfile%
-ECHO wScript.Sleep 2000>>%vbsfile%
+rem ECHO CreateObject("Scripting.FileSystemObject").CreateTextFile(%2, True).Write "PK" ^& Chr(5) ^& Chr(6) ^& String(18, vbNullChar)>%vbsf
+rem ECHO Set objShell = CreateObject("Shell.Application")>>%vbsfile%
+rem ECHO Set source = objShell.NameSpace(%1).Items>>%vbsfile%
+rem ECHO objShell.NameSpace(%2).CopyHere(source)>>%vbsfile%
+rem ECHO wScript.Sleep 2000>>%vbsfile%
 
 echo.
 echo Compressing files...
-cscript //nologo %vbsfile%
+
+rem cscript //nologo %vbsfile%
+.\tools\7z a %zipfile% .\submission\*>NULL
+
 IF %ERRORLEVEL% EQU 0 (
-	if exist %vbsfile% del /f /q %vbsfile%
+	rem if exist %vbsfile% del /f /q %vbsfile%
 	echo Compression Succeed^!
 	EXIT /B 0
 ) ELSE (
-	if exist %vbsfile% del /f /q %vbsfile%
+	rem if exist %vbsfile% del /f /q %vbsfile%
 	echo Compression error^!
 	EXIT /B 1
 )
