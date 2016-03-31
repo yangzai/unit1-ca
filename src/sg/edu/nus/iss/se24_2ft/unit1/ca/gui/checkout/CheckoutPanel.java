@@ -203,8 +203,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
             transaction.getTransactionItemList().stream()
                     .map(TransactionItem::getProduct)
                     .forEach(p -> {
-                        if (p.isUnderstock()) return;
-                        model.addRow(new Object[] {p.getId(), p.getQuantity()});
+                        if (p.isUnderstock()) model.addRow(new Object[] {p.getId(), p.getQuantity()});    
                     });
             if (model.getRowCount() > 0) {
                 JScrollPane scroll = new JScrollPane(new JTable(model));
