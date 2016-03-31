@@ -10,7 +10,7 @@
 
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,7 +37,7 @@ public class StoreKeeperManager {
      */
     private void initData() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
+            stream.map(Util::splitCsv).forEach(a -> {
                 String name = a[0], password = a[1];
                 StoreKeeper storeKeeper = new StoreKeeper(name, password);
                 storeKeeperMap.put(name, storeKeeper);

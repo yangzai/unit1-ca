@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -44,13 +44,13 @@ public class ProductManager {
 
     public void initData() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
+            stream.map(Util::splitCsv).forEach(a -> {
                 String id = a[0], name = a[1], description = a[2];
-                double price = Utils.parseDoubleOrDefault(a[4], 0);
-                int quantity = Utils.parseIntOrDefault(a[3], 0),
-                        barCode = Utils.parseIntOrDefault(a[5], 0),
-                        threshold = Utils.parseIntOrDefault(a[6], 0),
-                        orderQuantity = Utils.parseIntOrDefault(a[7], 0);
+                double price = Util.parseDoubleOrDefault(a[4], 0);
+                int quantity = Util.parseIntOrDefault(a[3], 0),
+                        barCode = Util.parseIntOrDefault(a[5], 0),
+                        threshold = Util.parseIntOrDefault(a[6], 0),
+                        orderQuantity = Util.parseIntOrDefault(a[7], 0);
 
                 Product product = new Product(name, description, quantity,
                         price, barCode, threshold, orderQuantity);

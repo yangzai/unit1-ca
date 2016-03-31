@@ -1,6 +1,6 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.category;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -33,7 +33,7 @@ public class CategoryManager {
 
     private void initData() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
+            stream.map(Util::splitCsv).forEach(a -> {
                 String id = a[0], name = a[1];
                 Category category = new Category(id, name);
                 category.setId();

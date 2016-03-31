@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.table.TableModel;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 /**
  * Created by chenyao on 15/3/16
@@ -117,11 +117,11 @@ public class ProductPanel extends FeaturePanel {
             //TODO: change to Integer.parse, catch NFE, return message dialog
             String name = nameTextField.getText(), destination = desTextField.getText(),
                     categoryId = categoryTextField.getText();
-            int quantity = Utils.parseIntOrDefault(aqTextField.getText(), 0),
-                    barCode = Utils.parseIntOrDefault(barcodeTextField.getText(), 0),
-                    threshold = Utils.parseIntOrDefault(thresholdTextField.getText(), 0),
-                    orderQuantity = Utils.parseIntOrDefault(orderQuantityTextField.getText(), 0);
-            double price = Utils.parseDoubleOrDefault(priceTextField.getText(), 0);
+            int quantity = Util.parseIntOrDefault(aqTextField.getText(), 0),
+                    barCode = Util.parseIntOrDefault(barcodeTextField.getText(), 0),
+                    threshold = Util.parseIntOrDefault(thresholdTextField.getText(), 0),
+                    orderQuantity = Util.parseIntOrDefault(orderQuantityTextField.getText(), 0);
+            double price = Util.parseDoubleOrDefault(priceTextField.getText(), 0);
 
             Product product = new Product(name, destination, quantity, price,
                     barCode, threshold, orderQuantity);

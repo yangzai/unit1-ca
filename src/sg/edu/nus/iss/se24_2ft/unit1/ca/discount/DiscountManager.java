@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -31,11 +31,11 @@ public class DiscountManager {
 
     private void initData() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
+            stream.map(Util::splitCsv).forEach(a -> {
                 String code = a[0], description = a[1];
-                Date start = Utils.parseDateOrDefault(a[2], null);
-                int period = Utils.parseIntOrDefault(a[3], -1);
-                double percent = Utils.parseDoubleOrDefault(a[4], 0);
+                Date start = Util.parseDateOrDefault(a[2], null);
+                int period = Util.parseIntOrDefault(a[3], -1);
+                double percent = Util.parseDoubleOrDefault(a[4], 0);
                 boolean memberOnly = a[5].toUpperCase().equals("M");
 
                 //TODO: refactor order of domain object instantiation for all iniitData

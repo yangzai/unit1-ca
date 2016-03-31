@@ -13,7 +13,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.MemberManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -52,9 +52,9 @@ public class TransactionManager {
 
     private void initData() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
-                int id = Utils.parseIntOrDefault(a[0], 0),
-                        quantity = Utils.parseIntOrDefault(a[3], 0);
+            stream.map(Util::splitCsv).forEach(a -> {
+                int id = Util.parseIntOrDefault(a[0], 0),
+                        quantity = Util.parseIntOrDefault(a[3], 0);
                 String productId = a[1];
 
                 Product product = productManager.getProduct(productId);
@@ -68,7 +68,7 @@ public class TransactionManager {
                 }
 
                 String memberId = a[2];
-                Date date = Utils.parseDateOrDefault(a[4], null);
+                Date date = Util.parseDateOrDefault(a[4], null);
 
                 Customer customer;
                 if (memberId.toUpperCase().equals("PUBLIC"))

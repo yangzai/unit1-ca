@@ -9,7 +9,7 @@ import javax.swing.*;
 import javax.swing.table.TableModel;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 public class DiscountPanel extends FeaturePanel {
     private static final int VISIBLE_ROW = 5;
@@ -136,9 +136,9 @@ public class DiscountPanel extends FeaturePanel {
             boolean isMemberOnly = MAComboBox.getSelectedItem().toString().equals(MEMBER);
 
             String code = codeTextField.getText(), description = descriptionTextField.getText();
-            Date start = Utils.parseDateOrDefault(dateTextField.getText(), null); //TODO: date ui
-            int period = Utils.parseIntOrDefault(periodTextField.getText(), -1);
-            double percent = Utils.parseDoubleOrDefault(percentTextField.getText(), 0);
+            Date start = Util.parseDateOrDefault(dateTextField.getText(), null); //TODO: date ui
+            int period = Util.parseIntOrDefault(periodTextField.getText(), -1);
+            double percent = Util.parseDoubleOrDefault(percentTextField.getText(), 0);
 
             Discount discount = new Discount(code, description, start, period, percent, isMemberOnly);
 

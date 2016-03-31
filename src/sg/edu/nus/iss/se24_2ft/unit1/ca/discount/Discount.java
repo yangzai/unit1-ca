@@ -3,7 +3,7 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca.discount;
 import java.util.Date;
 import java.util.StringJoiner;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 /**
  * Created by Nguyen Trung on 27/2/16.
@@ -46,7 +46,7 @@ public class Discount {
         StringJoiner stringJoiner = new StringJoiner(",");
         return stringJoiner.add(code)
                 .add(description)
-                .add(Utils.formatDateOrDefault(start, "ALWAYS"))
+                .add(Util.formatDateOrDefault(start, "ALWAYS"))
                 .add(period > -1 ? Integer.toString(period) : "ALWAYS")
                 .add(Double.toString(percent))
                 .add(memberOnly ? "M" : "A")
@@ -61,7 +61,7 @@ public class Discount {
 
         if (period < 0) return true;
 
-        Date end = Utils.addDate(start, period);
+        Date end = Util.addDate(start, period);
         return !end.before(today);
     }
 
