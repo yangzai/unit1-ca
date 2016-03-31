@@ -1,6 +1,6 @@
-package sg.edu.nus.iss.se24_2ft.unit1.ca;
+package sg.edu.nus.iss.se24_2ft.unit1.ca.vendor;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -22,10 +22,10 @@ public class VendorManager {
         this.directory = directory;
         vendorMap = new HashMap<>();
 
-        initData();
+        load();
     }
 
-    private void initData() {
+    private void load() {
         try (Stream<Path> pathStream = Files.list(Paths.get(directory))) {
             pathStream.filter(p -> p.getFileName() //filter vendor files
                     .toString()
@@ -35,7 +35,7 @@ public class VendorManager {
 
                 try (Stream<String> lineStream = Files.lines(p)) {
 
-                    List<Vendor> vendorList = lineStream.map(Utils::splitCsv)
+                    List<Vendor> vendorList = lineStream.map(Util::splitCsv)
                             .map(a -> new Vendor(categoryId, a[0], a[1]))
                             .collect(Collectors.toList());
 

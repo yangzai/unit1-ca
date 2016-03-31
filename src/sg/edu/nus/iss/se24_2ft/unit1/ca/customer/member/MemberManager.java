@@ -1,6 +1,6 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,15 +27,15 @@ public class MemberManager {
         memberList = new ArrayList<>();
         memberMap = new HashMap<>();
 
-        initData();
+        load();
     }
 
-    private void initData() {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
+            stream.map(Util::splitCsv).forEach(a -> {
                 String name = a[0], id = a[1];
 
-                int loyaltyPoint = Utils.parseIntOrDefault(a[2], -1);
+                int loyaltyPoint = Util.parseIntOrDefault(a[2], -1);
 
                 Member member = new Member(id, name);
                 member.setId();

@@ -1,6 +1,6 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.category;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -28,12 +28,12 @@ public class CategoryManager {
         categoryMap = new HashMap<>();
         categoryList = new ArrayList<>();
 
-        initData();
+        load();
     }
 
-    private void initData() {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
+            stream.map(Util::splitCsv).forEach(a -> {
                 String id = a[0], name = a[1];
                 Category category = new Category(id, name);
                 category.setId();
@@ -72,7 +72,8 @@ public class CategoryManager {
         int insertedRowIndex = categoryList.size() - 1;
         if (tableModel != null)
             tableModel.fireTableRowsInserted(insertedRowIndex, insertedRowIndex);
-        //TODO: persist immediately?
+
+        store();
     }
 
     public TableModel getTableModel() {
@@ -104,5 +105,17 @@ public class CategoryManager {
                 }
             }
         };
+    }
+
+    private void store() {
+        Stream<String> stream = categoryList.stream()
+                .sorted(Comparator.comparing(Category::getId))
+                .map(Category::toString);
+
+        try {
+            Files.write(Paths.get(filename), (Iterable<String>) stream::iterator);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

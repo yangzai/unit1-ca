@@ -16,7 +16,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.Transaction;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.TransactionManager;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 /**
  * 
@@ -91,7 +91,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
         gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
         double subtotal = transaction != null ? transaction.getSubtotal() : 0;
-        infoPanel.add(new JLabel(Utils.formatDollar(subtotal)), gbc);
+        infoPanel.add(new JLabel(Util.formatDollar(subtotal)), gbc);
 
         gbc.gridx--;
         gbc.gridy++;
@@ -104,7 +104,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
         gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
         double discountAmount = transaction != null ? transaction.getDiscountAmount() : 0;
-        infoPanel.add(new JLabel(Utils.formatDollar(discountAmount)), gbc);
+        infoPanel.add(new JLabel(Util.formatDollar(discountAmount)), gbc);
 
         gbc.gridx--;
         gbc.gridy++;
@@ -118,7 +118,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
         gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
         double redeemValue = transaction != null ? transaction.getRedeemPointValue() : 0;
-        JLabel redeemValueLabel = new JLabel(Utils.formatDollar(redeemValue));
+        JLabel redeemValueLabel = new JLabel(Util.formatDollar(redeemValue));
         redeemValueLabel.setVisible(member != null);
         infoPanel.add(redeemValueLabel, gbc);
 
@@ -132,7 +132,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
         gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
         double payment = transaction != null ? transaction.getPayment() : 0;
-        infoPanel.add(new JLabel(Utils.formatDollar(payment)), gbc);
+        infoPanel.add(new JLabel(Util.formatDollar(payment)), gbc);
 
         gbc.gridx--;
         gbc.gridy++;
@@ -144,7 +144,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
         gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
         double change = transaction != null ? transaction.getBalance() * -1 : 0;
-        infoPanel.add(new JLabel(Utils.formatDollar(change)), gbc);
+        infoPanel.add(new JLabel(Util.formatDollar(change)), gbc);
 
         gbc.gridx--;
         gbc.gridy++;

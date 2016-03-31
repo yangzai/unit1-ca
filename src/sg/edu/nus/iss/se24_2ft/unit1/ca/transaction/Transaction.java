@@ -3,7 +3,7 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca.transaction;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -114,7 +114,7 @@ public class Transaction {
                     case 0: return item.getQuantity();
                     case 1: return item.getProduct().getId();
                     case 2: return item.getProduct().getDescription();
-                    case 3: return Utils.formatDollar(item.getProduct().getPrice());
+                    case 3: return Util.formatDollar(item.getProduct().getPrice());
                     default: return null;
                 }
             }

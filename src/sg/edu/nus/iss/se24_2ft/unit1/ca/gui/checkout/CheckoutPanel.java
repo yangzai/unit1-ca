@@ -7,7 +7,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.FeaturePanel;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -114,7 +114,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
                 return;
             }
 
-            int quantity = Utils.parseIntOrDefault(quantityField.getText(), 0);
+            int quantity = Util.parseIntOrDefault(quantityField.getText(), 0);
             if (quantity <= 0) {
                 JOptionPane.showMessageDialog(this, "Quantity cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -128,7 +128,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
 
             TransactionItem transactionItem = new TransactionItem(product, quantity);
             transaction.addTransactionItem(transactionItem);
-            subTotalField.setText(Utils.formatDollar(transaction.getSubtotal()));
+            subTotalField.setText(Util.formatDollar(transaction.getSubtotal()));
 
             productField.setText(null);
             quantityField.setText("1");
@@ -252,7 +252,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
         gbc.gridx++;
         gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
-        subTotalField = new JLabel(Utils.formatDollar(transaction.getSubtotal()));
+        subTotalField = new JLabel(Util.formatDollar(transaction.getSubtotal()));
         panel.add(subTotalField, gbc);
 
         return panel;
@@ -279,7 +279,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
         transaction = new Transaction();
         setTableModel(transaction.getTableModel());
         memberField.setText(null);
-        subTotalField.setText(Utils.formatDollar(0));
+        subTotalField.setText(Util.formatDollar(0));
         proceedPaymentButton.setEnabled(false);
     }
 

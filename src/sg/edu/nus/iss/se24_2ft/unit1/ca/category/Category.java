@@ -1,5 +1,8 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.category;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * Created by yangzai on 27/2/16.
  */
@@ -18,4 +21,11 @@ public class Category {
 
     //setters
     /*package*/ void setId() { id = requestedId; }
+
+    @Override
+    public String toString() {
+        return Arrays.asList(id, name).stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(","));
+    }
 }

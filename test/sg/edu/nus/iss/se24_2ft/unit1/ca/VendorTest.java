@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import junit.framework.TestCase;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.Vendor;
 
 public class VendorTest extends TestCase {
     // test fixtures
