@@ -6,6 +6,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -28,21 +31,15 @@ public class ProductPanel extends FeaturePanel {
     private JTable table;
     private JScrollPane scrollPane;
     private List<ProductPanelListener> productPanelListenerList;
+    private JTextField categoryTextField, nameTextField, desTextField, aqTextField,
+            orderQuantityTextField, priceTextField, barcodeTextField, thresholdTextField;
 
     public ProductPanel() {
-        // super(new GridBagLayout());
-
         super(new BorderLayout());
 
         table = new JTable();
         productPanelListenerList = new ArrayList<>();
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = c.gridy = 0;
-        c.fill = GridBagConstraints.BOTH;
         add(detailPanel(), BorderLayout.CENTER);
-
-        c.gridy++;
-        c.fill = GridBagConstraints.BOTH;
         add(newProductPanel(), BorderLayout.SOUTH);
     }
 
@@ -62,7 +59,6 @@ public class ProductPanel extends FeaturePanel {
 
         c.gridx = c.gridy = 0;
         panel.add(new JLabel("Product"), c);
-        c.gridwidth = 2;
 
         c.gridy++;
         c.gridwidth = 1;
@@ -74,8 +70,7 @@ public class ProductPanel extends FeaturePanel {
         // Back Button
         c.gridx++;
         c.anchor = GridBagConstraints.NORTH;
-        c.weightx = 0;
-        c.weighty = 0;
+        c.weightx = c.weighty = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
 
         JButton backButton = new JButton("Back");
@@ -88,26 +83,17 @@ public class ProductPanel extends FeaturePanel {
     private JPanel newProductPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        //
-        // c.gridx = 1;
-        // c.gridy = 0;
-        // c.anchor = GridBagConstraints.CENTER;
-        // panel.add(new JLabel("Add New Product"), c);
-        c.gridwidth = 5;
 
         // input field for product categoryId
-        c.gridy = 0;
-        c.gridx = 0;
+        c.gridy = c.gridx = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
-        // c.anchor = GridBagConstraints.WEST;
         c.gridwidth = 1;
         c.weightx = 0.5;
         c.weighty = 0;
         panel.add(new JLabel("Category ID"), c);
 
         c.gridx++;
-        c.weightx = 0.5;
-        JTextField categoryTextField = new JTextField();
+        categoryTextField = new JTextField();
         panel.add(categoryTextField, c);
 
         // input field for product name
@@ -115,7 +101,7 @@ public class ProductPanel extends FeaturePanel {
         panel.add(new JLabel("Name"), c);
 
         c.gridx++;
-        JTextField nameTextField = new JTextField();
+        nameTextField = new JTextField();
         panel.add(nameTextField, c);
 
         // input field for product description
@@ -124,7 +110,7 @@ public class ProductPanel extends FeaturePanel {
         panel.add(new JLabel("Description"), c);
 
         c.gridx++;
-        JTextField desTextField = new JTextField();
+        desTextField = new JTextField();
         panel.add(desTextField, c);
 
         // input field for product available quantity
@@ -132,7 +118,7 @@ public class ProductPanel extends FeaturePanel {
         panel.add(new JLabel("Quantity"), c);
 
         c.gridx++;
-        JTextField aqTextField = new JTextField();
+        aqTextField = new JTextField();
         panel.add(aqTextField, c);
 
         // input field for product product price
@@ -141,7 +127,7 @@ public class ProductPanel extends FeaturePanel {
         panel.add(new JLabel("Price"), c);
 
         c.gridx++;
-        JTextField priceTextField = new JTextField();
+        priceTextField = new JTextField();
         panel.add(priceTextField, c);
 
         // input field for product product bar code number
@@ -149,7 +135,7 @@ public class ProductPanel extends FeaturePanel {
         panel.add(new JLabel("Barcode"), c);
 
         c.gridx++;
-        JTextField barcodeTextField = new JTextField();
+        barcodeTextField = new JTextField();
         panel.add(barcodeTextField, c);
 
         // input field for product product threshold
@@ -158,7 +144,7 @@ public class ProductPanel extends FeaturePanel {
         panel.add(new JLabel("Threshold"), c);
 
         c.gridx++;
-        JTextField thresholdTextField = new JTextField();
+        thresholdTextField = new JTextField();
         panel.add(thresholdTextField, c);
 
         // input field for product product orderQuantity
@@ -166,14 +152,13 @@ public class ProductPanel extends FeaturePanel {
         panel.add(new JLabel("Order Qty"), c);
 
         c.gridx++;
-        JTextField orderQuantityTextField = new JTextField();
+        orderQuantityTextField = new JTextField();
         panel.add(orderQuantityTextField, c);
 
         // Add Button
         c.gridx++;
         c.gridy = 0;
         c.weightx = 0;
-        c.weighty = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
         JButton addButton = new JButton("Add");
         addButton.addActionListener(e -> {
@@ -196,29 +181,28 @@ public class ProductPanel extends FeaturePanel {
                 }
             });
 
-            categoryTextField.setText(null);
-            nameTextField.setText(null);
-            desTextField.setText(null);
-            aqTextField.setText(null);
-            priceTextField.setText(null);
-            barcodeTextField.setText(null);
-            thresholdTextField.setText(null);
-            orderQuantityTextField.setText(null);
+            resetFields();
         });
         panel.add(addButton, c);
 
         // reset button
-        // c.anchor = GridBagConstraints.SOUTH;
         c.gridy++;
-        c.weightx = 0;
-        c.weighty = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
         JButton resetButton = new JButton("Reset");
-        resetButton.addActionListener(e -> {
-
-        });
+        resetButton.addActionListener(e -> resetFields());
         panel.add(resetButton, c);
 
         return panel;
+    }
+
+    private void resetFields() {
+        categoryTextField.setText(null);
+        nameTextField.setText(null);
+        desTextField.setText(null);
+        aqTextField.setText(null);
+        priceTextField.setText(null);
+        barcodeTextField.setText(null);
+        thresholdTextField.setText(null);
+        orderQuantityTextField.setText(null);
     }
 }
