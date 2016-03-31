@@ -10,6 +10,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.*;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.checkout.CheckoutPanel;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.storekeeper.StoreKeeperManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.TransactionManager;
 
 import javax.swing.*;
@@ -123,8 +124,6 @@ public class StoreApplication {
         mainFrame.addFeaturePanel(NULL, getTempPanel.apply(NULL));
 
         mainFrame.resizeAndPack();
-
-        Store store = new Store(mainFrame);
 
         mainFrame.setVisible(true);
 

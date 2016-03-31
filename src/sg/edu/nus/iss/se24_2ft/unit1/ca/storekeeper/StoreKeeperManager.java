@@ -8,7 +8,7 @@
  * Copyright @ ISS, NUS.  All right reserved. 
  *********************************************/ 
 
-package sg.edu.nus.iss.se24_2ft.unit1.ca;
+package sg.edu.nus.iss.se24_2ft.unit1.ca.storekeeper;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 

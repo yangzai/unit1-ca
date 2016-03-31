@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import junit.framework.TestCase;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.Vendor;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.VendorManager;
 
 public class VendorManagerTest extends TestCase {
     // test fixtures
