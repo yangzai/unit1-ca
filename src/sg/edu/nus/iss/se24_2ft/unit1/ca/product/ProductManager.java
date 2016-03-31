@@ -96,6 +96,8 @@ public class ProductManager {
         String id = categoryId + '/' + subId;
 
         addProduct(category, product, id);
+
+        store();
     }
 
     private void addProduct(Category category, Product product, String id) {
@@ -120,7 +122,12 @@ public class ProductManager {
     
     public boolean deductQuantity(String id, int quantity) {
         Product product = productMap.get(id);
-        return product != null && product.deductQuantity(quantity);
+        if (product == null || product.deductQuantity(quantity))
+            return false;
+
+        store();
+
+        return true;
     }
 
     public void generatePurchaseOrder(List<Integer> understockIndexList) {
@@ -138,6 +145,8 @@ public class ProductManager {
 
         if (tableModel != null)
             tableModel.fireTableDataChanged();
+
+        store();
     }
 
     public TableModel getTableModel() {
@@ -200,5 +209,17 @@ public class ProductManager {
                 }
             }
         };
+    }
+
+    private void store() {
+        Stream<String> stream = productList.stream()
+                .sorted(Comparator.comparing(Product::getId))
+                .map(Product::toString);
+
+        try {
+            Files.write(Paths.get(filename), (Iterable<String>) stream::iterator);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

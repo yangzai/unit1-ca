@@ -72,7 +72,8 @@ public class CategoryManager {
         int insertedRowIndex = categoryList.size() - 1;
         if (tableModel != null)
             tableModel.fireTableRowsInserted(insertedRowIndex, insertedRowIndex);
-        //TODO: persist immediately?
+
+        store();
     }
 
     public TableModel getTableModel() {
@@ -104,5 +105,17 @@ public class CategoryManager {
                 }
             }
         };
+    }
+
+    private void store() {
+        Stream<String> stream = categoryList.stream()
+                .sorted(Comparator.comparing(Category::getId))
+                .map(Category::toString);
+
+        try {
+            Files.write(Paths.get(filename), (Iterable<String>) stream::iterator);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
