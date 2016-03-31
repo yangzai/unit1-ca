@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,8 +20,7 @@ public class DiscountTest {
 	@SuppressWarnings("deprecation")
 	@Before
 	public void setUp() throws Exception {
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, -2); //TODO: fix the date
+		Calendar calendar = new GregorianCalendar(2016, 2, 27);
 		Date date = calendar.getTime();
 		discount1 = new Discount("TEST1", "TEST 1 Desc", date, 1, 10, true);
 		discount2 = new Discount("TEST2", "TEST 2 Desc", null, -1, 30, true);
@@ -55,7 +55,7 @@ public class DiscountTest {
 	public void testToString() {
 		String str1 = "null,TEST 1 Desc,2016-03-27,1,10.0,M";
 		String str2 = "null,TEST 2 Desc,ALWAYS,ALWAYS,30.0,M";
-		assertTrue(discount1.toString().trim().equals(str1)); //TODO: fix the test 
+		assertTrue(discount1.toString().trim().equals(str1)); 
 		assertTrue(discount2.toString().trim().equals(str2));
 	}
 }
