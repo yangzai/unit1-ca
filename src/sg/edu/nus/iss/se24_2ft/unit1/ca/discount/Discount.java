@@ -19,8 +19,8 @@ public class Discount {
                     Date start, int period, double percent, boolean memberOnly) {
         code = null;
 
-        this.requestedCode = requestedCode.trim().toUpperCase();
-        this.description = description.trim();
+        this.requestedCode = (requestedCode != null ? requestedCode.trim().toUpperCase() : null);
+        this.description = (description != null ? description.trim() : null);
         this.start = start;
         this.period = period;
         this.percent = percent;

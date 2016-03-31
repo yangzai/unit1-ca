@@ -16,8 +16,8 @@ public class Member implements Customer {
         //TODO: chk all other list methods, try validation
         id = null;
 
-        this.requestedId = requestedId.trim();
-        this.name = name.trim();
+        this.requestedId = (requestedId != null ? requestedId.trim() : null);
+        this.name = (name != null ? name.trim() : null);
         loyaltyPoint = -1;
     }
 
