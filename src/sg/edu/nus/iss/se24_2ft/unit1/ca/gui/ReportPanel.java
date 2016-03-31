@@ -1,6 +1,6 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class ReportPanel extends FeaturePanel {
         panel.add(new JLabel("Start Date: "), gbc);
 
         gbc.gridy++;
-        startDateField = new JFormattedTextField(Utils.DATE_FORMAT);
+        startDateField = new JFormattedTextField(Util.DATE_FORMAT);
         startDateField.setValue(today);
         panel.add(startDateField, gbc);
 
@@ -99,7 +99,7 @@ public class ReportPanel extends FeaturePanel {
         panel.add(new JLabel("End Date: "), gbc);
 
         gbc.gridy++;
-        endDateField = new JFormattedTextField(Utils.DATE_FORMAT);
+        endDateField = new JFormattedTextField(Util.DATE_FORMAT);
         endDateField.setValue(today);
         panel.add(endDateField, gbc);
 
@@ -182,7 +182,7 @@ public class ReportPanel extends FeaturePanel {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                            boolean hasFocus, int row, int column) {
                 if( value instanceof Date)
-                    value = Utils.formatDateOrDefault((Date) value, null);
+                    value = Util.formatDateOrDefault((Date) value, null);
                 return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };

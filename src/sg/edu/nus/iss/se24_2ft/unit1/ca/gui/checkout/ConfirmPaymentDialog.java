@@ -5,7 +5,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.TransactionManager;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +57,7 @@ import java.awt.*;
         gbc.gridx++;
         gbc.weightx = 1;
         gbc.gridwidth = 3;
-        JTextArea subtotalTA = new JTextArea(Utils.formatDollar(getSubtotal()));
+        JTextArea subtotalTA = new JTextArea(Util.formatDollar(getSubtotal()));
         subtotalTA.setEditable(false);
         panel.add(subtotalTA, gbc);
 
@@ -70,7 +70,7 @@ import java.awt.*;
 
         gbc.gridx++;
         gbc.gridwidth = 3;
-        JTextArea discountTA = new JTextArea(Utils.formatDollar(getDiscountAmount()));
+        JTextArea discountTA = new JTextArea(Util.formatDollar(getDiscountAmount()));
         discountTA.setEditable(false);
         panel.add(discountTA, gbc);
 
@@ -82,7 +82,7 @@ import java.awt.*;
 
         gbc.gridx++;
         gbc.gridwidth = 3;
-        JTextArea totalTA = new JTextArea(Utils.formatDollar(getSubtotalAfterDiscount()));
+        JTextArea totalTA = new JTextArea(Util.formatDollar(getSubtotalAfterDiscount()));
         totalTA.setEditable(false);
         panel.add(totalTA, gbc);
 
@@ -113,7 +113,7 @@ import java.awt.*;
 
         gbc.gridx++;
         gbc.gridwidth = 3;
-        JTextArea redeemValueTA = new JTextArea(Utils.formatDollar(getRedeemPointValue()));
+        JTextArea redeemValueTA = new JTextArea(Util.formatDollar(getRedeemPointValue()));
         redeemTA.setEditable(false);
         redeemTA.setVisible(member != null);
         panel.add(redeemValueTA, gbc);
@@ -127,7 +127,7 @@ import java.awt.*;
 
         gbc.gridx++;
         gbc.gridwidth = 3;
-        JTextArea payTA = new JTextArea(Utils.formatDollar(getPayment()));
+        JTextArea payTA = new JTextArea(Util.formatDollar(getPayment()));
         payTA.setEditable(false);
         panel.add(payTA, gbc);
 
@@ -142,7 +142,7 @@ import java.awt.*;
 
         gbc.gridx++;
         gbc.gridwidth = 3;
-        balanceTA = new JTextArea(Utils.formatDollar(Math.abs(balance)));
+        balanceTA = new JTextArea(Util.formatDollar(Math.abs(balance)));
         panel.add(balanceTA, gbc);
 
         // Button
@@ -187,8 +187,8 @@ import java.awt.*;
             if (transaction != null)
                 transaction.setRedeemPoint(redeemPoint);
             redeemTA.setText(Integer.toString(redeemPoint));
-            redeemValueTA.setText(Utils.formatDollar(getRedeemPointValue()));
-            double balanceLabelValue = Utils.parseDoubleOrDefault(balanceLabel.getText(), 0);
+            redeemValueTA.setText(Util.formatDollar(getRedeemPointValue()));
+            double balanceLabelValue = Util.parseDoubleOrDefault(balanceLabel.getText(), 0);
             double currentBalance = getBalance();
             if (currentBalance != balanceLabelValue) balanceChanged(currentBalance);
         });
@@ -224,7 +224,7 @@ import java.awt.*;
             }
 
             transaction.setPayment(paidAmount);
-            payTA.setText(Utils.formatDollar(paidAmount));
+            payTA.setText(Util.formatDollar(paidAmount));
             double currentBalance = getBalance();
             if (currentBalance != balance) balanceChanged(currentBalance);
         });
@@ -282,7 +282,7 @@ import java.awt.*;
 
     private void balanceChanged(double balance) {
         balanceLabel.setText(balance < 0 ? "Change:" : "Balance:");
-        balanceTA.setText(Utils.formatDollar(Math.abs(balance)));
+        balanceTA.setText(Util.formatDollar(Math.abs(balance)));
         confirmButton.setEnabled(balance <= 0);
     }
 }

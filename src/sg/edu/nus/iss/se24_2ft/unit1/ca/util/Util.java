@@ -5,10 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public final class Utils {
+public final class Util {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-    private Utils() {}
+    private Util() {}
 
     public static Date addDate(Date date, int period) {
         Calendar calendar = Calendar.getInstance();

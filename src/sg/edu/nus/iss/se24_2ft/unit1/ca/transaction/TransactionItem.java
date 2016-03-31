@@ -3,7 +3,7 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca.transaction;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.PublicCustomer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -44,7 +44,7 @@ public class TransactionItem {
         String productId = product != null ? product.getId() : null;
 
         return Arrays.asList(parentId, productId, customer.getId(),
-                quantity, Utils.formatDateOrDefault(parent.getDate(), null)).stream()
+                quantity, Util.formatDateOrDefault(parent.getDate(), null)).stream()
                 .map(Object::toString)
                 .collect(Collectors.joining(","));
     }
