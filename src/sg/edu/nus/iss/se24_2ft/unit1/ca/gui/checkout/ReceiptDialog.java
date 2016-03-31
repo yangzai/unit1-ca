@@ -150,8 +150,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
         gbc.gridy++;
         gbc.weightx = 0.2;
         gbc.anchor = GridBagConstraints.EAST;
-        JLabel redeemPointTextLabel = new JLabel("Redeemed (1 point = $"+
-                TransactionManager.POINT_TO_DOLLAR + "):");
+        JLabel redeemPointTextLabel = new JLabel("Redeemed (1 point = $"+ TransactionManager.POINT_TO_DOLLAR + "):");
         redeemPointTextLabel.setVisible(member != null);
         infoPanel.add(redeemPointTextLabel, gbc);
 
@@ -167,8 +166,8 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
         gbc.gridy++;
         gbc.weightx = 0.2;
         gbc.anchor = GridBagConstraints.EAST;
-        JLabel creditPointTextLabel = new JLabel("Credited ($1 = "+
-                TransactionManager.DOLLAR_TO_POINT + " point(s)): ");
+        JLabel creditPointTextLabel = new JLabel("Credited ($" + TransactionManager.DOLLAR_TO_POINT + " = "
+                 + " 1 point): ");
         creditPointTextLabel.setVisible(member != null);
         infoPanel.add(creditPointTextLabel, gbc);
 

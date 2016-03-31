@@ -91,8 +91,7 @@ import java.awt.*;
         gbc.gridy++;
         gbc.gridx--;
         gbc.gridwidth = 1;
-        JLabel redeemLabel = new JLabel("Redeem (1 point = $"+
-                TransactionManager.POINT_TO_DOLLAR + "): ");
+        JLabel redeemLabel = new JLabel("Redeem (1 point = $"+ TransactionManager.POINT_TO_DOLLAR + "):");
         redeemLabel.setVisible(member != null);
         panel.add(redeemLabel, gbc);
 
