@@ -36,7 +36,7 @@ public class MemberPanel extends FeaturePanel {
         // Table to display all current records
         gbc.gridx = gbc.gridy = 0;
         gbc.weightx = gbc.weighty = 1;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 3;
         gbc.fill = GridBagConstraints.BOTH;
         add(scrollPane, gbc);
 
@@ -65,9 +65,10 @@ public class MemberPanel extends FeaturePanel {
         add(nameTextField, gbc);
 
 //        gbc.gridx--;
-        gbc.gridy++; 
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.anchor = GridBagConstraints.EAST;
+        gbc.gridy--;
+        gbc.gridx++;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         JButton addButton = new JButton("Add");
         addButton.addActionListener(e -> {
             Member member = new Member(idTextField.getText(), nameTextField.getText());
@@ -88,6 +89,13 @@ public class MemberPanel extends FeaturePanel {
 //        JButton backButton = new JButton("Back");
 //        backButton.addActionListener(this::backActionPerformed);
 //        add(backButton, gbc);
+        gbc.gridy++;
+        JButton resetBtn = new JButton("Reset");
+        resetBtn.addActionListener(e -> {
+        	idTextField.setText(null);
+        	nameTextField.setText(null);
+        });
+        add(resetBtn, gbc);
     }
 
     public void setTableModel(TableModel tableModel) {

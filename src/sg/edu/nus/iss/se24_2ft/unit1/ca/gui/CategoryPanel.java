@@ -26,7 +26,7 @@ public class CategoryPanel extends FeaturePanel {
         GridBagConstraints c = new GridBagConstraints();
 
         c.gridx = c.gridy = 0;
-        c.weightx = c.weighty = 1;
+        c.weightx = c.weighty = 0.5;
         c.gridwidth = 3;
         c.fill = GridBagConstraints.BOTH;
         add(scrollPane, c);
@@ -34,30 +34,36 @@ public class CategoryPanel extends FeaturePanel {
         c.gridy++;
         c.gridwidth = 1;
         c.weighty = 0;
+        c.weightx = 0.2;
+        c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.NONE;
-        add(new JLabel("ID"), c);
+        add(new JLabel("Category ID"), c);
 
         c.gridx++;
-        c.gridwidth++;
+        c.gridwidth = 1;
+        c.weightx = 0.5;
         c.fill = GridBagConstraints.HORIZONTAL;
         JTextField idTextField = new JTextField();
         add(idTextField, c);
 
-        c.gridx--;
+        c.gridx = 0;
         c.gridy++;
-        c.gridwidth--;
+        c.gridwidth = 1;
+        c.weightx = 0.2;
         c.fill = GridBagConstraints.NONE;
         add(new JLabel("Name"), c);
 
         c.gridx++;
-        c.gridwidth++;
+        c.gridwidth = 1;
+        c.weightx = 0.5;
         c.fill = GridBagConstraints.HORIZONTAL;
         JTextField nameTextField = new JTextField();
         add(nameTextField, c);
 
-        c.gridy++;
-        c.gridwidth--;
-        c.anchor = GridBagConstraints.EAST;
+        c.gridy--;
+        c.gridx++;
+        c.gridwidth = 1;
+        c.weightx = 0;
         JButton addCategoryButton = new JButton("Add");
         addCategoryButton.addActionListener(e -> {
             Category category = new Category(idTextField.getText(), nameTextField.getText());
@@ -78,6 +84,14 @@ public class CategoryPanel extends FeaturePanel {
 //        JButton backButton = new JButton("Back");
 //        backButton.addActionListener(this::backActionPerformed);
 //        add(backButton, c);
+        
+        c.gridy++;
+        JButton resetBtn = new JButton("Reset");
+        resetBtn.addActionListener(e -> {
+        	idTextField.setText(null);
+        	nameTextField.setText(null);
+        });
+        add(resetBtn, c);
     }
 
     public void addCategoryPanelListener(CategoryPanelListener l) {

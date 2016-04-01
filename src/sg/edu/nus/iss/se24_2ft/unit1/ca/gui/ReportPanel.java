@@ -32,7 +32,8 @@ public class ReportPanel extends FeaturePanel {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT); //enables to use scrolling tabs.
 
-        JPanel categoryReportPanel = createCategoryReportPanel();
+        JPanel categoryReportPanel = new JPanel(new BorderLayout()); 
+        categoryReportPanel.add(createCategoryReportPanel(), BorderLayout.CENTER);
         tabbedPane.add("Category Report", categoryReportPanel);
 
         JPanel productReportPanel = createProductReportPanel();
@@ -154,11 +155,6 @@ public class ReportPanel extends FeaturePanel {
 
     public void setCategoryTableModel(TableModel tableModel) {
         categoryTable.setModel(tableModel);
-        categoryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        categoryTable.setPreferredSize(new Dimension(WIDTH, categoryTable.getRowHeight() * VISIBLE_ROW ));
-        TableColumnModel columnModel = categoryTable.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth((int) (WIDTH*0.2));
-        columnModel.getColumn(1).setPreferredWidth((int) (WIDTH*0.8));
     }
     
     public void setMemberTableModel(TableModel tableModel) {
