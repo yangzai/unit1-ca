@@ -53,14 +53,24 @@ public class CategoryTest extends TestCase {
         assertSame(category1, category1);
         assertSame(category2, category2);
 
-        assertEquals(category1, new Category("BOK", "Book"));
-        assertEquals(category2, new Category("CLO", null));
+        assertTrue(isEqual(category1, new Category("BOK", "Book")));
+        assertTrue(isEqual(category2, new Category("CLO", null)));
 
-        assertFalse(category1.equals(category2));
-        assertFalse(category2.equals(category1));
+        assertFalse(isEqual(category1,category2));
+        assertFalse(isEqual(category2,category1));
 
         Category category3 = new Category("CLO", "Book");
-        assertFalse(category2.equals(category3));
-        assertFalse(category3.equals(category2));
+        assertFalse(isEqual(category3,category2));
     }
+    
+	private boolean isEqual(Category category1, Category category2) {
+		if (category1 == category2) return true;
+		if (!category1.getRequestedId().equals(category2.getRequestedId())) return false;
+		if (category1.getName()==null){
+			if (category2.getName()!=null) return false;
+		} else {
+			if (!category1.getName().equals(category2.getName())) return false;
+		}
+		return true;
+	}
 }

@@ -2,6 +2,13 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,15 +25,29 @@ public class DiscountManagerTest {
 	private DiscountManager discountManager = null;
 	private Discount discount = null;
 	private Member member = null;
+	private final String FILENAME = "test/data/Discounts.dat";
+	private List<String> stringList;
+
 
 	@Before
 	public void setUp() throws Exception {
-		discountManager = new DiscountManager("data/Discounts.dat");
+		// Preserved Test Data
+		try (Stream<String> stream = Files.lines(Paths.get(FILENAME))) {
+			stringList = stream.collect(Collectors.toList());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		discountManager = new DiscountManager(FILENAME);
 		discount = new Discount("TEST11", "TEST 2 Desc", null, -1, 30, true);
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		try {
+			Files.write(Paths.get(FILENAME), stringList);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
