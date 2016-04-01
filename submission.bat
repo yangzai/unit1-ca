@@ -44,7 +44,7 @@ echo.
 echo Compressing files...
 
 rem cscript //nologo %vbsfile%
-.\tools\7z a %zipfile% .\submission\*>NULL
+.\tools\7z a %zipfile% .\submission\*>NUL
 
 IF %ERRORLEVEL% EQU 0 (
 	rem if exist %vbsfile% del /f /q %vbsfile%
