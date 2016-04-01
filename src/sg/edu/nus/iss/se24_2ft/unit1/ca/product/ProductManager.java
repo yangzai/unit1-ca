@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -27,7 +27,7 @@ public class ProductManager {
     private AbstractTableModel tableModel;
     private AbstractTableModel understockTableModel;
 
-    public ProductManager(String filename, CategoryManager categoryManager) throws IOException {
+    public ProductManager(String filename, CategoryManager categoryManager) {
         tableModel = null;
         understockTableModel = null;
 
@@ -39,18 +39,18 @@ public class ProductManager {
         understockProductList = new ArrayList<>();
         maxSubIdMap = new HashMap<>();
 
-        initData();
+        load();
     }
 
-    public void initData() throws IOException {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
+            stream.map(Util::splitCsv).forEach(a -> {
                 String id = a[0], name = a[1], description = a[2];
-                double price = Utils.parseDoubleOrDefault(a[4], 0);
-                int quantity = Utils.parseIntOrDefault(a[3], 0),
-                        barCode = Utils.parseIntOrDefault(a[5], 0),
-                        threshold = Utils.parseIntOrDefault(a[6], 0),
-                        orderQuantity = Utils.parseIntOrDefault(a[7], 0);
+                double price = Util.parseDoubleOrDefault(a[4], 0);
+                int quantity = Util.parseIntOrDefault(a[3], 0),
+                        barCode = Util.parseIntOrDefault(a[5], 0),
+                        threshold = Util.parseIntOrDefault(a[6], 0),
+                        orderQuantity = Util.parseIntOrDefault(a[7], 0);
 
                 Product product = new Product(name, description, quantity,
                         price, barCode, threshold, orderQuantity);
@@ -72,6 +72,8 @@ public class ProductManager {
 
                 addProduct(category, product, id);
             });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -79,11 +81,15 @@ public class ProductManager {
 
     public List<Product> getProductList() { return productList; }
 
-    public boolean addProduct(Category category, Product product) {
-        if (category == null || product == null) return false;
+    public void addProduct(Category category, Product product) {
+        if (category == null)
+            throw new IllegalArgumentException("Category is not valid");
+        if (product == null)
+            throw new IllegalArgumentException("Product is not valid");
 
         String categoryId = category.getId();
-        if (categoryId == null) return false;
+        if (categoryId == null)
+            throw new IllegalArgumentException("Category ID is empty. Please input again");
 
         int subId = maxSubIdMap.getOrDefault(categoryId, 0) + 1;
         maxSubIdMap.put(categoryId, subId);
@@ -91,7 +97,7 @@ public class ProductManager {
 
         addProduct(category, product, id);
 
-        return true;
+        store();
     }
 
     private void addProduct(Category category, Product product, String id) {
@@ -113,6 +119,16 @@ public class ProductManager {
         if (understockTableModel != null)
             understockTableModel.fireTableRowsInserted(rowIndex, rowIndex);
     }
+    
+    public boolean deductQuantity(String id, int quantity) {
+        Product product = productMap.get(id);
+        if (product == null || product.deductQuantity(quantity))
+            return false;
+
+        store();
+
+        return true;
+    }
 
     public void generatePurchaseOrder(List<Integer> understockIndexList) {
         //No change to table, short circuit
@@ -129,6 +145,8 @@ public class ProductManager {
 
         if (tableModel != null)
             tableModel.fireTableDataChanged();
+
+        store();
     }
 
     public TableModel getTableModel() {
@@ -191,5 +209,17 @@ public class ProductManager {
                 }
             }
         };
+    }
+
+    private void store() {
+        Stream<String> stream = productList.stream()
+                .sorted(Comparator.comparing(Product::getId))
+                .map(Product::toString);
+
+        try {
+            Files.write(Paths.get(filename), (Iterable<String>) stream::iterator);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

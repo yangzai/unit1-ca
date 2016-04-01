@@ -4,13 +4,12 @@ package sg.edu.nus.iss.se24_2ft.unit1.ca.discount;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Stream;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -21,30 +20,30 @@ public class DiscountManager {
     private Map<String, Discount> discountMap;
     private AbstractTableModel tableModel;
 
-    public DiscountManager(String fileaname) throws IOException {
+    public DiscountManager(String filename) {
         tableModel = null;
-        this.filename = fileaname;
+        this.filename = filename;
         discountList = new ArrayList<>();
         discountMap = new HashMap<>();
 
-        initData();
+        load();
     }
 
-    private void initData() throws IOException {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
+            stream.map(Util::splitCsv).forEach(a -> {
                 String code = a[0], description = a[1];
-                Date start = Utils.parseDateOrDefault(a[2], null);
-                int period = Utils.parseIntOrDefault(a[3], -1);
-                double percent = Utils.parseDoubleOrDefault(a[4], 0);
+                Date start = Util.parseDateOrDefault(a[2], null);
+                int period = Util.parseIntOrDefault(a[3], -1);
+                double percent = Util.parseDoubleOrDefault(a[4], 0);
                 boolean memberOnly = a[5].toUpperCase().equals("M");
 
-                //TODO: refactor order of domain object instantiation for all iniitData
+                //TODO: refactor order of domain object instantiation for all load
                 Discount discount = new Discount(code, description, start, period, percent, memberOnly);
 
                 //TODO: try filter
                 //if id already exist, skip
-                //TODO: conditions for other initData
+                //TODO: conditions for other load
                 if (discountMap.containsKey(code)) return;
 
                 discount.setCode();
@@ -52,6 +51,8 @@ public class DiscountManager {
                 discountList.add(discount);
                 discountMap.put(code, discount);
             });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -92,12 +93,7 @@ public class DiscountManager {
         if (tableModel != null)
             tableModel.fireTableRowsInserted(rowIndex, rowIndex);
 
-        //TODO: KIV try/catch for IO
-        try {
-            store();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        store();
 
         return true;
     }
@@ -146,12 +142,15 @@ public class DiscountManager {
         };
     }
 
-    private void store() throws IOException {
+    private void store() {
         Stream<String> stream = discountList.stream()
                 .sorted(Comparator.comparing(Discount::getCode))
                 .map(Discount::toString);
 
-        Files.write(Paths.get(filename), (Iterable<String>) stream::iterator,
-                StandardOpenOption.CREATE);
+        try {
+            Files.write(Paths.get(filename), (Iterable<String>) stream::iterator);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

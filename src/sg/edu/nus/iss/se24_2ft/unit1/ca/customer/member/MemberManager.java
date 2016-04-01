@@ -1,11 +1,10 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -21,22 +20,22 @@ public class MemberManager {
     private String filename;
     private AbstractTableModel tableModel;
 
-    public MemberManager(String filename) throws IOException {
+    public MemberManager(String filename) {
         tableModel = null;
         this.filename = filename;
 
         memberList = new ArrayList<>();
         memberMap = new HashMap<>();
 
-        initData();
+        load();
     }
 
-    private void initData() throws IOException {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
+            stream.map(Util::splitCsv).forEach(a -> {
                 String name = a[0], id = a[1];
 
-                int loyaltyPoint = Utils.parseIntOrDefault(a[2], -1);
+                int loyaltyPoint = Util.parseIntOrDefault(a[2], -1);
 
                 Member member = new Member(id, name);
                 member.setId();
@@ -45,12 +44,17 @@ public class MemberManager {
                 memberList.add(member);
                 memberMap.put(id, member);
             });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public boolean addMember(Member member) {
+    public void addMember(Member member) {
         String id = member.getRequestedId();
-        if (memberMap.containsKey(id)) return false;
+        if (id == null || id.isEmpty())
+            throw new IllegalArgumentException("Member ID field is blank. Please input again");
+        if (memberMap.containsKey(id))
+            throw new IllegalArgumentException("Member ID " + id + " already existed. Please input again");
 
         member.setId();
         memberList.add(member);
@@ -60,14 +64,30 @@ public class MemberManager {
         if (tableModel != null)
             tableModel.fireTableRowsInserted(rowIndex, rowIndex);
 
-        //TODO: KIV try/catch for IO
-        try {
-            store();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        store();
+    }
 
-        return true;
+    public void debitLoyaltyPoint(String id, int loyaltyPoint) {
+        Member member = memberMap.get(id);
+        //TODO: may not update view
+//        for (Member m : memberList) {
+//
+//        }
+        if (member == null)
+            throw new IllegalArgumentException("Member is not valid");
+        if (loyaltyPoint == 0) return;
+        if (member.getLoyaltyPoint() < loyaltyPoint)
+            throw new IllegalArgumentException("Loyalty Point is not enough");
+
+        member.removeLoyaltyPoint(loyaltyPoint);
+    }
+
+    public void creditLoyaltyPoint(String id, int loyaltyPoint) {
+        Member member = memberMap.get(id);
+        if (member == null)
+            throw new IllegalArgumentException("Member is not valid");
+
+        member.addLoyaltyPoint(loyaltyPoint);
     }
 
     //TODO: KIV
@@ -122,12 +142,15 @@ public class MemberManager {
         };
     }
 
-    private void store() throws IOException {
+    private void store() {
         Stream<String> stream = memberList.stream()
                 .sorted(Comparator.comparing(Member::getId))
                 .map(Member::toString);
 
-        Files.write(Paths.get(filename), (Iterable<String>) stream::iterator,
-                StandardOpenOption.CREATE);
+        try {
+            Files.write(Paths.get(filename), (Iterable<String>) stream::iterator);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

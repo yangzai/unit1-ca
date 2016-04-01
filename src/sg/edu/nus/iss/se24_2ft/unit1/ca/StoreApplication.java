@@ -1,21 +1,21 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.Customer;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.MemberManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.DiscountManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.*;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.gui.checkout.CheckoutPanel;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.storekeeper.StoreKeeperManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.TransactionManager;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.function.Function;
 
 /**
@@ -23,17 +23,29 @@ import java.util.function.Function;
  */
 public class StoreApplication {
     private static final String
-            CHECK_OUT = "Check Out", DISCOUNT = "Discount",
+            CHECK_OUT = "Checkout", DISCOUNT = "Discount",
             INVENTORY = "Inventory", NEW_MEMBER = "New Member",
             NEW_PRODUCT = "New Product", NEW_CATEGORY = "New Category",
             REPORTS = "Reports", NULL = "NULL";
 
-    public static void main (String args[]) throws IOException {
-        //TODO: handle IOException within managers' constructors
+    public static void main (String args[]) {
+        StoreKeeperManager storeKeeperManager = new StoreKeeperManager("data/Storekeepers.dat");
+        LoginPanel loginPanel = new LoginPanel() {
+            @Override
+            protected boolean login(String username, String password) {
+                return storeKeeperManager.login(username, password);
+            }
+        };
+        loginPanel.setVisible(true);
+
+        if (!loginPanel.isSuccess()) System.exit(0);
+
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
         ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
         MemberManager memberManager = new MemberManager("data/Members.dat");
         DiscountManager discountManager = new DiscountManager("data/Discounts.dat");
+        TransactionManager transactionManager =
+                new TransactionManager("data/Transactions.dat", productManager, memberManager);
 
         MainFrame mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -47,15 +59,15 @@ public class StoreApplication {
 
         DiscountPanel discountPanel = new DiscountPanel();
         discountPanel.setTableModel(discountManager.getTableModel());
-        discountPanel.addDiscountPanelListener(d -> discountManager.addDiscount(d));
+        discountPanel.addDiscountPanelListener(discountManager::addDiscount);
         
         CategoryPanel categoryPanel = new CategoryPanel();
         categoryPanel.setTableModel(categoryManager.getTableModel());
-        categoryPanel.addCategoryPanelListener(c -> categoryManager.addCategory(c));
+        categoryPanel.addCategoryPanelListener(categoryManager::addCategory);
 
         MemberPanel memberPanel = new MemberPanel();
         memberPanel.setTableModel(memberManager.getTableModel());
-        memberPanel.addMemberPanelistener(m -> memberManager.addMember(m));
+        memberPanel.addMemberPanelistener(memberManager::addMember);
 
         ProductPanel productPanel = new ProductPanel();
         productPanel.setTableModel(productManager.getTableModel());
@@ -65,15 +77,39 @@ public class StoreApplication {
 
         InventoryPanel inventoryPanel = new InventoryPanel();
         inventoryPanel.setTableModel(productManager.getUnderstockTableModel());
-        inventoryPanel.addInventoryPanelListener(uil -> productManager.generatePurchaseOrder(uil));
+        inventoryPanel.addInventoryPanelListener(productManager::generatePurchaseOrder);
 
+        CheckoutPanel checkoutPanel = new CheckoutPanel() {
+            @Override
+            protected Product getProduct(String id) {
+                return productManager.getProduct(id);
+            }
+
+            @Override
+            protected Member getMember(String id) {
+                return memberManager.getMember(id);
+            }
+
+            @Override
+            protected Discount getDiscount(Customer customer) {
+                return discountManager.getMaxDiscount(customer);
+            }
+        };
+        checkoutPanel.addCheckoutPanelListener(transactionManager::addTransaction);
+
+        ReportPanel reportPanel = new ReportPanel();
+        reportPanel.setCategoryTableModel(categoryManager.getTableModel());
+        reportPanel.setProductTableModel(productManager.getTableModel());
+        reportPanel.setTransactionTableModel(transactionManager.getTableModel());
+        reportPanel.setMemberTableModel(memberManager.getTableModel());
 
         mainFrame.addFeaturePanel(NEW_CATEGORY, categoryPanel);
         mainFrame.addFeaturePanel(NEW_MEMBER, memberPanel);
         mainFrame.addFeaturePanel(NEW_PRODUCT, productPanel);
         mainFrame.addFeaturePanel(INVENTORY, inventoryPanel);
         mainFrame.addFeaturePanel(DISCOUNT, discountPanel);
-        mainFrame.addFeaturePanel(CHECK_OUT, new CheckoutPanel());
+        mainFrame.addFeaturePanel(CHECK_OUT, checkoutPanel);
+        mainFrame.addFeaturePanel(REPORTS, reportPanel);
         //TODO: Temp panel
         Function<String, FeaturePanel> getTempPanel = s -> new FeaturePanel() {
             {
@@ -85,12 +121,9 @@ public class StoreApplication {
                 });
             }
         };
-        mainFrame.addFeaturePanel(REPORTS, getTempPanel.apply(REPORTS));
         mainFrame.addFeaturePanel(NULL, getTempPanel.apply(NULL));
 
         mainFrame.resizeAndPack();
-
-        Store store = new Store(mainFrame);
 
         mainFrame.setVisible(true);
 
@@ -187,5 +220,11 @@ public class StoreApplication {
 //        ****************** understock test ****************************************
 //        productManager.addProduct(categoryManager.getCategory("CLO"), new Product("t", "t", 1, 10.5, 101, 5, 5));
 //        productManager.addProduct(categoryManager.getCategory("CLO"), new Product("z", "z", 1, 10.5, 102, 10, 5));
+        
+////      ****************** Tran Test on Report Panel ********************************
+//        ReportPanel reportPanel = new ReportPanel();
+//        reportPanel.setCategoryTableModel(categoryManager.getTableModel());
+//        reportPanel.setMemberTableModel(memberManager.getTableModel());
+//        mainFrame.addFeaturePanel(REPORTS, reportPanel);
     }
 }

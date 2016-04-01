@@ -1,4 +1,4 @@
-package sg.edu.nus.iss.se24_2ft.unit1.ca;
+package sg.edu.nus.iss.se24_2ft.unit1.ca.vendor;
 
 /**
  * Created by yangzai on 27/2/16.
@@ -7,9 +7,9 @@ public class Vendor {
     private String categoryId, name, description;
 
     public Vendor(String categoryId, String name, String description) {
-        this.categoryId = categoryId;
-        this.name = name;
-        this.description = description;
+        this.categoryId = categoryId.trim();
+        this.name = name.trim();
+        this.description = description.trim();
     }
 
     public String getCategoryId() { return categoryId; }

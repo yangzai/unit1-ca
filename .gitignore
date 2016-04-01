@@ -154,3 +154,11 @@ Temporary Items
 
 # Persistence
 /data/
+
+# Submission
+/submission/src/
+/submission/classes/
+/submission/test/
+/submission/data/
+/submission/*.log
+*.zip

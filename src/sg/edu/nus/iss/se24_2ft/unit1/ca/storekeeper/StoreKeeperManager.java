@@ -8,9 +8,9 @@
  * Copyright @ ISS, NUS.  All right reserved. 
  *********************************************/ 
 
-package sg.edu.nus.iss.se24_2ft.unit1.ca;
+package sg.edu.nus.iss.se24_2ft.unit1.ca.storekeeper;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,24 +24,26 @@ public class StoreKeeperManager {
     private String filename;
     private Map<String, StoreKeeper> storeKeeperMap;
 
-    public StoreKeeperManager(String fileName) throws IOException {
+    public StoreKeeperManager(String fileName) {
         this.filename = fileName;
         storeKeeperMap = new HashMap<>();
 
-        initData();
+        load();
     }
 
     /**
      * Initialize the data from csv file for the store keepers
      *
      */
-    private void initData() throws IOException {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
+            stream.map(Util::splitCsv).forEach(a -> {
                 String name = a[0], password = a[1];
                 StoreKeeper storeKeeper = new StoreKeeper(name, password);
                 storeKeeperMap.put(name, storeKeeper);
             });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

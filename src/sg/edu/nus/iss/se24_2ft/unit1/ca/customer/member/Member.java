@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
  */
 public class Member implements Customer {
     private String id, requestedId, name;
-    private int loyaltyPoint, redeemPoint, addPoint;
+    private int loyaltyPoint;
 
     public Member(String requestedId, String name) {
         //TODO: chk all other list methods, try validation
         id = null;
 
-        this.requestedId = requestedId;
-        this.name = name;
+        this.requestedId = (requestedId != null ? requestedId.trim() : null);
+        this.name = (name != null ? name.trim() : null);
         loyaltyPoint = -1;
     }
 
@@ -50,6 +50,22 @@ public class Member implements Customer {
         this.loyaltyPoint = loyaltyPoint;
     }
 
+    /*package*/ void addLoyaltyPoint(int loyaltyPoint) {
+        if (this.loyaltyPoint < 0) setLoyaltyPoint(loyaltyPoint);
+        else this.loyaltyPoint += loyaltyPoint;
+    }
+
+    /*package*/ int removeLoyaltyPoint(int loyaltyPoint) {
+        //remove at most curr pts
+        if (this.loyaltyPoint < 0) return 0;
+        int diff = this.loyaltyPoint - loyaltyPoint;
+        if (diff < 0) {
+            loyaltyPoint = this.loyaltyPoint;
+            this.loyaltyPoint = 0;
+        } else this.loyaltyPoint = diff;
+
+        return loyaltyPoint;
+    }
     //TODO: to be verified with CheckoutPanel
 //    public int setRedeemPoint(int point){
 //        if (loyaltyPoint < 0){

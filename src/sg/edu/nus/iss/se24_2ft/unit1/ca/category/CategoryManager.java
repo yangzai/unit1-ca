@@ -1,6 +1,6 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.category;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Utils;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -21,19 +21,19 @@ public class CategoryManager {
 
     private AbstractTableModel tableModel;
 
-    public CategoryManager(String filename) throws IOException {
+    public CategoryManager(String filename) {
         tableModel = null;
 
         this.filename = filename;
         categoryMap = new HashMap<>();
         categoryList = new ArrayList<>();
 
-        initData();
+        load();
     }
 
-    private void initData() throws IOException {
+    private void load() {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-            stream.map(Utils::splitCsv).forEach(a -> {
+            stream.map(Util::splitCsv).forEach(a -> {
                 String id = a[0], name = a[1];
                 Category category = new Category(id, name);
                 category.setId();
@@ -41,6 +41,8 @@ public class CategoryManager {
                 categoryMap.put(id, category);
                 categoryList.add(category);
             });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -52,15 +54,16 @@ public class CategoryManager {
         return categoryList;
     }
 
-    public boolean addCategory(Category category) {
-        // Needs to check if already exist as per requirement
-        //TODO: return false or throw error?
-
+    public void addCategory(Category category) {
 //        //null implies success, not null implies collision
 //        return categoryMap.putIfAbsent(category.getId(), category) == null;
 
         String categoryId = category.getRequestedId();
-        if (categoryMap.get(categoryId) != null) return false;
+        //Check if categoryId is empty
+        if (categoryId == null || categoryId.isEmpty())
+        	throw new IllegalArgumentException("Category ID is blank, please input again");
+        if (categoryMap.get(categoryId) != null)
+			throw new IllegalArgumentException("Category " + categoryId + " already existed. Please input again");
 
         category.setId();
         categoryMap.put(categoryId, category);
@@ -69,8 +72,8 @@ public class CategoryManager {
         int insertedRowIndex = categoryList.size() - 1;
         if (tableModel != null)
             tableModel.fireTableRowsInserted(insertedRowIndex, insertedRowIndex);
-        return true;
-        //TODO: persist immediately?
+
+        store();
     }
 
     public TableModel getTableModel() {
@@ -102,5 +105,17 @@ public class CategoryManager {
                 }
             }
         };
+    }
+
+    private void store() {
+        Stream<String> stream = categoryList.stream()
+                .sorted(Comparator.comparing(Category::getId))
+                .map(Category::toString);
+
+        try {
+            Files.write(Paths.get(filename), (Iterable<String>) stream::iterator);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

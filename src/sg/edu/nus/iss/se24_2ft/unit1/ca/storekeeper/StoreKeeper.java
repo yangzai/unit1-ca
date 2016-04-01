@@ -9,16 +9,15 @@
  * Copyright @ ISS, NUS.  All right reserved. 
  *********************************************/ 
 
-package sg.edu.nus.iss.se24_2ft.unit1.ca;
+package sg.edu.nus.iss.se24_2ft.unit1.ca.storekeeper;
 
 public class StoreKeeper {
 	
     private String name, password;
     
     public StoreKeeper(String name, String password) {
-    	this.name = name;
-    	this.password = password;
-    
+    	this.name = name.trim();
+    	this.password = password.trim();
     }
     
     /*Attribute accessor: Access the name of store keeper */

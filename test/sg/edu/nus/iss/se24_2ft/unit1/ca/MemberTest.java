@@ -1,50 +1,66 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.MemberManager;
+import junit.framework.TestCase;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 
-public class MemberTest {
+/**
+ * Created by chenyao on 26/3/16
+ */
+public class MemberTest extends TestCase {
+    // Test Fixtures
+    private Member member1 = null;
+    private Member member2 = null;
 
-	@Test
-	public void testMemberManager() {
-		MemberManager memberManager = null;
-		try {
-			memberManager = new MemberManager("data/Members.dat");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		assertTrue(memberManager!=null);
-	}
+    @Before
+    public void setUp() throws Exception {
+        member1 = new Member("E0015280", null);
+        member2 = new Member("E0015270", "Chen Yao");
+    }
 
-	@Test
-	public void testAddMember() {
-		fail("Not yet implemented");
-	}
+    @After
+    public void tearDown() throws Exception {
+        member1 = null;
+        member2 = null;
+    }
 
-	@Test
-	public void testGetMember() {
-		fail("Not yet implemented");
-	}
+    @Test
+    public void testMember() {
+        assertEquals("E0015280", member1.getRequestedId());
+        assertNull(member1.getName());
 
-	@Test
-	public void testGetMemberList() {
-		fail("Not yet implemented");
-	}
+        assertEquals("E0015270", member2.getRequestedId());
+        assertEquals("Chen Yao", member2.getName());
+    }
 
-	@Test
-	public void testGetTableModel() {
-		fail("Not yet implemented");
-	}
+    @Test
+    public void testGetRequestedId() {
+        assertEquals("E0015280", member1.getRequestedId());
+        assertEquals("E0015270", member2.getRequestedId());
+    }
 
-	@Test
-	public void testStore() {
-		fail("Not yet implemented");
-	}
+    @Test
+    public void testGetName() {
+        assertNull(member1.getName());
+        assertEquals("Chen Yao", member2.getName());
+    }
 
+    @Test
+    public void testEquals() {
+        assertSame(member1, member1);
+        assertSame(member2, member2);
+
+        assertEquals(member1, new Member("E0015280", null));
+        assertEquals(member2, new Member("E0015270", "Chen Yao"));
+
+        assertFalse(member1.equals(member2));
+        assertFalse(member2.equals(member1));
+
+        Member member3 = new Member("E0015270", "Gao Haijun");
+        assertFalse(member3.equals(member2));
+        assertFalse(member2.equals(member3));
+    }
 }
