@@ -226,9 +226,9 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
     	double redeemValue = transaction != null ? transaction.getRedeemPointValue() : 0;
     	double payment = transaction != null ? transaction.getPayment() : 0;
     	double change = transaction != null ? transaction.getBalance() * -1 : 0;
-    	String redeemPointLabel = "Redeemed (1 point = $" + TransactionManager.DOLLAR_TO_POINT + "):";
+    	String redeemPointLabel = "Redeemed (1 point = $" + TransactionManager.POINT_TO_DOLLAR + "):";
     	int redeemPoint = transaction != null ? transaction.getRedeemPoint() : 0;
-    	String creditPointLabel = "Credited ($10 = " + TransactionManager.POINT_TO_DOLLAR + "point):";
+    	String creditPointLabel = "Credited ($" + TransactionManager.DOLLAR_TO_POINT + " = 1 point):";
     	int creditPoint = transaction != null ? transaction.getCreditPoint() : 0;
     	int balancePoint = member != null ? member.getLoyaltyPoint() : 0;
     	
@@ -244,7 +244,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
     	string += String.format(strTotalFormat, "Subtotal: ", Util.formatDollar(subtotal));
     	string += String.format(strTotalFormat, discountLabel, Util.formatDollar(discountAmount));
     	if (member!=null) {
-    		string += String.format(strTotalFormat, "Redeem Value:", Util.formatDollar(discountAmount));
+    		string += String.format(strTotalFormat, "Redeem Value:", Util.formatDollar(redeemValue));
 		}
     	string += "\n";
     	string += String.format(strTotalFormat, "Cash:", Util.formatDollar(payment));
