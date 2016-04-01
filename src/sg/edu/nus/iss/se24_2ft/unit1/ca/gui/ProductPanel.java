@@ -67,15 +67,15 @@ public class ProductPanel extends FeaturePanel {
         scrollPane = new JScrollPane(table);
         panel.add(scrollPane, c);
 
-        // Back Button
-        c.gridx++;
-        c.anchor = GridBagConstraints.NORTH;
-        c.weightx = c.weighty = 0;
-        c.fill = GridBagConstraints.HORIZONTAL;
-
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(this::backActionPerformed);
-        panel.add(backButton, c);
+//        // Back Button
+//        c.gridx++;
+//        c.anchor = GridBagConstraints.NORTH;
+//        c.weightx = c.weighty = 0;
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//
+//        JButton backButton = new JButton("Back");
+//        backButton.addActionListener(this::backActionPerformed);
+//        panel.add(backButton, c);
 
         return panel;
     }

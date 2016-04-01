@@ -64,8 +64,8 @@ public class MemberPanel extends FeaturePanel {
         JTextField nameTextField = new JTextField();
         add(nameTextField, gbc);
 
-        gbc.gridx--;
-        gbc.gridy++;
+//        gbc.gridx--;
+        gbc.gridy++; 
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.EAST;
         JButton addButton = new JButton("Add");
@@ -83,11 +83,11 @@ public class MemberPanel extends FeaturePanel {
         });
         add(addButton, gbc);
 
-        gbc.gridx++;
-        gbc.anchor = GridBagConstraints.WEST;
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(this::backActionPerformed);
-        add(backButton, gbc);
+//        gbc.gridx++;
+//        gbc.anchor = GridBagConstraints.WEST;
+//        JButton backButton = new JButton("Back");
+//        backButton.addActionListener(this::backActionPerformed);
+//        add(backButton, gbc);
     }
 
     public void setTableModel(TableModel tableModel) {

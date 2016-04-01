@@ -74,10 +74,10 @@ public class CategoryPanel extends FeaturePanel {
         });
         add(addCategoryButton, c);
 
-        c.gridx++;
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(this::backActionPerformed);
-        add(backButton, c);
+//        c.gridx++;
+//        JButton backButton = new JButton("Back");
+//        backButton.addActionListener(this::backActionPerformed);
+//        add(backButton, c);
     }
 
     public void addCategoryPanelListener(CategoryPanelListener l) {

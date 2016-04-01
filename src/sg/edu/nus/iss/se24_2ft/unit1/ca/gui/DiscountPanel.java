@@ -83,14 +83,14 @@ public class DiscountPanel extends FeaturePanel {
         panel.add(scrollPane, c);
 
         // add Back btn
-        c.gridx++;
-        c.weightx = c.weighty = 0;
-        c.anchor = GridBagConstraints.NORTH;
-        c.fill = GridBagConstraints.HORIZONTAL;
-
-        JButton backBtn = new JButton("Back");
-        backBtn.addActionListener(this::backActionPerformed);
-        panel.add(backBtn, c);
+//        c.gridx++;
+//        c.weightx = c.weighty = 0;
+//        c.anchor = GridBagConstraints.NORTH;
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//
+//        JButton backBtn = new JButton("Back");
+//        backBtn.addActionListener(this::backActionPerformed);
+//        panel.add(backBtn, c);
 
         return panel;
     }
@@ -203,15 +203,15 @@ public class DiscountPanel extends FeaturePanel {
         // add Reset btn
         c.gridy++;
         c.weightx = 0;
-        JButton resetrBtn = new JButton("Reset");
-        resetrBtn.addActionListener(e -> {
+        JButton resetBtn = new JButton("Reset");
+        resetBtn.addActionListener(e -> {
             codeTextField.setText(null);
             descriptionTextField.setText(null);
             dateTextField.setText(null);
             periodTextField.setText(null);
             percentTextField.setText(null);
         });
-        panel.add(resetrBtn, c);
+        panel.add(resetBtn, c);
         return panel;
     }
 }

@@ -50,16 +50,16 @@ public class ReportPanel extends FeaturePanel {
         tabbedPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         add(tabbedPane, gbc);
 
-        //Add button
-        gbc.gridy++;
-        gbc.weighty = 0;
-        gbc.weightx = 0.5;
-        gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.anchor = GridBagConstraints.EAST;
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(this::backActionPerformed);
-        add(backButton, gbc);
+//        //Add button
+//        gbc.gridy++;
+//        gbc.weighty = 0;
+//        gbc.weightx = 0.5;
+//        gbc.gridwidth = 1;
+//        gbc.fill = GridBagConstraints.NONE;
+//        gbc.anchor = GridBagConstraints.EAST;
+//        JButton backButton = new JButton("Back");
+//        backButton.addActionListener(this::backActionPerformed);
+//        add(backButton, gbc);
     }
 
     private JPanel createCategoryReportPanel() {
