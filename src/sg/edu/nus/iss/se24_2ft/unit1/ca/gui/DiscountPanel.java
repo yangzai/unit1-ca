@@ -82,7 +82,9 @@ public class DiscountPanel extends FeaturePanel {
         c.gridy++;
         c.gridwidth--;
         c.fill = GridBagConstraints.NONE;
-        add(new JLabel("<html><div style='text-align:center;'>" + "Start Date<br>(YYYY-MM-DD)" + "</div></html>"), c);
+        add(new JLabel("<html><div style='text-align:center;'>" +
+                "Start Date<br>(YYYY-MM-DD)" +
+                "</div></html>"), c);
 
         // add Text description
         c.gridx++;
@@ -148,9 +150,7 @@ public class DiscountPanel extends FeaturePanel {
             boolean isMemberOnly = MAComboBox.getSelectedItem().toString().equals(MEMBER);
 
             String code = codeTextField.getText(), description = descriptionTextField.getText();
-            Date start = Util.parseDateOrDefault(dateTextField.getText(), null); // TODO:
-                                                                                 // date
-                                                                                 // ui
+            Date start = Util.parseDateOrDefault(dateTextField.getText(), null);
             int period = Util.parseIntOrDefault(periodTextField.getText(), -1);
             double percent = Util.parseDoubleOrDefault(percentTextField.getText(), 0);
 
