@@ -160,11 +160,11 @@ public class DiscountPanel extends FeaturePanel {
         });
         add(addBtn, c);
 
-        // add Back btn
-        c.gridx++;
-        JButton backBtn = new JButton("Back");
-        backBtn.addActionListener(this::backActionPerformed);
-        add(backBtn, c);
+//        // add Back btn
+//        c.gridx++;
+//        JButton backBtn = new JButton("Back");
+//        backBtn.addActionListener(this::backActionPerformed);
+//        add(backBtn, c);
     }
 
     public void addDiscountPanelListener(DiscountPanelListener l) {

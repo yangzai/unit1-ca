@@ -57,10 +57,10 @@ public class InventoryPanel extends FeaturePanel {
         });
         add(purchaseOrderButton,gc);
 
-        gc.gridy++;
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(this::backActionPerformed);
-        add(backButton,gc);
+//        gc.gridy++;
+//        JButton backButton = new JButton("Back");
+//        backButton.addActionListener(this::backActionPerformed);
+//        add(backButton,gc);
     }
 
     public void addInventoryPanelListener(InventoryPanelListener l ) {
