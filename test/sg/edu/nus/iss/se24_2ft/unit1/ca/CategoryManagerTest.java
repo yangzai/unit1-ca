@@ -93,6 +93,13 @@ public class CategoryManagerTest extends TestCase {
 	}
 
 	private boolean isEqual(Category category1, Category category2) {
-		return (category1.getRequestedId().equals(category2.getRequestedId())) && (category1.getName().equals(category2.getName()));
+		if (category1 == category2) return true;
+		if (!category1.getRequestedId().equals(category2.getRequestedId())) return false;
+		if (category1.getName()==null){
+			if (category2.getName()!=null) return false;
+		} else {
+			if (!category1.getName().equals(category2.getName())) return false;
+		}
+		return true;
 	}
 }

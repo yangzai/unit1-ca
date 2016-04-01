@@ -1,5 +1,12 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +35,9 @@ public class TransactionTest extends TestCase {
     private ProductManager pm1 = null;
     private CategoryManager cm1 = null;
     private Transaction t1 = null;
+	private final String FILENAME_CATEGORY = "test/data/Category.dat";
+	private final String FILENAME_PRODUCT = "test/data/Products.dat";
+	private List<String> stringListCategory, stringListProduct;
 
     @Before
     public void setUp() throws Exception {
@@ -37,6 +47,16 @@ public class TransactionTest extends TestCase {
         p2 = new Product("Book", "expensive", 50, 20.00, 178, 10, 50);
         ti1 = new TransactionItem(p1, 3);
         ti2 = new TransactionItem(p2, 1);
+		try (Stream<String> stream = Files.lines(Paths.get(FILENAME_CATEGORY))) {
+			stringListCategory = stream.collect(Collectors.toList());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try (Stream<String> stream = Files.lines(Paths.get(FILENAME_PRODUCT))) {
+			stringListProduct = stream.collect(Collectors.toList());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
     @After
@@ -50,23 +70,30 @@ public class TransactionTest extends TestCase {
         pm1 = null;
         cm1 = null;
         t1 = null;
+		try {
+			Files.write(Paths.get(FILENAME_CATEGORY), stringListCategory);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Files.write(Paths.get(FILENAME_PRODUCT), stringListProduct);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
     @Test
     public void testAddTransactionItem() {
         assertNull(cm1);
-        cm1 = new CategoryManager("data/Category.dat");
+        cm1 = new CategoryManager(FILENAME_CATEGORY);
         cm1.addCategory(c1);
         cm1.addCategory(c2);
         assertTrue(null != cm1);
 
         assertNull(pm1);
-        pm1 = new ProductManager("data/Products.dat", cm1);
+        pm1 = new ProductManager(FILENAME_PRODUCT, cm1);
         pm1.addProduct(c1, p1);
         pm1.addProduct(c2, p2);
-        // for testing the setID of the product
-        // System.out.println(p1.getId());
-        // System.out.println(p2.getId());
 
         assertNull(t1);
         t1 = new Transaction();

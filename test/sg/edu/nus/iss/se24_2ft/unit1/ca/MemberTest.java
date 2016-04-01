@@ -53,14 +53,26 @@ public class MemberTest extends TestCase {
         assertSame(member1, member1);
         assertSame(member2, member2);
 
-        assertEquals(member1, new Member("E0015280", null));
-        assertEquals(member2, new Member("E0015270", "Chen Yao"));
+        assertTrue(isEqual(member1, new Member("E0015280", null)));
+        assertTrue(isEqual(member2, new Member("E0015270", "Chen Yao")));
 
-        assertFalse(member1.equals(member2));
-        assertFalse(member2.equals(member1));
+        assertFalse(isEqual(member1, member2));
+        assertFalse(isEqual(member2, member1));
 
         Member member3 = new Member("E0015270", "Gao Haijun");
-        assertFalse(member3.equals(member2));
-        assertFalse(member2.equals(member3));
+        assertFalse(isEqual(member3, member2));
+        assertFalse(isEqual(member2, member3));
     }
+    
+	private boolean isEqual(Member member1, Member member2) {
+		if (member1 == member2) return true;
+		if (!member1.getRequestedId().equals(member2.getRequestedId())) return false;
+		if (member1.getName()==null){
+			if (member2.getName()!=null) return false;
+		} else {
+			if (!member1.getName().equals(member2.getName())) return false;
+		}
+		if (member1.getLoyaltyPoint()!= member2.getLoyaltyPoint()) return false;
+		return true;
+	}
 }

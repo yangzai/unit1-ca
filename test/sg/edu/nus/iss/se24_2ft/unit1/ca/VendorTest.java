@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import junit.framework.TestCase;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.Vendor;
 
 public class VendorTest extends TestCase {
@@ -48,14 +49,30 @@ public class VendorTest extends TestCase {
         assertSame(v1, v1);
         assertSame(v2, v2);
 
-        assertEquals(v1, new Vendor("MUG", "Office Sovenirs", "One and only Office Sovenirs"));
-        assertEquals(v2, new Vendor("MUF", "ArtWorks Stationary Store", null));
+        assertTrue(isEqual(v1, new Vendor("MUG", "Office Sovenirs", "One and only Office Sovenirs")));
+        assertTrue(isEqual(v2, new Vendor("MUF", "ArtWorks Stationary Store", null)));
 
-        assertFalse(v1.equals(v2));
-        assertFalse(v2.equals(v1));
+        assertFalse(isEqual(v1, v2));
+        assertFalse(isEqual(v2, v1));
 
         Vendor v3 = new Vendor("MUF", "ArtWorks Stationary Store", "All kinds of Stationary and Gifts");
-        assertFalse(v2.equals(v3));
-        assertFalse(v3.equals(v2));
+        assertFalse(isEqual(v2, v3));
+        assertFalse(isEqual(v3, v2));
     }
+    
+	private boolean isEqual(Vendor vendor1, Vendor vendor2) {
+		if (vendor1 == vendor2) return true;
+		if (!vendor1.getCategoryId().equals(vendor2.getCategoryId())) return false;
+		if (vendor1.getName()==null){
+			if (vendor2.getName()!=null) return false;
+		} else {
+			if (!vendor1.getName().equals(vendor2.getName())) return false;
+		}
+		if (vendor1.getDescription()==null){
+			if (vendor2.getDescription()!=null) return false;
+		} else {
+			if (!vendor1.getDescription().equals(vendor2.getDescription())) return false;
+		}
+		return true;
+	}
 }
