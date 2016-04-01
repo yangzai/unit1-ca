@@ -1,11 +1,22 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca.gui;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
@@ -14,23 +25,27 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 public class DiscountPanel extends FeaturePanel {
     private static final int VISIBLE_ROW = 5;
     private static final String MEMBER = "Member", ALL = "All";
-    private static final String[] MA_ARRAY = {MEMBER, ALL};
+    private static final String[] MA_ARRAY = { MEMBER, ALL };
     private JTable table;
     private JScrollPane scrollPane;
     private List<DiscountPanelListener> discountPanelListenerList;
 
     public DiscountPanel() {
         super(new GridBagLayout());
+        setPreferredSize(new Dimension(550, 400));
 
         table = new JTable();
         scrollPane = new JScrollPane(table);
         discountPanelListenerList = new ArrayList<>();
         GridBagConstraints c = new GridBagConstraints();
+        // add Transaction JLabel
+        c.gridx = c.gridy = 0;
+        c.gridwidth = 3;
+        add(new JLabel("Transaction"), c);
 
         // add scroll panel to grid
         c.weightx = c.weighty = 1;
-        c.gridx = c.gridy = 0;
-        c.gridwidth = 3;
+        c.gridy++;
         c.fill = GridBagConstraints.BOTH;
         add(scrollPane, c);
 
@@ -67,9 +82,7 @@ public class DiscountPanel extends FeaturePanel {
         c.gridy++;
         c.gridwidth--;
         c.fill = GridBagConstraints.NONE;
-        add(new JLabel("<html><div style='text-align:center;'>" +
-                "Start Date<br>(YYYY-MM-DD)" +
-                "</div></html>"), c);
+        add(new JLabel("<html><div style='text-align:center;'>" + "Start Date<br>(YYYY-MM-DD)" + "</div></html>"), c);
 
         // add Text description
         c.gridx++;
@@ -128,15 +141,16 @@ public class DiscountPanel extends FeaturePanel {
         add(Box.createHorizontalGlue(), c);
 
         // add percent
-        c.gridx++;
         c.weightx = 0;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        JButton addBtn = new JButton("Add Discount");
+        c.anchor = GridBagConstraints.EAST;
+        JButton addBtn = new JButton("Add");
         addBtn.addActionListener(e -> {
             boolean isMemberOnly = MAComboBox.getSelectedItem().toString().equals(MEMBER);
 
             String code = codeTextField.getText(), description = descriptionTextField.getText();
-            Date start = Util.parseDateOrDefault(dateTextField.getText(), null); //TODO: date ui
+            Date start = Util.parseDateOrDefault(dateTextField.getText(), null); // TODO:
+                                                                                 // date
+                                                                                 // ui
             int period = Util.parseIntOrDefault(periodTextField.getText(), -1);
             double percent = Util.parseDoubleOrDefault(percentTextField.getText(), 0);
 
@@ -147,7 +161,7 @@ public class DiscountPanel extends FeaturePanel {
         add(addBtn, c);
 
         // add Back btn
-        c.gridy++;
+        c.gridx++;
         JButton backBtn = new JButton("Back");
         backBtn.addActionListener(this::backActionPerformed);
         add(backBtn, c);
@@ -158,8 +172,21 @@ public class DiscountPanel extends FeaturePanel {
     }
 
     public void setTableModel(TableModel tableModel) {
+        int dateColumnIndex = tableModel.getColumnCount() - 4;
         table.setModel(tableModel);
         Dimension d = table.getPreferredSize();
-        scrollPane.setPreferredSize(new Dimension(d.width,table.getRowHeight()*VISIBLE_ROW+1));
+        scrollPane.setPreferredSize(new Dimension(d.width, table.getRowHeight() * VISIBLE_ROW + 1));
+        // TODO: Consider replacing with localdate
+        TableCellRenderer tableCellRenderer = new DefaultTableCellRenderer() {
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+                if (value instanceof Date)
+                    value = Util.formatDateOrDefault((Date) value, null);
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        };
+        table.getColumnModel().getColumn(dateColumnIndex).setCellRenderer(tableCellRenderer);
     }
 }
