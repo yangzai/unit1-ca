@@ -97,8 +97,16 @@ public class TransactionTest extends TestCase {
 
         assertNull(t1);
         t1 = new Transaction();
-        assertTrue(t1.addTransactionItem(ti1));
-        assertTrue(t1.addTransactionItem(ti2));
+        try {
+            t1.addTransactionItem(ti1);
+        } catch (IllegalArgumentException e) {
+            fail("Exception thrown!");
+        }
+        try {
+            t1.addTransactionItem(ti2);
+        } catch (IllegalArgumentException e) {
+            fail("Exception thrown!");
+        }
         assertTrue(t1 != null);
     }
 

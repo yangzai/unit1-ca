@@ -12,6 +12,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.text.Format;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -87,11 +88,15 @@ public abstract class CheckoutPanel extends FeaturePanel {
         panel.add(new JLabel("Quantity:"), gbc);
 
         gbc.gridy++;
-        quantityField = new JFormattedTextField(NumberFormat.getNumberInstance());
+        NumberFormat format = NumberFormat.getIntegerInstance();
+        format.setGroupingUsed(false);
+        format.setMinimumIntegerDigits(1);
+        format.setMaximumIntegerDigits(4);
+        quantityField = new JFormattedTextField(format);
         //workaround for http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6256502:
-        //1. use setText instead of setValue
-        //2. reset text on focus gained
+        //1. use setText to trigger change
         quantityField.setText("1");
+        quantityField.setValue(1);
         quantityField.addActionListener(e -> addItemButton.doClick());
         quantityField.addFocusListener(new FocusAdapter() {
             @Override
@@ -114,7 +119,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
                 return;
             }
 
-            int quantity = Util.parseIntOrDefault(quantityField.getText(), 0);
+            int quantity = ((Number) quantityField.getValue()).intValue();
             if (quantity <= 0) {
                 JOptionPane.showMessageDialog(this, "Quantity cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -127,7 +132,12 @@ public abstract class CheckoutPanel extends FeaturePanel {
             }
 
             TransactionItem transactionItem = new TransactionItem(product, quantity);
-            transaction.addTransactionItem(transactionItem);
+            try {
+                transaction.addTransactionItem(transactionItem);
+            } catch (IllegalArgumentException iae) {
+                JOptionPane.showMessageDialog(this, iae.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             subTotalField.setText(Util.formatDollar(transaction.getSubtotal()));
 
             productField.setText(null);
