@@ -1,5 +1,5 @@
 # University Souvenir Store Application
-CA assignment by group SE24 2FT for SG4101 Basic Software Engineering Discipline, NUS ISS.
+CA assignment by SE24 2FT for SG4101 Basic Software Engineering Discipline, NUS ISS.
 
 ## Contributors
 
