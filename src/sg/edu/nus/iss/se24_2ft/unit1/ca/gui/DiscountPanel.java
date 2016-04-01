@@ -13,6 +13,7 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -83,14 +84,14 @@ public class DiscountPanel extends FeaturePanel {
         panel.add(scrollPane, c);
 
         // add Back btn
-//        c.gridx++;
-//        c.weightx = c.weighty = 0;
-//        c.anchor = GridBagConstraints.NORTH;
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//
-//        JButton backBtn = new JButton("Back");
-//        backBtn.addActionListener(this::backActionPerformed);
-//        panel.add(backBtn, c);
+        // c.gridx++;
+        // c.weightx = c.weighty = 0;
+        // c.anchor = GridBagConstraints.NORTH;
+        // c.fill = GridBagConstraints.HORIZONTAL;
+        //
+        // JButton backBtn = new JButton("Back");
+        // backBtn.addActionListener(this::backActionPerformed);
+        // panel.add(backBtn, c);
 
         return panel;
     }
@@ -191,7 +192,20 @@ public class DiscountPanel extends FeaturePanel {
 
             String code = codeTextField.getText(), description = descriptionTextField.getText();
             Date start = Util.parseDateOrDefault(dateTextField.getText(), null);
-            int period = Util.parseIntOrDefault(periodTextField.getText(), -1);
+
+            // date
+            String periodStr = periodTextField.getText(); // ui
+            if (periodTextField.getText().contains(".")) {
+                periodStr = periodStr.substring(0, periodTextField.getText().indexOf("."));
+                float periodF = Float.parseFloat(periodTextField.getText());
+                float fracPart = periodF - (int) periodF;
+                if (fracPart != 0) {
+                    JOptionPane.showMessageDialog(null, "The period input is not valid");
+                    return;
+                }
+            }
+            int period = Util.parseIntOrDefault(periodStr, -1);
+
             double percent = Util.parseDoubleOrDefault(percentTextField.getText(), 0);
 
             Discount discount = new Discount(code, description, start, period, percent, isMemberOnly);
