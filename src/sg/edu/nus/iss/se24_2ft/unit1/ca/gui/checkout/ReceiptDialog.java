@@ -210,7 +210,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
         super.setVisible(visible);
     }
 
-    public String getReceiptText(){
+    private String getReceiptText(){
         String strTableFormat = "%-6.6s  %-7.7s %-30.30s  %-10.10s %n";
         String strTotalFormat = "%-30.30s %-10.10s %n";
 
