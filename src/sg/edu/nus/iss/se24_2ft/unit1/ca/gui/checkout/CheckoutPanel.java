@@ -212,9 +212,8 @@ public abstract class CheckoutPanel extends FeaturePanel {
                     = new DefaultTableModel(new Object[] {"Product", "Quantity Available"}, 0);
             transaction.getTransactionItemList().stream()
                     .map(TransactionItem::getProduct)
-                    .forEach(p -> {
-                        if (p.isUnderstock()) model.addRow(new Object[] {p.getId(), p.getQuantity()});    
-                    });
+                    .filter(Product::isUnderstock)
+                    .forEach(p -> model.addRow(new Object[] {p.getId(), p.getQuantity()}));
             if (model.getRowCount() > 0) {
                 JScrollPane scroll = new JScrollPane(new JTable(model));
                 JOptionPane.showMessageDialog(this, scroll, "Alert! Product Understock", JOptionPane.WARNING_MESSAGE);
@@ -223,6 +222,11 @@ public abstract class CheckoutPanel extends FeaturePanel {
             newTransactionRequested();
         });
         panel.add(proceedPaymentButton, gbc);
+
+        gbc.gridx++;
+        JButton resetButton = new JButton("Reset");
+        resetButton.addActionListener(e -> newTransactionRequested());
+        panel.add(resetButton);
 
 //        // Back button
 //        gbc.gridx++;
