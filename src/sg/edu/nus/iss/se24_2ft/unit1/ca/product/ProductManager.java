@@ -120,14 +120,22 @@ public class ProductManager {
             understockTableModel.fireTableRowsInserted(rowIndex, rowIndex);
     }
     
-    public boolean deductQuantity(String id, int quantity) {
+    public void deductQuantity(String id, int quantity) {
         Product product = productMap.get(id);
-        if (product == null || product.deductQuantity(quantity))
-            return false;
+        if (product == null)
+            throw new IllegalArgumentException("No such product.");
+        if (!product.deductQuantity(quantity))
+            throw new IllegalArgumentException("Exceed inventory quantity.");
+
+        int index = productList.indexOf(product);
+        if (index > -1 && tableModel != null)
+            tableModel.fireTableCellUpdated(index, 3);
+
+        index = understockProductList.indexOf(product);
+        if (index > -1 && understockTableModel != null)
+            understockTableModel.fireTableCellUpdated(index, 3);
 
         store();
-
-        return true;
     }
 
     public void generatePurchaseOrder(List<Integer> understockIndexList) {

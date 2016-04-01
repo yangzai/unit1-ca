@@ -175,7 +175,7 @@ import java.awt.*;
                 return;
             }
 
-            if (redeemPoint < 0 || redeemPoint > memberPoint) {
+            if (redeemPoint < 0 || redeemPoint > maxPoint) {
                 JOptionPane.showMessageDialog(this, "Out of range.");
                 return;
             }
