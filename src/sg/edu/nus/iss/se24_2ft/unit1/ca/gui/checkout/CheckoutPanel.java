@@ -38,32 +38,120 @@ public abstract class CheckoutPanel extends FeaturePanel {
         transaction = new Transaction();
         checkoutPanelListenerList = new ArrayList<>();
 
-        // Initial setting
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = gbc.weighty = 0;
+         // Initial setting
+        setLayout(new BorderLayout());
 
-        // Item Panel: To key in Item details and Add into table
-        gbc.gridx = gbc.gridy = 0;
-        add(getItemPanel(), gbc);
+        // Header Menu
+        add(getItemPanel(), BorderLayout.NORTH);
 
         // Table to display all current records
         table = new JTable();
         scrollPane = new JScrollPane(table);
         setTableModel(transaction.getTableModel());
+        add(scrollPane, BorderLayout.CENTER);
 
-        gbc.gridy++;
-        add(scrollPane, gbc);
+        // Bottom Menu
+        add(getBottomPanel(), BorderLayout.SOUTH);
+    }
 
-        // Additional Info: Membership, Subtotal
-        gbc.gridy++;
-        add(getInfoPanel(), gbc);
+    private JPanel getBottomPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Menu Button Panel
+        gbc.weightx = gbc.weighty = 0;
+
+        // Membership Details
+        gbc.gridx = gbc.gridy = 0;
+        gbc.weightx = 0.5;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel.add(new JLabel("Membership: "), gbc);
+
+        gbc.gridx++;
+        gbc.anchor = GridBagConstraints.WEST;
+        memberField = new JLabel();
+        panel.add(memberField, gbc);
+
+        // Subtotal Details
         gbc.gridy++;
-        gbc.gridheight = 2;
-        add(getButtonPanel(), gbc);
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.ipadx = table.getWidth() / 3;
+        panel.add(new JLabel("Subtotal: "), gbc);
+
+        gbc.gridx++;
+        gbc.anchor = GridBagConstraints.WEST;
+        subTotalField = new JLabel(Util.formatDollar(transaction.getSubtotal()));
+        panel.add(subTotalField, gbc);
+
+        // Membership Button
+        gbc.gridx++;
+        gbc.gridy--;
+        gbc.weightx = 0;
+        JButton setMemberButton = new JButton("Membership");
+        setMemberButton.addActionListener(e -> {
+            String memberFieldText = memberField.getText();
+            String id = (String) JOptionPane.showInputDialog(this, "Membership ID", "Customer Detail",
+                    JOptionPane.PLAIN_MESSAGE, null, null, memberFieldText);
+
+            if (id == null) {
+                JOptionPane.showMessageDialog(this, "Member ID is not valid");
+                return;
+            }
+            if (id.equals(memberFieldText))
+                return;
+
+            Member member = getMember(id);
+            if (!id.isEmpty() && member == null) {
+                JOptionPane.showMessageDialog(this, "Member ID is not valid");
+                return;
+            }
+
+            transaction.setCustomer(member);
+            memberField.setText(member != null ? member.getId() : null);
+        });
+        panel.add(setMemberButton, gbc);
+
+        // Proceed to Payment Button
+        gbc.gridy++;
+        proceedPaymentButton = new JButton("Proceed to Payment");
+        proceedPaymentButton.setEnabled(false);
+        proceedPaymentButton.addActionListener(e -> {
+            transaction.setDiscount(getDiscount(transaction.getCustomer()));
+            ConfirmPaymentDialog cpd = new ConfirmPaymentDialog(this, transaction);
+            cpd.setVisible(true);
+
+            if (!cpd.isConfirmed())
+                return;
+
+            transaction.setDate(new Date());
+            checkoutPanelListenerList.forEach(l -> l.addTransactionRequested(transaction));
+
+            String[] selectionList = { "Print Receipt and Return", "Return" };
+            int option = JOptionPane.showOptionDialog(this, "Transaction Completed", "Transaction Completed",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, selectionList, selectionList[0]);
+
+            if (option == 0) {
+                ReceiptDialog receipt = new ReceiptDialog(this, transaction);
+                receipt.setVisible(true);
+            }
+
+            // Display Alert and list of product understock
+            DefaultTableModel model = new DefaultTableModel(new Object[] { "Product", "Quantity Available" }, 0);
+            transaction.getTransactionItemList().stream()
+                    .map(TransactionItem::getProduct)
+                    .filter(Product::isUnderstock)
+                    .forEach(p -> model.addRow(new Object[] { p.getId(), p.getQuantity() }));
+            if (model.getRowCount() > 0) {
+                JScrollPane scroll = new JScrollPane(new JTable(model));
+                JOptionPane.showMessageDialog(this, scroll, "Alert! Product Understock", JOptionPane.WARNING_MESSAGE);
+            }
+
+            newTransactionRequested();
+        });
+        panel.add(proceedPaymentButton, gbc);
+
+        return panel;
     }
 
     private JPanel getItemPanel() {
@@ -83,8 +171,8 @@ public abstract class CheckoutPanel extends FeaturePanel {
         panel.add(productField, gbc);
 
         // Add Quantity input field
-        gbc.gridx = 1;
-        gbc.gridy = 0;
+        gbc.gridx++;
+        gbc.gridy--;
         panel.add(new JLabel("Quantity:"), gbc);
 
         gbc.gridy++;
@@ -93,8 +181,9 @@ public abstract class CheckoutPanel extends FeaturePanel {
         format.setMinimumIntegerDigits(1);
         format.setMaximumIntegerDigits(4);
         quantityField = new JFormattedTextField(format);
-        //workaround for http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6256502:
-        //1. use setText to trigger change
+        // workaround for
+        // http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6256502:
+        // 1. use setText to trigger change
         quantityField.setText("1");
         quantityField.setValue(1);
         quantityField.addActionListener(e -> addItemButton.doClick());
@@ -108,9 +197,8 @@ public abstract class CheckoutPanel extends FeaturePanel {
         panel.add(quantityField, gbc);
 
         // Add Add Item button
-        gbc.gridx = 2;
-        gbc.weightx = 0.2;
-        gbc.gridheight = 2;
+        gbc.gridx++;
+        gbc.weightx = 0;
         addItemButton = new JButton("Add Item");
         addItemButton.addActionListener(e -> {
             String productId = productField.getText().toUpperCase();
@@ -147,142 +235,20 @@ public abstract class CheckoutPanel extends FeaturePanel {
         });
         panel.add(addItemButton, gbc);
 
-        return panel;
-    }
-
-    private JPanel getButtonPanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        // Setting
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.fill = GridBagConstraints.BOTH;
-
-        // Membership Details
-        gbc.gridy = 0;
-        gbc.gridx = 2;
-        gbc.weightx = 0.5;
-        JButton setMemberButton = new JButton("Membership");
-        setMemberButton.addActionListener(e -> {
-            String memberFieldText = memberField.getText();
-            String id = (String) JOptionPane.showInputDialog(this, "Membership ID", "Customer Detail",
-                    JOptionPane.PLAIN_MESSAGE, null, null, memberFieldText);
-
-            if (id == null) {
-                JOptionPane.showMessageDialog(this, "Member ID is not valid");
-                return;
-            }
-            if (id.equals(memberFieldText)) return;
-
-            Member member = getMember(id);
-            if (!id.isEmpty() && member == null) {
-                JOptionPane.showMessageDialog(this, "Member ID is not valid");
-                return;
-            }
-
-            transaction.setCustomer(member);
-            memberField.setText(member != null ? member.getId() : null);
-        });
-        panel.add(setMemberButton, gbc);
-
-        // Proceed to Payment
-        gbc.gridx++;
-        proceedPaymentButton = new JButton("Proceed to Payment");
-        proceedPaymentButton.setEnabled(false);
-        proceedPaymentButton.addActionListener(e -> {
-            transaction.setDiscount(getDiscount(transaction.getCustomer()));
-            ConfirmPaymentDialog cpd = new ConfirmPaymentDialog(this, transaction);
-            cpd.setVisible(true);
-
-            if (!cpd.isConfirmed()) return;
-
-            transaction.setDate(new Date());
-            checkoutPanelListenerList.forEach(l -> l.addTransactionRequested(transaction));
-
-            String[] selectionList = {"Print Receipt and Return", "Return"};
-            int option = JOptionPane.showOptionDialog(this, "Transaction Completed", "Transaction Completed",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, selectionList, selectionList[0]);
-
-            if (option == 0) {
-                ReceiptDialog receipt = new ReceiptDialog(this, transaction);
-                receipt.setVisible(true);
-            }
-            
-            //Display Alert and list of product understock
-            DefaultTableModel model
-                    = new DefaultTableModel(new Object[] {"Product", "Quantity Available"}, 0);
-            transaction.getTransactionItemList().stream()
-                    .map(TransactionItem::getProduct)
-                    .filter(Product::isUnderstock)
-                    .forEach(p -> model.addRow(new Object[] {p.getId(), p.getQuantity()}));
-            if (model.getRowCount() > 0) {
-                JScrollPane scroll = new JScrollPane(new JTable(model));
-                JOptionPane.showMessageDialog(this, scroll, "Alert! Product Understock", JOptionPane.WARNING_MESSAGE);
-            }
-
-            newTransactionRequested();
-        });
-        panel.add(proceedPaymentButton, gbc);
-
+        // Reset Button
         gbc.gridx++;
         JButton resetButton = new JButton("Reset");
         resetButton.addActionListener(e -> newTransactionRequested());
-        panel.add(resetButton);
-
-//        // Back button
-//        gbc.gridx++;
-//        JButton backButton = new JButton("Back");
-//        backButton.addActionListener(this::backActionPerformed);
-//        panel.add(backButton, gbc);
-
-        return panel;
-    }
-
-
-    private JPanel getInfoPanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        // Setting
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Membership Details
-        gbc.gridx = gbc.gridy = 0;
-        gbc.weightx = 0.2;
-        gbc.anchor = GridBagConstraints.EAST;
-        panel.add(new JLabel("Membership: "), gbc);
-
-        gbc.gridx++;
-        gbc.weightx = 0.5;
-        gbc.anchor = GridBagConstraints.WEST;
-        memberField = new JLabel();
-        panel.add(memberField, gbc);
-
-        // Subtotal Details
-        gbc.gridx++;
-        gbc.weightx = 0.2;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.ipadx = table.getWidth() / 3;
-        panel.add(new JLabel("Subtotal: "), gbc);
-
-        gbc.gridx++;
-        gbc.weightx = 0.5;
-        gbc.anchor = GridBagConstraints.WEST;
-        subTotalField = new JLabel(Util.formatDollar(transaction.getSubtotal()));
-        panel.add(subTotalField, gbc);
+        panel.add(resetButton, gbc);
 
         return panel;
     }
 
     private void setTableModel(TableModel tableModel) {
         table.setModel(tableModel);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        TableColumnModel tableColumnModel = table.getColumnModel();
-        tableColumnModel.getColumn(0).setPreferredWidth(75);
-        tableColumnModel.getColumn(1).setPreferredWidth(75);
-        tableColumnModel.getColumn(2).setPreferredWidth(300);
-        tableColumnModel.getColumn(3).setPreferredWidth(75);
         Dimension d = table.getPreferredSize();
-        scrollPane.setPreferredSize(new Dimension(d.width + 5, table.getRowHeight() * VISIBLE_ROW + 1));
+        scrollPane.setPreferredSize(new Dimension(d.width, table.getRowHeight() * VISIBLE_ROW + 1));
     }
 
     public void addCheckoutPanelListener(CheckoutPanelListener l) {
