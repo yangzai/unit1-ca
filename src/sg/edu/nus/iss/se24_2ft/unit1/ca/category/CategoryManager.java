@@ -64,6 +64,8 @@ public class CategoryManager {
         	throw new IllegalArgumentException("Category ID is blank, please input again");
         if (categoryMap.get(categoryId) != null)
 			throw new IllegalArgumentException("Category " + categoryId + " already existed. Please input again");
+        if (categoryId.trim().length() != 3)
+            throw new IllegalArgumentException("Category ID must be three letter code");
 
         category.setId();
         categoryMap.put(categoryId, category);
