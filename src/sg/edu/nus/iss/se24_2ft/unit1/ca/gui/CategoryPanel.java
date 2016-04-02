@@ -40,7 +40,6 @@ public class CategoryPanel extends FeaturePanel {
         add(new JLabel("Category ID"), c);
 
         c.gridx++;
-        c.gridwidth = 1;
         c.weightx = 0.5;
         c.fill = GridBagConstraints.HORIZONTAL;
         JTextField idTextField = new JTextField();
@@ -48,13 +47,11 @@ public class CategoryPanel extends FeaturePanel {
 
         c.gridx = 0;
         c.gridy++;
-        c.gridwidth = 1;
         c.weightx = 0.2;
         c.fill = GridBagConstraints.NONE;
         add(new JLabel("Name"), c);
 
         c.gridx++;
-        c.gridwidth = 1;
         c.weightx = 0.5;
         c.fill = GridBagConstraints.HORIZONTAL;
         JTextField nameTextField = new JTextField();
@@ -62,7 +59,6 @@ public class CategoryPanel extends FeaturePanel {
 
         c.gridy--;
         c.gridx++;
-        c.gridwidth = 1;
         c.weightx = 0;
         JButton addCategoryButton = new JButton("Add");
         addCategoryButton.addActionListener(e -> {
@@ -79,11 +75,6 @@ public class CategoryPanel extends FeaturePanel {
             nameTextField.setText(null);
         });
         add(addCategoryButton, c);
-
-//        c.gridx++;
-//        JButton backButton = new JButton("Back");
-//        backButton.addActionListener(this::backActionPerformed);
-//        add(backButton, c);
         
         c.gridy++;
         JButton resetBtn = new JButton("Reset");

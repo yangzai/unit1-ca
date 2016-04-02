@@ -64,7 +64,7 @@ public class StoreApplication {
 
         MemberPanel memberPanel = new MemberPanel();
         memberPanel.setTableModel(memberManager.getTableModel());
-        memberPanel.addMemberPanelistener(memberManager::addMember);
+        memberPanel.addMemberPaneListener(memberManager::addMember);
 
         ProductPanel productPanel = new ProductPanel();
         productPanel.setTableModel(productManager.getTableModel());

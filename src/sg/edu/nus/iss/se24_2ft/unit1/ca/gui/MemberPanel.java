@@ -20,7 +20,7 @@ import javax.swing.table.TableModel;
 public class MemberPanel extends FeaturePanel {
     private static final int VISIBLE_ROW = 5;
     private JTable table;
-    JScrollPane scrollPane;
+    private JScrollPane scrollPane;
     private List<MemberPanelListener> memberPanelListenerList;
 
     public MemberPanel() {
@@ -64,7 +64,6 @@ public class MemberPanel extends FeaturePanel {
         JTextField nameTextField = new JTextField();
         add(nameTextField, gbc);
 
-//        gbc.gridx--;
         gbc.gridy--;
         gbc.gridx++;
         gbc.weightx = 0;
@@ -84,11 +83,6 @@ public class MemberPanel extends FeaturePanel {
         });
         add(addButton, gbc);
 
-//        gbc.gridx++;
-//        gbc.anchor = GridBagConstraints.WEST;
-//        JButton backButton = new JButton("Back");
-//        backButton.addActionListener(this::backActionPerformed);
-//        add(backButton, gbc);
         gbc.gridy++;
         JButton resetBtn = new JButton("Reset");
         resetBtn.addActionListener(e -> {
@@ -104,7 +98,7 @@ public class MemberPanel extends FeaturePanel {
         scrollPane.setPreferredSize(new Dimension(d.width,table.getRowHeight()*VISIBLE_ROW+1));
     }
 
-    public void addMemberPanelistener(MemberPanelListener l) {
+    public void addMemberPaneListener(MemberPanelListener l) {
         memberPanelListenerList.add(l);
     }
 }

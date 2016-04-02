@@ -68,7 +68,6 @@ public abstract class CheckoutPanel extends FeaturePanel {
         panel.add(new JLabel("Membership: "), gbc);
 
         gbc.gridx++;
-        gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
         memberField = new JLabel();
         panel.add(memberField, gbc);
@@ -76,13 +75,11 @@ public abstract class CheckoutPanel extends FeaturePanel {
         // Subtotal Details
         gbc.gridy++;
         gbc.gridx = 0;
-        gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.ipadx = table.getWidth() / 3;
         panel.add(new JLabel("Subtotal: "), gbc);
 
         gbc.gridx++;
-        gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
         subTotalField = new JLabel(Util.formatDollar(transaction.getSubtotal()));
         panel.add(subTotalField, gbc);
@@ -141,7 +138,9 @@ public abstract class CheckoutPanel extends FeaturePanel {
 
             // Display Alert and list of product understock
             DefaultTableModel model = new DefaultTableModel(new Object[] { "Product", "Quantity Available" }, 0);
-            transaction.getTransactionItemList().stream().map(TransactionItem::getProduct).filter(Product::isUnderstock)
+            transaction.getTransactionItemList().stream()
+                    .map(TransactionItem::getProduct)
+                    .filter(Product::isUnderstock)
                     .forEach(p -> model.addRow(new Object[] { p.getId(), p.getQuantity() }));
             if (model.getRowCount() > 0) {
                 JScrollPane scroll = new JScrollPane(new JTable(model));
@@ -172,7 +171,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
         panel.add(productField, gbc);
 
         // Add Quantity input field
-        gbc.gridx = 1;
+        gbc.gridx++;
         gbc.gridy--;
         panel.add(new JLabel("Quantity:"), gbc);
 
@@ -198,9 +197,8 @@ public abstract class CheckoutPanel extends FeaturePanel {
         panel.add(quantityField, gbc);
 
         // Add Add Item button
-        gbc.gridx = 2;
+        gbc.gridx++;
         gbc.weightx = 0;
-        gbc.gridheight = 1;
         addItemButton = new JButton("Add Item");
         addItemButton.addActionListener(e -> {
             String productId = productField.getText().toUpperCase();

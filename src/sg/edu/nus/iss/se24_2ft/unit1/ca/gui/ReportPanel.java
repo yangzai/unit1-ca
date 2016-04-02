@@ -23,10 +23,6 @@ public class ReportPanel extends FeaturePanel {
 
         // Initial setting
         this.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = gbc.weighty = 0;
-        gbc.gridwidth = 2;
 
         // Create Tab Pane for Multiple Report
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -45,22 +41,13 @@ public class ReportPanel extends FeaturePanel {
         JPanel memberReportPanel = createMemberReportPanel();
         tabbedPane.add("Member Report", memberReportPanel);
 
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = 2;
         gbc.gridx = gbc.gridy = 0;
         gbc.weightx = gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
         tabbedPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         add(tabbedPane, gbc);
-
-//        //Add button
-//        gbc.gridy++;
-//        gbc.weighty = 0;
-//        gbc.weightx = 0.5;
-//        gbc.gridwidth = 1;
-//        gbc.fill = GridBagConstraints.NONE;
-//        gbc.anchor = GridBagConstraints.EAST;
-//        JButton backButton = new JButton("Back");
-//        backButton.addActionListener(this::backActionPerformed);
-//        add(backButton, gbc);
     }
 
     private JPanel createCategoryReportPanel() {
@@ -85,7 +72,6 @@ public class ReportPanel extends FeaturePanel {
         GridBagConstraints gbc = new GridBagConstraints();
         // Selection field for Start Date/ End Date and button Get
         gbc.weightx = 0.5;
-        gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = gbc.gridy = 0;
         panel.add(new JLabel("Start Date: "), gbc);
