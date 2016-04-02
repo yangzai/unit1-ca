@@ -80,6 +80,13 @@ public class MemberManager {
             throw new IllegalArgumentException("Loyalty Point is not enough");
 
         member.removeLoyaltyPoint(loyaltyPoint);
+
+        int index = memberList.indexOf(member);
+
+        if (index > -1 && tableModel != null)
+            tableModel.fireTableCellUpdated(index, 2);
+
+        store();
     }
 
     public void creditLoyaltyPoint(String id, int loyaltyPoint) {
@@ -88,6 +95,13 @@ public class MemberManager {
             throw new IllegalArgumentException("Member is not valid");
 
         member.addLoyaltyPoint(loyaltyPoint);
+
+        int index = memberList.indexOf(member);
+
+        if (index > -1 && tableModel != null)
+            tableModel.fireTableCellUpdated(index, 2);
+
+        store();
     }
 
     //TODO: KIV

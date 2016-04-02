@@ -63,7 +63,11 @@ public class TransactionManager {
                 Transaction transaction = transactionMap.get(id);
                 if (transaction != null) {
                     //same transaction, assume no conflict in tx details
-                    transaction.addTransactionItem(transactionItem);
+                    try {
+                        transaction.addTransactionItem(transactionItem, true);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    }
                     return;
                 }
 
@@ -79,7 +83,11 @@ public class TransactionManager {
                 transaction = new Transaction();
                 transaction.setCustomer(customer);
                 transaction.setDate(date);
-                transaction.addTransactionItem(transactionItem);
+                try {
+                    transaction.addTransactionItem(transactionItem, true);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
 
                 if (id > maxId) maxId = id;
 
@@ -174,8 +182,13 @@ public class TransactionManager {
         transaction.getTransactionItemList().forEach(i -> {
             Product p = i.getProduct();
             if (p == null) return;
-            productManager.deductQuantity(p.getId(), i.getQuantity());
-            //TODO: Add logic to update Product file here;
+            try {
+                productManager.deductQuantity(p.getId(), i.getQuantity());
+            } catch (IllegalArgumentException e) {
+                //should not happen, but try to deduct the max amount possible
+                try { productManager.deductQuantity(p.getId(), p.getQuantity()); }
+                catch (IllegalArgumentException e2) { e2.printStackTrace(); }
+            }
         });
 
         transaction.setId(++maxId);

@@ -31,7 +31,7 @@ public class VendorManagerTest extends TestCase {
 
     @Test
     public void testVendorManager() {
-        VendorManager vm = new VendorManager("data");
+        VendorManager vm = new VendorManager("test/data");
             vm.getVendorListByCategoryId("MUG").stream()
                     .map(v -> v.getCategoryId() + ',' + v.getName() + ',' + v.getDescription())
                     .forEach(System.out::println);
@@ -41,8 +41,12 @@ public class VendorManagerTest extends TestCase {
     @Test
     public void testGetVendorListByCategoryId() {
         // load data from mug file
-        VendorManager vm = new VendorManager("data");
-        List<Vendor> listVendor = vm.getVendorListByCategoryId("MUG");
-        assertTrue(listVendor != null);
+        VendorManager vm = new VendorManager("test/data");
+        List<Vendor> listVendorMUG = vm.getVendorListByCategoryId("MUG");
+        assertTrue(listVendorMUG != null);
+        List<Vendor> listVendorCLO = vm.getVendorListByCategoryId("CLO");
+        assertTrue(listVendorCLO != null);
+        List<Vendor> listVendorSTA = vm.getVendorListByCategoryId("STA");
+        assertTrue(listVendorSTA == null);
     }
 }

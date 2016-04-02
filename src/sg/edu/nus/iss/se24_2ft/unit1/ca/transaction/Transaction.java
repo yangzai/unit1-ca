@@ -131,16 +131,27 @@ public class Transaction {
     }
 
     //setters
-    public boolean addTransactionItem(TransactionItem transactionItem) {
+    public void addTransactionItem(TransactionItem transactionItem) {
+        addTransactionItem(transactionItem, false);
+    }
+
+    /*package*/ void addTransactionItem(TransactionItem transactionItem, boolean isLoading) {
         //allow adding only before id is set
-        if (id != null) return false;
+        if (id != null)
+            throw new IllegalArgumentException("Unauthorised.");
 
         Product product = transactionItem.getProduct();
 
-        if (product == null) return false;
-        String productId = product.getId();
+        if (product == null)
+            throw new IllegalArgumentException("No product in transaction item.");
 
-        if (productId == null) return false;
+        String productId = product.getId();
+        if (productId == null)
+            throw new IllegalArgumentException("No such product.");
+
+        int quantity = transactionItem.getQuantity();
+        if (!isLoading && quantity > product.getQuantity())
+            throw new IllegalArgumentException("Exceeded inventory quantity.");
 
         TransactionItem existingItem = transactionItemMap.get(productId);
 
@@ -154,6 +165,10 @@ public class Transaction {
                 tableModel.fireTableRowsInserted(rowIndex, rowIndex);
             }
         } else {
+            quantity += existingItem.getQuantity();
+            if (!isLoading && quantity > product.getQuantity())
+                throw new IllegalArgumentException("Exceeded inventory quantity.");
+
             existingItem.addQuantity(transactionItem.getQuantity());
 
             if (tableModel != null) {
@@ -164,8 +179,6 @@ public class Transaction {
         }
 
         subtotal += transactionItem.getQuantity() * product.getPrice();
-
-        return true;
     }
 
     public boolean setCustomer(Customer customer) {

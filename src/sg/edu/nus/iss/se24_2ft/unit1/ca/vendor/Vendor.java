@@ -7,9 +7,9 @@ public class Vendor {
     private String categoryId, name, description;
 
     public Vendor(String categoryId, String name, String description) {
-        this.categoryId = categoryId.trim();
-        this.name = name.trim();
-        this.description = description.trim();
+        this.categoryId = (categoryId == null ? null : categoryId.trim());
+        this.name = (name == null ? null : name.trim());
+        this.description = (description == null ? null : description.trim());
     }
 
     public String getCategoryId() { return categoryId; }

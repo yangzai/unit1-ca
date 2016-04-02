@@ -20,8 +20,8 @@ public class Product {
         id = null;
         category = null;
 
-        this.name = name.trim();
-        this.description = description.trim();
+        this.name = (name != null ? name.trim() : null);
+        this.description = (description != null ? description.trim() : null);
         this.quantity = quantity;
         this.price = price;
         this.barCode = barCode;

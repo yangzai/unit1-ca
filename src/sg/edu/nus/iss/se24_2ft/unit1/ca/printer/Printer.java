@@ -13,7 +13,8 @@ public abstract class Printer {
 
     public abstract String getTag();
 
-    public void print(String message) {
-        System.out.println(getTag() + ' ' + id + ": " + message);
+    public static void print(String message) {
+//        System.out.println(getTag() + ' ' + id + ": " + message);
+    	System.out.println(message);
     }
 }

@@ -16,8 +16,8 @@ public class StoreKeeper {
     private String name, password;
     
     public StoreKeeper(String name, String password) {
-    	this.name = name.trim();
-    	this.password = password.trim();
+    	this.name = (name == null ? null : name.trim());
+    	this.password = (password == null ? null : password.trim());
     }
     
     /*Attribute accessor: Access the name of store keeper */

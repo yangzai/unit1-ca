@@ -160,4 +160,5 @@ Temporary Items
 /submission/classes/
 /submission/test/
 /submission/data/
+/submission/*.log
 *.zip
