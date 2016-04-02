@@ -101,6 +101,9 @@ public class ProductManager {
     }
 
     private void addProduct(Category category, Product product, String id) {
+        //Check if bar code already existed
+        if (productList.stream().anyMatch(p -> p.getBarCode() == product.getBarCode())) 
+            throw new IllegalArgumentException("Bar code: " + product.getBarCode() + " already existed in the system");
         product.setId(id);
         product.setCategory(category);
         productMap.put(id, product);

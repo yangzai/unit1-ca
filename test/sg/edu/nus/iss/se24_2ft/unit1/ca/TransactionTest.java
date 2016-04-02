@@ -41,10 +41,10 @@ public class TransactionTest extends TestCase {
 
     @Before
     public void setUp() throws Exception {
-        c1 = new Category("PEN/1", "Pen");
+        c1 = new Category("PEN", "Pen");
         c2 = new Category("BOK", "Book");
-        p1 = new Product("Pen", "cheap", 100, 1.50, 1234, 5, 20);
-        p2 = new Product("Book", "expensive", 50, 20.00, 178, 10, 50);
+        p1 = new Product("Pen", "cheap", 100, 1.50, 12346, 5, 20);
+        p2 = new Product("Book", "expensive", 50, 20.00, 1789, 10, 50);
         ti1 = new TransactionItem(p1, 3);
         ti2 = new TransactionItem(p2, 1);
 		try (Stream<String> stream = Files.lines(Paths.get(FILENAME_CATEGORY))) {
