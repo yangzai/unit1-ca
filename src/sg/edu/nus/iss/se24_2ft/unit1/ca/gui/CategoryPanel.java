@@ -88,8 +88,8 @@ public class CategoryPanel extends FeaturePanel {
         c.gridy++;
         JButton resetBtn = new JButton("Reset");
         resetBtn.addActionListener(e -> {
-        	idTextField.setText(null);
-        	nameTextField.setText(null);
+            idTextField.setText(null);
+            nameTextField.setText(null);
         });
         add(resetBtn, c);
     }
