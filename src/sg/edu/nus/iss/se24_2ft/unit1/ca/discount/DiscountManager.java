@@ -38,18 +38,16 @@ public class DiscountManager {
                 double percent = Util.parseDoubleOrDefault(a[4], 0);
                 boolean memberOnly = a[5].toUpperCase().equals("M");
 
-                //TODO: refactor order of domain object instantiation for all load
                 Discount discount = new Discount(code, description, start, period, percent, memberOnly);
 
-                //TODO: try filter
+                String requestedCode = discount.getRequestedCode();
                 //if id already exist, skip
-                //TODO: conditions for other load
-                if (discountMap.containsKey(code)) return;
+                if (discountMap.containsKey(requestedCode)) return;
 
                 discount.setCode();
 
                 discountList.add(discount);
-                discountMap.put(code, discount);
+                discountMap.put(requestedCode, discount);
             });
         } catch (IOException e) {
             e.printStackTrace();

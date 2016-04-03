@@ -4,27 +4,25 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.TestCase;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by chenyao on 27/3/16
  */
-public class CategoryTest extends TestCase {
-    // Test Fixtures
-    private Category category1 = null;
-    private Category category2 = null;
+public class CategoryTest {
+    private Category category1;
+    private Category category2;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         category1 = new Category("BOK", "Book");
         category2 = new Category("CLO", null);
     }
 
     @After
-    public void tearDown() throws Exception {
-        category1 = null;
-        category2 = null;
+    public void tearDown() {
     }
 
     @Test
@@ -63,14 +61,14 @@ public class CategoryTest extends TestCase {
         assertFalse(isEqual(category3,category2));
     }
     
-	private boolean isEqual(Category category1, Category category2) {
-		if (category1 == category2) return true;
-		if (!category1.getRequestedId().equals(category2.getRequestedId())) return false;
-		if (category1.getName()==null){
-			if (category2.getName()!=null) return false;
-		} else {
-			if (!category1.getName().equals(category2.getName())) return false;
-		}
-		return true;
-	}
+    private boolean isEqual(Category category1, Category category2) {
+        if (category1 == category2) return true;
+        if (!category1.getRequestedId().equals(category2.getRequestedId())) return false;
+        if (category1.getName()==null){
+            if (category2.getName()!=null) return false;
+        } else {
+            if (!category1.getName().equals(category2.getName())) return false;
+        }
+        return true;
+    }
 }

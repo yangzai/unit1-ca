@@ -36,9 +36,14 @@ public class CategoryManager {
             stream.map(Util::splitCsv).forEach(a -> {
                 String id = a[0], name = a[1];
                 Category category = new Category(id, name);
+
+                String requestedId = category.getRequestedId();
+                if (categoryMap.containsKey(requestedId)) return;
+                if (requestedId.length() != 3) return;
+
                 category.setId();
 
-                categoryMap.put(id, category);
+                categoryMap.put(requestedId, category);
                 categoryList.add(category);
             });
         } catch (IOException e) {

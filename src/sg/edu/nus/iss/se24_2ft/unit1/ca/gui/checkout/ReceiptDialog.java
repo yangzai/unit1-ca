@@ -84,7 +84,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
 
         JPanel infoPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(7, 7, 7, 7);
+        gbc.insets = new Insets(7, 7, 0, 7);
         gbc.gridx = gbc.gridy = 0;
         gbc.weightx = 0.2;
         gbc.anchor = GridBagConstraints.EAST;
@@ -126,6 +126,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
         redeemValueLabel.setVisible(member != null);
         infoPanel.add(redeemValueLabel, gbc);
 
+        gbc.insets = new Insets(14, 7, 0, 7);
         gbc.gridx--;
         gbc.gridy++;
         gbc.weightx = 0.2;
@@ -166,6 +167,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
         redeemPointLabel.setVisible(member != null);
         infoPanel.add(redeemPointLabel, gbc);
 
+        gbc.insets = new Insets(7, 7, 0, 7);
         gbc.gridx--;
         gbc.gridy++;
         gbc.weightx = 0.2;
@@ -200,6 +202,22 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
         balancePointLabel.setVisible(member != null);
         infoPanel.add(balancePointLabel, gbc);
         p.add(infoPanel, BorderLayout.EAST);
+        
+        gbc.gridx--;
+        gbc.gridy++;
+        gbc.weightx = 0.2;
+        gbc.anchor = GridBagConstraints.EAST;
+        JLabel memberIdTextLabel = new JLabel("Membership ID:");
+        memberIdTextLabel.setVisible(member != null);
+        infoPanel.add(memberIdTextLabel, gbc);
+
+        gbc.gridx++;
+        gbc.weightx = 0.5;
+        gbc.anchor = GridBagConstraints.WEST;
+        JLabel memberIdLabel = new JLabel(member != null ? member.getId() : "");
+        memberIdLabel.setVisible(member != null);
+        infoPanel.add(memberIdLabel, gbc);
+        p.add(infoPanel, BorderLayout.EAST);
 
         return p;
     }
@@ -229,6 +247,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
         String creditPointLabel = "Credited ($" + TransactionManager.DOLLAR_TO_POINT + " = 1 point):";
         int creditPoint = transaction != null ? transaction.getCreditPoint() : 0;
         int balancePoint = member != null ? member.getLoyaltyPoint() : 0;
+        String memberIdLabel = member != null ? member.getId() : "";
 
         //Formatted Text
         String string = "********* Transaction ID: " + id + " **************" + "\n";
@@ -253,6 +272,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
             string += String.format(strTotalFormat, redeemPointLabel, redeemPoint);
             string += String.format(strTotalFormat, creditPointLabel, creditPoint);
             string += String.format(strTotalFormat, "Point Balance:", balancePoint);
+            string += String.format(strTotalFormat, "Membership ID:", memberIdLabel);
         }
         return string;
     }

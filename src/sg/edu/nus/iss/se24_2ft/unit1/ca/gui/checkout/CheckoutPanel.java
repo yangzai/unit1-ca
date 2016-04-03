@@ -94,11 +94,8 @@ public abstract class CheckoutPanel extends FeaturePanel {
             String id = (String) JOptionPane.showInputDialog(this, "Membership ID", "Customer Detail",
                     JOptionPane.PLAIN_MESSAGE, null, null, memberFieldText);
 
-            if (id == null) {
-                JOptionPane.showMessageDialog(this, "Member ID is not valid");
-                return;
-            }
-            if (id.equals(memberFieldText))
+            //if cancel or no change, break
+            if (id == null || id.equals(memberFieldText))
                 return;
 
             Member member = getMember(id);
@@ -107,6 +104,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
                 return;
             }
 
+            //empty string => PUBLIC => valid
             transaction.setCustomer(member);
             memberField.setText(member != null ? member.getId() : null);
         });

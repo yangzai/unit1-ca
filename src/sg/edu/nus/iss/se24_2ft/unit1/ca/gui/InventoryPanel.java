@@ -44,6 +44,10 @@ public class InventoryPanel extends FeaturePanel {
             //TODO: vendor selection?
             List<Integer> selectedRowList = Arrays.stream(table.getSelectedRows())
                     .boxed().collect(Collectors.toList());
+            if (selectedRowList.isEmpty()) {
+                new JOptionPane().showMessageDialog(this, "Please elect at least one product understocked");
+                return;
+            } 
 
             JFrame frame = new JFrame();
             int response = JOptionPane.showConfirmDialog(

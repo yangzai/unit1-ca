@@ -4,30 +4,26 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.TestCase;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.Vendor;
 
-public class VendorTest extends TestCase {
-    // test fixtures
-    private Vendor v1 = null;
-    private Vendor v2 = null;
+import static org.junit.Assert.*;
+
+public class VendorTest {
+    private Vendor v1;
+    private Vendor v2;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         v1 = new Vendor("MUG", "Office Sovenirs", "One and only Office Sovenirs");
         v2 = new Vendor("MUF", "ArtWorks Stationary Store", null);
     }
 
     @After
-    public void tearDown() throws Exception {
-        v1 = null;
-        v2 = null;
+    public void tearDown() {
     }
 
     @Test
     public void testGetCategoryId() {
-
         assertEquals("MUG", v1.getCategoryId());
         assertEquals("MUF", v2.getCategoryId());
     }
@@ -60,19 +56,19 @@ public class VendorTest extends TestCase {
         assertFalse(isEqual(v3, v2));
     }
     
-	private boolean isEqual(Vendor vendor1, Vendor vendor2) {
-		if (vendor1 == vendor2) return true;
-		if (!vendor1.getCategoryId().equals(vendor2.getCategoryId())) return false;
-		if (vendor1.getName()==null){
-			if (vendor2.getName()!=null) return false;
-		} else {
-			if (!vendor1.getName().equals(vendor2.getName())) return false;
-		}
-		if (vendor1.getDescription()==null){
-			if (vendor2.getDescription()!=null) return false;
-		} else {
-			if (!vendor1.getDescription().equals(vendor2.getDescription())) return false;
-		}
-		return true;
-	}
+    private boolean isEqual(Vendor vendor1, Vendor vendor2) {
+        if (vendor1 == vendor2) return true;
+        if (!vendor1.getCategoryId().equals(vendor2.getCategoryId())) return false;
+        if (vendor1.getName()==null){
+            if (vendor2.getName()!=null) return false;
+        } else {
+            if (!vendor1.getName().equals(vendor2.getName())) return false;
+        }
+        if (vendor1.getDescription()==null){
+            if (vendor2.getDescription()!=null) return false;
+        } else {
+            if (!vendor1.getDescription().equals(vendor2.getDescription())) return false;
+        }
+        return true;
+    }
 }
