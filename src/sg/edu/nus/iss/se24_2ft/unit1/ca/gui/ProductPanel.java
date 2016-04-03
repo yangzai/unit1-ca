@@ -5,7 +5,9 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -66,16 +68,6 @@ public class ProductPanel extends FeaturePanel {
         c.fill = GridBagConstraints.BOTH;
         scrollPane = new JScrollPane(table);
         panel.add(scrollPane, c);
-
-//        // Back Button
-//        c.gridx++;
-//        c.anchor = GridBagConstraints.NORTH;
-//        c.weightx = c.weighty = 0;
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//
-//        JButton backButton = new JButton("Back");
-//        backButton.addActionListener(this::backActionPerformed);
-//        panel.add(backButton, c);
 
         return panel;
     }
@@ -162,26 +154,33 @@ public class ProductPanel extends FeaturePanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         JButton addButton = new JButton("Add");
         addButton.addActionListener(e -> {
-            // TODO: change to Integer.parse, catch NFE, return message dialog
             String name = nameTextField.getText(), destination = desTextField.getText(),
                     categoryId = categoryTextField.getText();
             int quantity = Util.parseIntOrDefault(aqTextField.getText(), 0),
-                    barCode = Util.parseIntOrDefault(barcodeTextField.getText(), 0),
+                    barcode = Util.parseIntOrDefault(barcodeTextField.getText(), 0),
                     threshold = Util.parseIntOrDefault(thresholdTextField.getText(), 0),
                     orderQuantity = Util.parseIntOrDefault(orderQuantityTextField.getText(), 0);
             double price = Util.parseDoubleOrDefault(priceTextField.getText(), 0);
 
-            Product product = new Product(name, destination, quantity, price, barCode, threshold, orderQuantity);
+            Product product = new Product(name, destination, quantity, price, barcode, threshold, orderQuantity);
 
+            Set<String> errorMessageSet = new HashSet<>();
             productPanelListenerList.forEach(l -> {
                 try {
                     l.addProductRequested(categoryId, product);
                 } catch (IllegalArgumentException iae) {
-                    JOptionPane.showMessageDialog(this, iae.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    errorMessageSet.add(iae.getMessage());
                 }
             });
 
-            resetFields();
+            if (errorMessageSet.size() == 0) {
+                resetFields();
+                return;
+            }
+
+            Object message = errorMessageSet.size() > 1 ? errorMessageSet : errorMessageSet.toArray()[0];
+            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+
         });
         panel.add(addButton, c);
 
