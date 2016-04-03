@@ -21,7 +21,7 @@ public class MemberManagerTest {
     private Member member2;
     private Member member3;
     private MemberManager memberManager;
-	
+
     @Before
     public void setUp() {
         TestUtil.putData(TestUtil.MEMBER_FILENAME, TestUtil.MEMBER_STRING_LIST);
@@ -68,14 +68,14 @@ public class MemberManagerTest {
         assertTrue(memberList.contains(member2));
     }
     
-	private boolean isEqual(Member member1, Member member2) {
-		if (member1 == member2) return true;
-		if (!member1.getRequestedId().equals(member2.getRequestedId())) return false;
-		if (member1.getName()==null){
-			if (member2.getName()!=null) return false;
-		} else {
-			if (!member1.getName().equals(member2.getName())) return false;
-		}
+    private boolean isEqual(Member member1, Member member2) {
+        if (member1 == member2) return true;
+        if (!member1.getRequestedId().equals(member2.getRequestedId())) return false;
+        if (member1.getName()==null){
+            if (member2.getName()!=null) return false;
+        } else {
+            if (!member1.getName().equals(member2.getName())) return false;
+        }
         return member1.getLoyaltyPoint() == member2.getLoyaltyPoint();
     }
 }

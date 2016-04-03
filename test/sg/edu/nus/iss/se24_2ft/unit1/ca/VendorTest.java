@@ -56,19 +56,19 @@ public class VendorTest {
         assertFalse(isEqual(v3, v2));
     }
     
-	private boolean isEqual(Vendor vendor1, Vendor vendor2) {
-		if (vendor1 == vendor2) return true;
-		if (!vendor1.getCategoryId().equals(vendor2.getCategoryId())) return false;
-		if (vendor1.getName()==null){
-			if (vendor2.getName()!=null) return false;
-		} else {
-			if (!vendor1.getName().equals(vendor2.getName())) return false;
-		}
-		if (vendor1.getDescription()==null){
-			if (vendor2.getDescription()!=null) return false;
-		} else {
-			if (!vendor1.getDescription().equals(vendor2.getDescription())) return false;
-		}
-		return true;
-	}
+    private boolean isEqual(Vendor vendor1, Vendor vendor2) {
+        if (vendor1 == vendor2) return true;
+        if (!vendor1.getCategoryId().equals(vendor2.getCategoryId())) return false;
+        if (vendor1.getName()==null){
+            if (vendor2.getName()!=null) return false;
+        } else {
+            if (!vendor1.getName().equals(vendor2.getName())) return false;
+        }
+        if (vendor1.getDescription()==null){
+            if (vendor2.getDescription()!=null) return false;
+        } else {
+            if (!vendor1.getDescription().equals(vendor2.getDescription())) return false;
+        }
+        return true;
+    }
 }

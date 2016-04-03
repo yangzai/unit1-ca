@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 public class StoreKeeperManagerTest {
     private StoreKeeperManager storeKeeperManager;
-	
+
     @Before
     public void setUp() {
         TestUtil.putData(TestUtil.STOREKEEPER_FILENAME, TestUtil.STOREKEEPER_STRING_LIST);
