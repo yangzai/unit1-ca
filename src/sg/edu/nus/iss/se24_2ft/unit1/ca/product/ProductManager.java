@@ -143,6 +143,11 @@ public class ProductManager {
         index = understockProductList.indexOf(product);
         if (index > -1 && understockTableModel != null)
             understockTableModel.fireTableCellUpdated(index, 3);
+        else if (index == -1 && product.isUnderstock()){
+            understockProductList.add(product);
+            int rowIndex = understockProductList.size() - 1;
+            understockTableModel.fireTableRowsInserted(rowIndex, rowIndex);
+        }
 
         store();
     }
