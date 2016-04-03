@@ -4,30 +4,26 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.TestCase;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.Vendor;
 
-public class VendorTest extends TestCase {
-    // test fixtures
-    private Vendor v1 = null;
-    private Vendor v2 = null;
+import static org.junit.Assert.*;
+
+public class VendorTest {
+    private Vendor v1;
+    private Vendor v2;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         v1 = new Vendor("MUG", "Office Sovenirs", "One and only Office Sovenirs");
         v2 = new Vendor("MUF", "ArtWorks Stationary Store", null);
     }
 
     @After
-    public void tearDown() throws Exception {
-        v1 = null;
-        v2 = null;
+    public void tearDown() {
     }
 
     @Test
     public void testGetCategoryId() {
-
         assertEquals("MUG", v1.getCategoryId());
         assertEquals("MUF", v2.getCategoryId());
     }

@@ -11,43 +11,30 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.Discount;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.discount.DiscountManager;
 
 public class DiscountTest {
-	private Discount discount1 = null, discount2 = null;
-	private DiscountManager discountManager = null;
+	private Discount discount1, discount2;
 
-	@SuppressWarnings("deprecation")
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		Calendar calendar = new GregorianCalendar(2016, 2, 27);
 		Date date = calendar.getTime();
 		discount1 = new Discount("TEST1", "TEST 1 Desc", date, 1, 10, true);
 		discount2 = new Discount("TEST2", "TEST 2 Desc", null, -1, 30, true);
-
 	}
 
 	@After
-	public void tearDown() throws Exception {
-		discount1 = null;
-		discount2 = null;
+	public void tearDown() {
 	}
 
-	@Test
-	public void testInitialize() {
-		assertTrue(!discount1.equals(null));
-		assertTrue(!discount2.equals(null));
-	}
-
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetDiscountInfo() {
 		assertTrue(discount1.getPeriod() == 1);
-		assertTrue(discount1.isDiscountAvailable() == false);
+		assertTrue(!discount1.isDiscountAvailable());
 		assertTrue(discount1.getPercent() == 10);
 
 		assertTrue(discount2.getPeriod() == -1);
-		assertTrue(discount2.isDiscountAvailable() == true);
+		assertTrue(discount2.isDiscountAvailable());
 		assertTrue(discount2.getPercent() == 30);
 	}
 

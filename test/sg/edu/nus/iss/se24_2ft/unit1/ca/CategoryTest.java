@@ -4,27 +4,25 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.TestCase;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by chenyao on 27/3/16
  */
-public class CategoryTest extends TestCase {
-    // Test Fixtures
-    private Category category1 = null;
-    private Category category2 = null;
+public class CategoryTest {
+    private Category category1;
+    private Category category2;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         category1 = new Category("BOK", "Book");
         category2 = new Category("CLO", null);
     }
 
     @After
-    public void tearDown() throws Exception {
-        category1 = null;
-        category2 = null;
+    public void tearDown() {
     }
 
     @Test

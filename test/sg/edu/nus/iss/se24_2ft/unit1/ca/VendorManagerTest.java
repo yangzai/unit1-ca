@@ -8,40 +8,37 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.TestCase;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.Vendor;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.VendorManager;
+import util.TestUtil;
 
-public class VendorManagerTest extends TestCase {
-    // test fixtures
-    private Vendor v1 = null;
-    private Vendor v2 = null;
+import static org.junit.Assert.assertTrue;
 
+public class VendorManagerTest {
     @Before
-    public void setUp() throws Exception {
-        v1 = new Vendor("MUG", "Office Sovenirs", "One and only Office Sovenirs");
-        v2 = new Vendor("MUF", "ArtWorks Stationary Store", null);
+    public void setUp() {
+        TestUtil.putData(TestUtil.VENDOR_MUG_FILENAME, TestUtil.VENDOR_MUG_STRING_LIST);
+        TestUtil.putData(TestUtil.VENDOR_CLO_FILENAME, TestUtil.VENDOR_CLO_STRING_LIST);
     }
 
     @After
-    public void tearDown() throws Exception {
-        v1 = null;
-        v2 = null;
+    public void tearDown() {
+        TestUtil.deleteData(TestUtil.VENDOR_MUG_FILENAME);
+        TestUtil.deleteData(TestUtil.VENDOR_CLO_FILENAME);
     }
 
     @Test
     public void testVendorManager() {
-        VendorManager vm = new VendorManager("test/data");
+        VendorManager vm = new VendorManager(TestUtil.DATA_PATH);
             vm.getVendorListByCategoryId("MUG").stream()
-                    .map(v -> v.getCategoryId() + ',' + v.getName() + ',' + v.getDescription())
-                    .forEach(System.out::println);
+                    .map(v -> v.getCategoryId() + ',' + v.getName() + ',' + v.getDescription());
         //TODO: test else something here
     }
 
     @Test
     public void testGetVendorListByCategoryId() {
         // load data from mug file
-        VendorManager vm = new VendorManager("test/data");
+        VendorManager vm = new VendorManager(TestUtil.DATA_PATH);
         List<Vendor> listVendorMUG = vm.getVendorListByCategoryId("MUG");
         assertTrue(listVendorMUG != null);
         List<Vendor> listVendorCLO = vm.getVendorListByCategoryId("CLO");

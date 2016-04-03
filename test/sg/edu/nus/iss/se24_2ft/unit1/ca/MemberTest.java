@@ -4,27 +4,25 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.TestCase;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.customer.member.Member;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by chenyao on 26/3/16
  */
-public class MemberTest extends TestCase {
-    // Test Fixtures
-    private Member member1 = null;
-    private Member member2 = null;
+public class MemberTest {
+    private Member member1;
+    private Member member2;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         member1 = new Member("E0015280", null);
         member2 = new Member("E0015270", "Chen Yao");
     }
 
     @After
-    public void tearDown() throws Exception {
-        member1 = null;
-        member2 = null;
+    public void tearDown() {
     }
 
     @Test
@@ -72,7 +70,6 @@ public class MemberTest extends TestCase {
 		} else {
 			if (!member1.getName().equals(member2.getName())) return false;
 		}
-		if (member1.getLoyaltyPoint()!= member2.getLoyaltyPoint()) return false;
-		return true;
-	}
+        return member1.getLoyaltyPoint() == member2.getLoyaltyPoint();
+    }
 }

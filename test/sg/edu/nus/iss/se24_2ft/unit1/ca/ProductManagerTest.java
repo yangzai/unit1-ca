@@ -1,87 +1,48 @@
 package sg.edu.nus.iss.se24_2ft.unit1.ca;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.TestCase;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
-import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
+import util.TestUtil;
 
-public class ProductManagerTest extends TestCase {
-    // test fixtures
-    private CategoryManager categoryManager = null;
-    private ProductManager productManager = null;
-	private final String FILENAME_PRODUCT = "test/data/Products.dat";
-	private final String FILENAME_CATEGORY = "test/data/Category.dat";
-	private List<String> stringListProduct, stringListCategory;
+import static org.junit.Assert.*;
+
+public class ProductManagerTest {
+    private CategoryManager categoryManager;
+    private ProductManager productManager;
 
     @Before
-    public void setUp() throws Exception {
-        // initTestData();
-		// Preserved Test Data
-		try (Stream<String> stream = Files.lines(Paths.get(FILENAME_PRODUCT))) {
-			stringListProduct = stream.collect(Collectors.toList());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try (Stream<String> stream = Files.lines(Paths.get(FILENAME_CATEGORY))) {
-			stringListCategory = stream.collect(Collectors.toList());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    public void setUp() {
+        TestUtil.putData(TestUtil.PRODUCT_FILENAME, TestUtil.PRODUCT_STRING_LIST);
+        TestUtil.putData(TestUtil.CATEGORY_FILENAME, TestUtil.CATEGORY_STRING_LIST);
+
+        categoryManager = null;
+        productManager = null;
     }
 
     @After
-    public void tearDown() throws Exception {
-        categoryManager = null;
-        productManager = null;
-		try {
-			Files.write(Paths.get(FILENAME_PRODUCT), stringListProduct);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			Files.write(Paths.get(FILENAME_CATEGORY), stringListCategory);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
-
-    @Test
-    public void testProductManager() {
-        CategoryManager categoryManager = new CategoryManager(FILENAME_CATEGORY);
-        assertTrue(categoryManager != null);
-
-        ProductManager productManager = new ProductManager(FILENAME_PRODUCT, categoryManager);
-        assertTrue(productManager != null);
+    public void tearDown() {
+        TestUtil.deleteData(TestUtil.PRODUCT_FILENAME);
+        TestUtil.deleteData(TestUtil.CATEGORY_FILENAME);
     }
 
     @Test
     public void testGetProduct() {
-        assertTrue(initTestData());
-        // non-existed product
+        initTestData();
         assertNull(productManager.getProduct("NON/1"));
         assertNull(productManager.getProduct("TST/1"));
-        //
-        assertTrue(initTestData());
-        // int count = productManager.getProductList().size();
-        Category category = new Category("TST", "Testing");
-        // category.setId();
-        categoryManager.addCategory(category);
 
-        // Product product1 = new Product("Test1", "NUS test", 525, 10.26, 5555,
-        // 50, 200);
+        initTestData();
+        Category category = new Category("TST", "Testing");
+        categoryManager.addCategory(category);
 
         Product product = new Product("TST", "test description", 525, 10.26, 5555, 50, 200);
         productManager.addProduct(category, product);
@@ -90,14 +51,14 @@ public class ProductManagerTest extends TestCase {
 
     @Test
     public void testGetProductList() {
-        assertTrue(initTestData());
+        initTestData();
         assertTrue(productManager.getProductList().size() > 0);
 
     }
 
     @Test
     public void testAddProduct() {
-        assertTrue(initTestData());
+        initTestData();
         int count = productManager.getProductList().size();
         Category category = new Category("TST", "Testing");
         categoryManager.addCategory(category);
@@ -131,9 +92,8 @@ public class ProductManagerTest extends TestCase {
 
     @Test
     public void testGeneratePurchaseOrder() {
-        assertTrue(initTestData());
+        initTestData();
         Category category = new Category("TST", "Testing");
-        // category.setId();
         categoryManager.addCategory(category);
 
         Product product1 = new Product("Test1", "NUS test", 20, 10.26, 5555, 50, 200);
@@ -150,39 +110,22 @@ public class ProductManagerTest extends TestCase {
         try {
             field = productManager.getClass().getDeclaredField("understockProductList");
             field.setAccessible(true);
-            Object value = (Object) field.get(productManager);
+            Object value = field.get(productManager);
             assertTrue(value instanceof List<?>);
 
             assertTrue(((List<Product>) value).contains(product1));
 
             field.setAccessible(false);
 
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            fail("Exception thrown!");
-
-        } catch (NoSuchFieldException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            fail("Exception thrown!");
-
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            fail("Exception thrown!");
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
+        } catch (SecurityException | NoSuchFieldException
+                | IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
             fail("Exception thrown!");
         }
     }
 
-    public boolean initTestData() {
-        categoryManager = new CategoryManager(FILENAME_CATEGORY);
-        productManager = new ProductManager(FILENAME_PRODUCT, categoryManager);
-        if (null == productManager) return false;
-
-        return true;
+    private void initTestData() {
+        categoryManager = new CategoryManager(TestUtil.CATEGORY_FILENAME);
+        productManager = new ProductManager(TestUtil.PRODUCT_FILENAME, categoryManager);
     }
 }
