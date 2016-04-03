@@ -42,7 +42,7 @@ public class ProductTest extends TestCase {
 
     @Test
     public void testGetBarCode() {
-        assertEquals(p1.getBarCode(), 5555);
+        assertEquals(p1.getBarcode(), 5555);
     }
 
     @Test

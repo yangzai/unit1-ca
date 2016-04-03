@@ -21,6 +21,7 @@ public class ProductManager {
     private CategoryManager categoryManager;
     private List<Product> productList;
     private Map<String, Product> productMap;
+    private Map<Integer, Product> barcodeMap;
     private List<Product> understockProductList;
     private Map<String, Integer> maxSubIdMap;
 
@@ -36,6 +37,7 @@ public class ProductManager {
 
         productList = new ArrayList<>();
         productMap = new HashMap<>();
+        barcodeMap = new HashMap<>();
         understockProductList = new ArrayList<>();
         maxSubIdMap = new HashMap<>();
 
@@ -48,18 +50,20 @@ public class ProductManager {
                 String id = a[0], name = a[1], description = a[2];
                 double price = Util.parseDoubleOrDefault(a[4], 0);
                 int quantity = Util.parseIntOrDefault(a[3], 0),
-                        barCode = Util.parseIntOrDefault(a[5], 0),
+                        barcode = Util.parseIntOrDefault(a[5], 0),
                         threshold = Util.parseIntOrDefault(a[6], 0),
                         orderQuantity = Util.parseIntOrDefault(a[7], 0);
 
                 Product product = new Product(name, description, quantity,
-                        price, barCode, threshold, orderQuantity);
+                        price, barcode, threshold, orderQuantity);
 
-                //TODO: try filter
                 //if id already exist, skip
+                id = id != null ? id.trim() : null;
                 if (productMap.containsKey(id)) return;
 
-                String[] idArray = id.split("/");
+                if (barcodeMap.containsKey(barcode)) return;
+
+                String[] idArray = id != null ? id.split("/") : new String[] {"", ""};
                 String categoryId = idArray[0];
                 Category category = categoryManager.getCategory(categoryId);
 
@@ -87,6 +91,9 @@ public class ProductManager {
         if (product == null)
             throw new IllegalArgumentException("Product is not valid");
 
+        if (barcodeMap.containsKey(product.getBarcode()))
+            throw new IllegalArgumentException("Bar code: " + product.getBarcode() + " already existed in the system");
+
         String categoryId = category.getId();
         if (categoryId == null)
             throw new IllegalArgumentException("Category ID is empty. Please input again");
@@ -102,12 +109,11 @@ public class ProductManager {
 
     private void addProduct(Category category, Product product, String id) {
         //Check if bar code already existed
-        if (productList.stream().anyMatch(p -> p.getBarCode() == product.getBarCode())) 
-            throw new IllegalArgumentException("Bar code: " + product.getBarCode() + " already existed in the system");
         product.setId(id);
         product.setCategory(category);
-        productMap.put(id, product);
         productList.add(product);
+        productMap.put(id, product);
+        barcodeMap.put(product.getBarcode(), product);
 
         int rowIndex = productList.size() - 1;
 
@@ -182,7 +188,7 @@ public class ProductManager {
                     case 2: return product.getDescription();
                     case 3: return product.getQuantity();
                     case 4: return product.getPrice();
-                    case 5: return product.getBarCode();
+                    case 5: return product.getBarcode();
                     case 6: return product.getThreshold();
                     case 7: return product.getOrderQuantity();
                     default: return null;
@@ -213,7 +219,7 @@ public class ProductManager {
                     case 2: return product.getDescription();
                     case 3: return product.getQuantity();
                     case 4: return product.getPrice();
-                    case 5: return product.getBarCode();
+                    case 5: return product.getBarcode();
                     case 6: return product.getThreshold();
                     case 7: return product.getOrderQuantity();
                     default: return null;

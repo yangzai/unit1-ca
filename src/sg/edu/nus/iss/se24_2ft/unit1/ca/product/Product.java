@@ -10,13 +10,12 @@ import java.util.stream.Collectors;
  */
 public class Product {
     private String id, name, description;
-    private int quantity, barCode, threshold, orderQuantity;
-    // BigDecimal price;
+    private int quantity, barcode, threshold, orderQuantity;
     private double price;
     private Category category;
 
     public Product(String name, String description, int quantity,
-                   double price, int barCode, int threshold, int orderQuantity) {
+                   double price, int barcode, int threshold, int orderQuantity) {
         id = null;
         category = null;
 
@@ -24,7 +23,7 @@ public class Product {
         this.description = (description != null ? description.trim() : null);
         this.quantity = quantity;
         this.price = price;
-        this.barCode = barCode;
+        this.barcode = barcode;
         this.threshold = threshold;
         this.orderQuantity = orderQuantity;
     }
@@ -37,7 +36,7 @@ public class Product {
 
     public int getQuantity() { return quantity; }
 
-    public int getBarCode() { return barCode; }
+    public int getBarcode() { return barcode; }
 
     public int getThreshold() { return threshold; }
 
@@ -52,7 +51,7 @@ public class Product {
     @Override
     public String toString() {
         return Arrays.asList(id, name, description, quantity, price,
-                barCode, threshold, orderQuantity).stream()
+                barcode, threshold, orderQuantity).stream()
                 .map(Object::toString)
                 .collect(Collectors.joining(","));
     }

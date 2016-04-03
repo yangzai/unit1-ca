@@ -38,11 +38,15 @@ public class MemberManager {
                 int loyaltyPoint = Util.parseIntOrDefault(a[2], -1);
 
                 Member member = new Member(id, name);
+
+                String requestedId = member.getRequestedId();
+                if (memberMap.containsKey(requestedId)) return;
+
                 member.setId();
                 member.setLoyaltyPoint(loyaltyPoint);
 
                 memberList.add(member);
-                memberMap.put(id, member);
+                memberMap.put(requestedId, member);
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,10 +73,7 @@ public class MemberManager {
 
     public void debitLoyaltyPoint(String id, int loyaltyPoint) {
         Member member = memberMap.get(id);
-        //TODO: may not update view
-//        for (Member m : memberList) {
-//
-//        }
+
         if (member == null)
             throw new IllegalArgumentException("Member is not valid");
         if (loyaltyPoint == 0) return;
@@ -103,14 +104,6 @@ public class MemberManager {
 
         store();
     }
-
-    //TODO: KIV
-//    public Customer getCustomer(String id) {
-//        if (id == null || id.equalsIgnoreCase("PUBLIC"))
-//            return PublicCustomer.getInstance();
-//
-//        return getMember(id);
-//    }
 
     public Member getMember(String memberID) {
         return memberMap.get(memberID);
