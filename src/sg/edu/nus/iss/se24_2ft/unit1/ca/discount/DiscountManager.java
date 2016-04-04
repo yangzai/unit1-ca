@@ -62,12 +62,11 @@ public class DiscountManager {
                     if (customer instanceof Member) {
                         int loyaltyPoint = ((Member) customer).getLoyaltyPoint();
                         String code = d.getCode().toUpperCase();
-                        if (!code.equals("MEMBER_FIRST") && !code.equals("MEMBER_SUBSEQ"))
-                            return true;
-                        if (code.equals("MEMBER_FIRST") && loyaltyPoint == -1)
-                            return true;
-                        if (code.equals("MEMBER_SUBSEQ") && loyaltyPoint != -1)
-                            return true;
+                        if (code.equals("MEMBER_FIRST") && loyaltyPoint != -1)
+                            return false;
+                        if (code.equals("MEMBER_SUBSEQ") && loyaltyPoint == -1)
+                            return false;
+                        return true;
                     }
                     return false;
                 }).max(Comparator.comparing(Discount::getPercent));
