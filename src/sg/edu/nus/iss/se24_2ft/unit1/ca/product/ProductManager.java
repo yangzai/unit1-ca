@@ -10,15 +10,21 @@ import java.util.stream.Stream;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.Category;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.category.CategoryManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.util.Util;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.Vendor;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.VendorManager;
 
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
 
 public class ProductManager {
     private final String[] COLUMN_NAMES = {"ID", "Name", "Description", "Quantity Avl.", "Price",
-            "Bar Code", "Reorder Quantity", "Order Quantity"};
+            "Bar Code", "Reorder Quantity", "Order Quantity", "Vendor"};
     private String filename;
     private CategoryManager categoryManager;
+    private VendorManager vendorManager;
     private List<Product> productList;
     private Map<String, Product> productMap;
     private Map<Integer, Product> barcodeMap;
@@ -42,6 +48,11 @@ public class ProductManager {
         maxSubIdMap = new HashMap<>();
 
         load();
+    }
+    
+    public ProductManager(String filename, CategoryManager categoryManager, VendorManager vendorManager) {
+        this(filename, categoryManager);
+        this.vendorManager = vendorManager;
     }
 
     private void load() {
@@ -182,7 +193,7 @@ public class ProductManager {
             public int getRowCount() { return productList.size(); }
 
             @Override
-            public int getColumnCount() { return COLUMN_NAMES.length; }
+            public int getColumnCount() { return COLUMN_NAMES.length - 1; }
 
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
@@ -207,6 +218,17 @@ public class ProductManager {
 
         return understockTableModel = new AbstractTableModel() {
             @Override
+            public void setValueAt(Object arg0, int row, int col) {
+                
+            }
+
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                // TODO Auto-generated method stub
+                return (col==8) ? true : false;
+            }
+
+            @Override
             public String getColumnName(int column) { return COLUMN_NAMES[column]; }
 
             @Override
@@ -227,10 +249,23 @@ public class ProductManager {
                     case 5: return product.getBarcode();
                     case 6: return product.getThreshold();
                     case 7: return product.getOrderQuantity();
+                    case 8: {
+                        String catID = product.getCategory().getId();
+                        return (vendorManager!=null) ? vendorManager.getVendorListByCategoryId(catID).get(0).getName() : null;
+                    }
                     default: return null;
                 }
             }
+            
+            
         };
+    }
+    
+    public TableCellEditor getCellEditor(int row, int col){
+        String catID = understockProductList.get(row).getCategory().getId();
+        JComboBox comboBox = new JComboBox();
+        vendorManager.getVendorListByCategoryId(catID).forEach(v -> comboBox.addItem(v.getName()));
+        return (new DefaultCellEditor(comboBox));
     }
 
     private void store() {

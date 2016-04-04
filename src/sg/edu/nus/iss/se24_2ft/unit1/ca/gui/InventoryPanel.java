@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.swing.*;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
+
+import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 
 // ** Created by Srishti ** // 
 
-public class InventoryPanel extends FeaturePanel {
+public abstract class InventoryPanel extends FeaturePanel {
     private static final int VISIBLE_ROW = 20;
     JTable table;
     JScrollPane scrollPane;
@@ -20,7 +23,14 @@ public class InventoryPanel extends FeaturePanel {
     public InventoryPanel() {
         super(new GridBagLayout());
 
-        table = new JTable();
+        table = new JTable() {
+            @Override
+            public TableCellEditor getCellEditor(int row, int col) {
+                // TODO Auto-generated method stub
+                return getTableCellEditor(row, col);
+            }
+            
+        };
         inventoryPanelListenerList = new ArrayList<>();
         GridBagConstraints gc = new GridBagConstraints();
 
@@ -76,4 +86,6 @@ public class InventoryPanel extends FeaturePanel {
         Dimension d = table.getPreferredSize();
         scrollPane.setPreferredSize(new Dimension(d.width,table.getRowHeight()*VISIBLE_ROW+1));
     }
+    
+    abstract protected TableCellEditor getTableCellEditor(int row, int col);
 }

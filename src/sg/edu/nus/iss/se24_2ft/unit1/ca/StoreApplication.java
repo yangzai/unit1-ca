@@ -17,6 +17,8 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.VendorManager;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.table.TableCellEditor;
+
 /**
  * Created by yangzai on 26/2/16.
  */
@@ -41,7 +43,7 @@ public class StoreApplication {
 
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
         VendorManager vendorManager = new VendorManager("data");
-        ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
+        ProductManager productManager = new ProductManager("data/Products.dat", categoryManager, vendorManager);
         MemberManager memberManager = new MemberManager("data/Members.dat");
         DiscountManager discountManager = new DiscountManager("data/Discounts.dat");
         TransactionManager transactionManager =
@@ -74,7 +76,15 @@ public class StoreApplication {
                 (cid, p) -> productManager.addProduct(categoryManager.getCategory(cid), p)
         );
 
-        InventoryPanel inventoryPanel = new InventoryPanel();
+        InventoryPanel inventoryPanel = new InventoryPanel(){
+
+            @Override
+            protected TableCellEditor getTableCellEditor(int row, int col) {
+                // TODO Auto-generated method stub
+                return productManager.getCellEditor(row, col);
+            }
+            
+        };
         inventoryPanel.setTableModel(productManager.getUnderstockTableModel());
         inventoryPanel.addInventoryPanelListener(productManager::generatePurchaseOrder);
 
