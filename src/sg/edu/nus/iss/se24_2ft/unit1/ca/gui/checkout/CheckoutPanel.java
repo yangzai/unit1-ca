@@ -228,6 +228,7 @@ public abstract class CheckoutPanel extends FeaturePanel {
 
             productField.setText(null);
             quantityField.setText("1");
+            quantityField.setValue(1);
             if (transaction.getTransactionItemList().size() == 1)
                 proceedPaymentButton.setEnabled(true);
         });
