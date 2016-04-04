@@ -40,7 +40,7 @@ public class StoreApplication {
         if (!loginPanel.isSuccess()) System.exit(0);
 
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
-        VendorManager vendorManager = new VendorManager("data");
+        VendorManager vendorManager = new VendorManager("data", categoryManager);
         ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
         MemberManager memberManager = new MemberManager("data/Members.dat");
         DiscountManager discountManager = new DiscountManager("data/Discounts.dat");
