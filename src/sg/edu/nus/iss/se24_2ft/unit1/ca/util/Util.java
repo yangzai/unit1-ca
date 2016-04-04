@@ -46,6 +46,6 @@ public final class Util {
 
     public static String[] splitCsv(String string) {
         if (string == null) return new String[0];
-        return string.split(",");
+        return string.split(",", -1);
     }
 }
