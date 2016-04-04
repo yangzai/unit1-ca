@@ -34,7 +34,7 @@ If and only if your working directory is not clean,
 ```
 git stash
 git merge dev
-git stash apply #fix confilcts if necessary
+git stash apply #fix conflicts if necessary
 git stash drop
 ```
 
