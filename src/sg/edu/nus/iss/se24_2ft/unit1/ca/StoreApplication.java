@@ -12,6 +12,7 @@ import sg.edu.nus.iss.se24_2ft.unit1.ca.product.Product;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.product.ProductManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.storekeeper.StoreKeeperManager;
 import sg.edu.nus.iss.se24_2ft.unit1.ca.transaction.TransactionManager;
+import sg.edu.nus.iss.se24_2ft.unit1.ca.vendor.VendorManager;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -39,6 +40,7 @@ public class StoreApplication {
         if (!loginPanel.isSuccess()) System.exit(0);
 
         CategoryManager categoryManager = new CategoryManager("data/Category.dat");
+        VendorManager vendorManager = new VendorManager("data");
         ProductManager productManager = new ProductManager("data/Products.dat", categoryManager);
         MemberManager memberManager = new MemberManager("data/Members.dat");
         DiscountManager discountManager = new DiscountManager("data/Discounts.dat");
